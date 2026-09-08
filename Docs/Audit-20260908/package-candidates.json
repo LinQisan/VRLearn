@@ -1,0 +1,36 @@
+{
+  "com.unity.multiplayer.center": {
+    "asset_guid_references": [],
+    "lockfile_dependents": [],
+    "package_dependencies": {
+      "com.unity.modules.uielements": "1.0.0"
+    }
+  },
+  "com.unity.timeline": {
+    "asset_guid_references": [],
+    "lockfile_dependents": [],
+    "package_dependencies": {
+      "com.unity.modules.director": "1.0.0",
+      "com.unity.modules.animation": "1.0.0",
+      "com.unity.modules.audio": "1.0.0",
+      "com.unity.modules.particlesystem": "1.0.0"
+    }
+  },
+  "com.unity.visualscripting": {
+    "asset_guid_references": [],
+    "lockfile_dependents": [],
+    "package_dependencies": {
+      "com.unity.ugui": "1.0.0",
+      "com.unity.modules.jsonserialize": "1.0.0"
+    }
+  },
+  "com.unity.ai.navigation": {
+    "asset_guid_references": [
+      "Assets/_Project/Scenes/TraficAcident.unity"
+    ],
+    "lockfile_dependents": [],
+    "package_dependencies": {
+      "com.unity.modules.ai": "1.0.0"
+    }
+  }
+}

@@ -1,0 +1,817 @@
+{
+  "scripts": [
+    {
+      "script": "Assets/_Project/Scripts/AccidentAreaContainer.cs",
+      "serialized_references": [
+        "Assets/_Project/Scenes/TraficAcident.unity"
+      ],
+      "code_references": []
+    },
+    {
+      "script": "Assets/_Project/Scripts/AccidentCarFactory.cs",
+      "serialized_references": [
+        "Assets/_Project/Scenes/TraficAcident.unity",
+        "Assets/_Project/Scenes/TraficAcident_Meta.unity"
+      ],
+      "code_references": [
+        "Assets/_Project/Scripts/GameplayFlowController.cs"
+      ]
+    },
+    {
+      "script": "Assets/_Project/Scripts/AccidentImpactPhysics.cs",
+      "serialized_references": [],
+      "code_references": [
+        "Assets/_Project/Scripts/AccidentResultPresenter.cs",
+        "Assets/_Project/Scripts/HybridAccidentPresentation.cs",
+        "Assets/_Project/Scripts/CarController.cs",
+        "Assets/_Project/Scripts/AvatarPresenter.cs",
+        "Assets/_Project/Tests/EditMode/AccidentRecordingTests.cs",
+        "Assets/_Project/Tests/EditMode/MetaSceneConfigurationTests.cs"
+      ]
+    },
+    {
+      "script": "Assets/_Project/Scripts/AccidentMotionHistory.cs",
+      "serialized_references": [],
+      "code_references": [
+        "Assets/_Project/Scripts/AccidentTrajectoryReplay.cs",
+        "Assets/_Project/Scripts/HybridAccidentPresentation.cs",
+        "Assets/_Project/Scripts/CarController.cs",
+        "Assets/_Project/Tests/EditMode/AccidentRecordingTests.cs"
+      ]
+    },
+    {
+      "script": "Assets/_Project/Scripts/AccidentOverheadView.cs",
+      "serialized_references": [],
+      "code_references": [
+        "Assets/_Project/Scripts/AccidentTrajectoryReplay.cs",
+        "Assets/_Project/Scripts/HybridAccidentPresentation.cs",
+        "Assets/_Project/Tests/PlayMode/MetaGameplaySmokeTests.cs",
+        "Assets/_Project/Tests/PlayMode/AccidentExperienceTests.cs"
+      ]
+    },
+    {
+      "script": "Assets/_Project/Scripts/AccidentResultPresenter.cs",
+      "serialized_references": [
+        "Assets/_Project/Scenes/TraficAcident_Meta.unity"
+      ],
+      "code_references": [
+        "Assets/_Project/Scripts/MetaGameplaySceneSetup.cs",
+        "Assets/_Project/Scripts/CenterEyeCamera.cs",
+        "Assets/_Project/Scripts/HybridAccidentPresentation.cs",
+        "Assets/_Project/Scripts/GoalController.cs",
+        "Assets/_Project/Editor/TitleTextSdfMigration.cs",
+        "Assets/_Project/Editor/AccidentExperienceValidation.cs",
+        "Assets/_Project/Tests/PlayMode/MetaGameplaySmokeTests.cs",
+        "Assets/_Project/Tests/PlayMode/AccidentExperienceTests.cs"
+      ]
+    },
+    {
+      "script": "Assets/_Project/Scripts/AccidentTrajectoryReplay.cs",
+      "serialized_references": [],
+      "code_references": [
+        "Assets/_Project/Scripts/HybridAccidentPresentation.cs",
+        "Assets/_Project/Editor/AccidentExperienceValidation.cs",
+        "Assets/_Project/Tests/PlayMode/AccidentExperienceTests.cs"
+      ]
+    },
+    {
+      "script": "Assets/_Project/Scripts/AccidentVehicleDamage.cs",
+      "serialized_references": [],
+      "code_references": [
+        "Assets/_Project/Scripts/HybridAccidentPresentation.cs",
+        "Assets/_Project/Scripts/CarController.cs",
+        "Assets/_Project/Tests/PlayMode/AccidentExperienceTests.cs"
+      ]
+    },
+    {
+      "script": "Assets/_Project/Scripts/AvatarPresenter.cs",
+      "serialized_references": [
+        "Assets/_Project/Scenes/TraficAcident_Meta.unity"
+      ],
+      "code_references": [
+        "Assets/_Project/Scripts/AccidentTrajectoryReplay.cs",
+        "Assets/_Project/Scripts/MetaGameplaySceneSetup.cs",
+        "Assets/_Project/Scripts/GameDirector.cs",
+        "Assets/_Project/Scripts/AccidentOverheadView.cs",
+        "Assets/_Project/Scripts/HybridAccidentPresentation.cs",
+        "Assets/_Project/Scripts/CarController.cs"
+      ]
+    },
+    {
+      "script": "Assets/_Project/Scripts/BicycleController.cs",
+      "serialized_references": [
+        "Assets/_Project/Scenes/TraficAcident.unity",
+        "Assets/_Project/Scenes/TraficAcident_Meta.unity"
+      ],
+      "code_references": [
+        "Assets/_Project/Scripts/GameDirector.cs",
+        "Assets/_Project/Scripts/CenterEyeCamera.cs",
+        "Assets/_Project/Scripts/HybridAccidentPresentation.cs",
+        "Assets/_Project/Scripts/GoalController.cs",
+        "Assets/_Project/Scripts/BicycleCrash.cs"
+      ]
+    },
+    {
+      "script": "Assets/_Project/Scripts/BicycleCrash.cs",
+      "serialized_references": [],
+      "code_references": []
+    },
+    {
+      "script": "Assets/_Project/Scripts/ButtonOption.cs",
+      "serialized_references": [
+        "Assets/_Project/Scenes/TraficAcident.unity",
+        "Assets/_Project/Scenes/TraficAcident_Meta.unity"
+      ],
+      "code_references": [
+        "Assets/_Project/Scripts/GameDirector_Title.cs",
+        "Assets/_Project/Scripts/CenterEyeCamera.cs",
+        "Assets/_Project/Editor/TitleMenuMigration.cs"
+      ]
+    },
+    {
+      "script": "Assets/_Project/Scripts/ButtonTest.cs",
+      "serialized_references": [
+        "Assets/_Project/Scenes/TraficAcident.unity",
+        "Assets/_Project/Scenes/TraficAcident_Meta.unity"
+      ],
+      "code_references": []
+    },
+    {
+      "script": "Assets/_Project/Scripts/CSVPrinter.cs",
+      "serialized_references": [
+        "Assets/_Project/Scenes/TraficAcident.unity",
+        "Assets/_Project/Scenes/TraficAcident_Meta.unity"
+      ],
+      "code_references": [
+        "Assets/_Project/Scripts/AccidentResultPresenter.cs",
+        "Assets/_Project/Scripts/GameDirector.cs",
+        "Assets/_Project/Scripts/CenterEyeCamera.cs",
+        "Assets/_Project/Scripts/CarController.cs"
+      ]
+    },
+    {
+      "script": "Assets/_Project/Scripts/CameraHeightStabilizer.cs",
+      "serialized_references": [
+        "Assets/_Project/Scenes/TraficAcident.unity"
+      ],
+      "code_references": []
+    },
+    {
+      "script": "Assets/_Project/Scripts/CameraMainController.cs",
+      "serialized_references": [],
+      "code_references": []
+    },
+    {
+      "script": "Assets/_Project/Scripts/CameraObjectController.cs",
+      "serialized_references": [
+        "Assets/_Project/Scenes/TraficAcident.unity"
+      ],
+      "code_references": [
+        "Assets/_Project/Scripts/CameraMainController.cs"
+      ]
+    },
+    {
+      "script": "Assets/_Project/Scripts/CameraPlayback.cs",
+      "serialized_references": [
+        "Assets/_Project/Scenes/TraficAcident.unity",
+        "Assets/_Project/Scenes/TraficAcident_Meta.unity"
+      ],
+      "code_references": []
+    },
+    {
+      "script": "Assets/_Project/Scripts/CameraRecorder.cs",
+      "serialized_references": [
+        "Assets/_Project/Scenes/TraficAcident.unity",
+        "Assets/_Project/Scenes/TraficAcident_Meta.unity"
+      ],
+      "code_references": [
+        "Assets/_Project/Scripts/ButtonOption.cs"
+      ]
+    },
+    {
+      "script": "Assets/_Project/Scripts/CanvasController.cs",
+      "serialized_references": [
+        "Assets/_Project/Scenes/TraficAcident.unity",
+        "Assets/_Project/Scenes/TraficAcident_Meta.unity",
+        "Assets/_Project/Scenes/TraficAcidentTitle.unity"
+      ],
+      "code_references": []
+    },
+    {
+      "script": "Assets/_Project/Scripts/CarController.cs",
+      "serialized_references": [
+        "Assets/_Project/Prefabs/Car_Left.prefab",
+        "Assets/_Project/Prefabs/Car_Right.prefab",
+        "Assets/_Project/Prefabs/Car_EndlessGo.prefab",
+        "Assets/_Project/Prefabs/Car_SideHit.prefab"
+      ],
+      "code_references": [
+        "Assets/_Project/Scripts/CameraMainController.cs",
+        "Assets/_Project/Scripts/CarFactory.cs",
+        "Assets/_Project/Scripts/MetaVehicleImpactSensor.cs",
+        "Assets/_Project/Scripts/DestroyArea.cs",
+        "Assets/_Project/Scripts/GameDirector.cs",
+        "Assets/_Project/Scripts/VehiclePool.cs",
+        "Assets/_Project/Scripts/HybridAccidentPresentation.cs",
+        "Assets/_Project/Scripts/GameplayFlowController.cs",
+        "Assets/_Project/Scripts/DieFlashController.cs",
+        "Assets/_Project/Scripts/BicycleCrash.cs",
+        "Assets/_Project/Scripts/WayPointController.cs",
+        "Assets/_Project/Tests/PlayMode/VehicleLifecycleTests.cs",
+        "Assets/_Project/Tests/PlayMode/AccidentExperienceTests.cs",
+        "Assets/_Project/Tests/EditMode/MetaSceneConfigurationTests.cs"
+      ]
+    },
+    {
+      "script": "Assets/_Project/Scripts/CarFactory.cs",
+      "serialized_references": [
+        "Assets/_Project/Scenes/TraficAcident.unity",
+        "Assets/_Project/Scenes/TraficAcident_Meta.unity"
+      ],
+      "code_references": [
+        "Assets/_Project/Scripts/AccidentCarFactory.cs",
+        "Assets/_Project/Scripts/GameplaySceneContext.cs",
+        "Assets/_Project/Scripts/CarController.cs",
+        "Assets/_Project/Scripts/GameplayFlowController.cs",
+        "Assets/_Project/Tests/PlayMode/VehicleLifecycleTests.cs",
+        "Assets/_Project/Tests/EditMode/MetaSceneConfigurationTests.cs"
+      ]
+    },
+    {
+      "script": "Assets/_Project/Scripts/CarLightController.cs",
+      "serialized_references": [
+        "Assets/ThirdParty/ModularLowpolyStreetsFree/Prefabs/Roads/Road_1_line.prefab",
+        "Assets/_Project/Scenes/TraficAcident.unity",
+        "Assets/_Project/Scenes/TraficAcident_Meta.unity",
+        "Assets/_Project/Prefabs/Car_Left.prefab",
+        "Assets/_Project/Prefabs/Car_Right.prefab",
+        "Assets/_Project/Prefabs/Car_EndlessGo.prefab",
+        "Assets/_Project/Prefabs/Car_SideHit.prefab"
+      ],
+      "code_references": [
+        "Assets/_Project/Scripts/SmartPhoneDistractionPresenter.cs"
+      ]
+    },
+    {
+      "script": "Assets/_Project/Scripts/CenterEyeCamera.cs",
+      "serialized_references": [
+        "Assets/_Project/Scenes/TraficAcident.unity",
+        "Assets/_Project/Scenes/TraficAcident_Meta.unity",
+        "Assets/_Project/Scenes/TraficAcidentTitle.unity"
+      ],
+      "code_references": [
+        "Assets/_Project/Scripts/HumanController.cs",
+        "Assets/_Project/Scripts/GameDirector_Title.cs",
+        "Assets/_Project/Scripts/MetaGameplaySceneSetup.cs",
+        "Assets/_Project/Scripts/GameDirector.cs",
+        "Assets/_Project/Scripts/CanvasController.cs",
+        "Assets/_Project/Scripts/ButtonOption.cs",
+        "Assets/_Project/Scripts/HybridAccidentPresentation.cs",
+        "Assets/_Project/Scripts/CSVPrinter.cs",
+        "Assets/_Project/Scripts/GoalController.cs",
+        "Assets/_Project/Scripts/CarController.cs",
+        "Assets/_Project/Scripts/GameplayFlowController.cs",
+        "Assets/_Project/Scripts/BicycleCrash.cs",
+        "Assets/_Project/Scripts/OpenXRScene.cs",
+        "Assets/_Project/Editor/TitleMenuMigration.cs",
+        "Assets/_Project/Editor/TitleTextSdfMigration.cs"
+      ]
+    },
+    {
+      "script": "Assets/_Project/Scripts/ColliderDebugger.cs",
+      "serialized_references": [],
+      "code_references": []
+    },
+    {
+      "script": "Assets/_Project/Scripts/CustomButton.cs",
+      "serialized_references": [],
+      "code_references": []
+    },
+    {
+      "script": "Assets/_Project/Scripts/DestroyArea.cs",
+      "serialized_references": [
+        "Assets/_Project/Scenes/TraficAcident.unity",
+        "Assets/_Project/Scenes/TraficAcident_Meta.unity"
+      ],
+      "code_references": [
+        "Assets/_Project/Scripts/CarController.cs"
+      ]
+    },
+    {
+      "script": "Assets/_Project/Scripts/DieFlashController.cs",
+      "serialized_references": [
+        "Assets/_Project/Prefabs/Car_Left.prefab",
+        "Assets/_Project/Prefabs/Car_Right.prefab",
+        "Assets/_Project/Prefabs/Car_EndlessGo.prefab",
+        "Assets/_Project/Prefabs/Car_SideHit.prefab"
+      ],
+      "code_references": [
+        "Assets/_Project/Scripts/CarController.cs"
+      ]
+    },
+    {
+      "script": "Assets/_Project/Scripts/FollowPhysicalMovement.cs",
+      "serialized_references": [
+        "Assets/_Project/Scenes/TraficAcident.unity"
+      ],
+      "code_references": []
+    },
+    {
+      "script": "Assets/_Project/Scripts/GameDirector.cs",
+      "serialized_references": [
+        "Assets/_Project/Scenes/TraficAcident.unity",
+        "Assets/_Project/Scenes/TraficAcident_Meta.unity"
+      ],
+      "code_references": [
+        "Assets/_Project/Scripts/CarLightController.cs",
+        "Assets/_Project/Scripts/CarFactory.cs",
+        "Assets/_Project/Scripts/HumanController.cs",
+        "Assets/_Project/Scripts/ScenarioRetry.cs",
+        "Assets/_Project/Scripts/AccidentCarFactory.cs",
+        "Assets/_Project/Scripts/GameDirector_Title.cs",
+        "Assets/_Project/Scripts/AccidentAreaContainer.cs",
+        "Assets/_Project/Scripts/MetaGameplaySceneSetup.cs",
+        "Assets/_Project/Scripts/AccidentResultPresenter.cs",
+        "Assets/_Project/Scripts/GameplaySceneContext.cs",
+        "Assets/_Project/Scripts/CenterEyeCamera.cs",
+        "Assets/_Project/Scripts/ButtonOption.cs",
+        "Assets/_Project/Scripts/CustomButton.cs",
+        "Assets/_Project/Scripts/HybridAccidentPresentation.cs",
+        "Assets/_Project/Scripts/CSVPrinter.cs",
+        "Assets/_Project/Scripts/GoalController.cs",
+        "Assets/_Project/Scripts/CarController.cs",
+        "Assets/_Project/Scripts/BicycleCrash.cs",
+        "Assets/_Project/Scripts/TrafficLightUP.cs",
+        "Assets/_Project/Tests/PlayMode/MetaGameplaySmokeTests.cs",
+        "Assets/_Project/Tests/PlayMode/AccidentExperienceTests.cs"
+      ]
+    },
+    {
+      "script": "Assets/_Project/Scripts/GameDirector_Title.cs",
+      "serialized_references": [
+        "Assets/_Project/Scenes/TraficAcidentTitle_Meta.unity",
+        "Assets/_Project/Scenes/TraficAcidentTitle.unity"
+      ],
+      "code_references": [
+        "Assets/_Project/Scripts/MetaTitleMenuPages.cs",
+        "Assets/_Project/Scripts/AccidentResultPresenter.cs",
+        "Assets/_Project/Scripts/TitleCommandButton.cs",
+        "Assets/_Project/Scripts/ButtonOption.cs",
+        "Assets/_Project/Scripts/CustomButton.cs",
+        "Assets/_Project/Scripts/TitleOptionToggle.cs",
+        "Assets/_Project/Editor/TitleMenuMigration.cs",
+        "Assets/_Project/Editor/TitleTextSdfMigration.cs",
+        "Assets/_Project/Tests/PlayMode/MetaGameplaySmokeTests.cs"
+      ]
+    },
+    {
+      "script": "Assets/_Project/Scripts/GameplayFlowController.cs",
+      "serialized_references": [
+        "Assets/_Project/Scenes/TraficAcident_Meta.unity"
+      ],
+      "code_references": [
+        "Assets/_Project/Scripts/MetaGameplaySceneSetup.cs",
+        "Assets/_Project/Scripts/AccidentResultPresenter.cs",
+        "Assets/_Project/Scripts/GameDirector.cs",
+        "Assets/_Project/Scripts/HybridAccidentPresentation.cs",
+        "Assets/_Project/Scripts/GoalController.cs",
+        "Assets/_Project/Scripts/CarController.cs",
+        "Assets/_Project/Scripts/BicycleCrash.cs",
+        "Assets/_Project/Tests/PlayMode/MetaGameplaySmokeTests.cs",
+        "Assets/_Project/Tests/PlayMode/AccidentExperienceTests.cs"
+      ]
+    },
+    {
+      "script": "Assets/_Project/Scripts/GameplaySceneContext.cs",
+      "serialized_references": [
+        "Assets/_Project/Scenes/TraficAcident_Meta.unity"
+      ],
+      "code_references": [
+        "Assets/_Project/Scripts/CarFactory.cs",
+        "Assets/_Project/Scripts/HumanController.cs",
+        "Assets/_Project/Scripts/AccidentCarFactory.cs",
+        "Assets/_Project/Scripts/GoalController.cs",
+        "Assets/_Project/Scripts/CarController.cs"
+      ]
+    },
+    {
+      "script": "Assets/_Project/Scripts/GoalController.cs",
+      "serialized_references": [
+        "Assets/_Project/Scenes/TraficAcident.unity",
+        "Assets/_Project/Scenes/TraficAcident_Meta.unity"
+      ],
+      "code_references": []
+    },
+    {
+      "script": "Assets/_Project/Scripts/GoalTextController.cs",
+      "serialized_references": [
+        "Assets/_Project/Scenes/TraficAcident.unity",
+        "Assets/_Project/Scenes/TraficAcident_Meta.unity"
+      ],
+      "code_references": []
+    },
+    {
+      "script": "Assets/_Project/Scripts/GroundSurface.cs",
+      "serialized_references": [
+        "Assets/_Project/Scenes/TraficAcident_Meta.unity"
+      ],
+      "code_references": [
+        "Assets/_Project/Scripts/GameDirector.cs"
+      ]
+    },
+    {
+      "script": "Assets/_Project/Scripts/HumanController.cs",
+      "serialized_references": [
+        "Assets/_Project/Scenes/TraficAcident.unity",
+        "Assets/_Project/Scenes/TraficAcident_Meta.unity"
+      ],
+      "code_references": [
+        "Assets/_Project/Scripts/CameraMainController.cs",
+        "Assets/_Project/Scripts/MetaGameplaySceneSetup.cs",
+        "Assets/_Project/Scripts/GameDirector.cs",
+        "Assets/_Project/Scripts/CarController.cs",
+        "Assets/_Project/Scripts/AvatarPresenter.cs",
+        "Assets/_Project/Scripts/BicycleCrash.cs",
+        "Assets/_Project/Tests/PlayMode/MetaGameplaySmokeTests.cs"
+      ]
+    },
+    {
+      "script": "Assets/_Project/Scripts/HybridAccidentPresentation.cs",
+      "serialized_references": [],
+      "code_references": [
+        "Assets/_Project/Scripts/MetaGameplaySceneSetup.cs",
+        "Assets/_Project/Scripts/CenterEyeCamera.cs",
+        "Assets/_Project/Scripts/GoalController.cs",
+        "Assets/_Project/Scripts/CarController.cs",
+        "Assets/_Project/Scripts/BicycleCrash.cs",
+        "Assets/_Project/Tests/PlayMode/MetaGameplaySmokeTests.cs",
+        "Assets/_Project/Tests/PlayMode/AccidentExperienceTests.cs"
+      ]
+    },
+    {
+      "script": "Assets/_Project/Scripts/MetaEditorSimulationController.cs",
+      "serialized_references": [],
+      "code_references": [
+        "Assets/_Project/Scripts/MetaTitleSceneSetup.cs",
+        "Assets/_Project/Scripts/MetaGameplaySceneSetup.cs",
+        "Assets/_Project/Scripts/AccidentResultPresenter.cs",
+        "Assets/_Project/Scripts/OpenXRScene.cs"
+      ]
+    },
+    {
+      "script": "Assets/_Project/Scripts/MetaGameplaySceneSetup.cs",
+      "serialized_references": [
+        "Assets/_Project/Scenes/TraficAcident_Meta.unity"
+      ],
+      "code_references": [
+        "Assets/_Project/Tests/PlayMode/MetaGameplaySmokeTests.cs"
+      ]
+    },
+    {
+      "script": "Assets/_Project/Scripts/MetaTitleMenuPages.cs",
+      "serialized_references": [
+        "Assets/_Project/Scenes/TraficAcidentTitle_Meta.unity"
+      ],
+      "code_references": []
+    },
+    {
+      "script": "Assets/_Project/Scripts/MetaTitleSceneSetup.cs",
+      "serialized_references": [
+        "Assets/_Project/Scenes/TraficAcidentTitle_Meta.unity"
+      ],
+      "code_references": [
+        "Assets/_Project/Editor/TitleTextSdfMigration.cs",
+        "Assets/_Project/Tests/PlayMode/MetaGameplaySmokeTests.cs"
+      ]
+    },
+    {
+      "script": "Assets/_Project/Scripts/MetaVehicleImpactSensor.cs",
+      "serialized_references": [],
+      "code_references": [
+        "Assets/_Project/Scripts/CarController.cs"
+      ]
+    },
+    {
+      "script": "Assets/_Project/Scripts/OpenXRAimPoseDriver.cs",
+      "serialized_references": [],
+      "code_references": [
+        "Assets/_Project/Scripts/TitleSceneXRSetup.cs"
+      ]
+    },
+    {
+      "script": "Assets/_Project/Scripts/OpenXRInput.cs",
+      "serialized_references": [],
+      "code_references": [
+        "Assets/_Project/Scripts/OpenXRPlayerController.cs",
+        "Assets/_Project/Scripts/HumanController.cs",
+        "Assets/_Project/Scripts/ScenarioRetry.cs",
+        "Assets/_Project/Scripts/AccidentResultPresenter.cs",
+        "Assets/_Project/Scripts/GameDirector.cs",
+        "Assets/_Project/Scripts/CenterEyeCamera.cs",
+        "Assets/_Project/Scripts/ButtonOption.cs",
+        "Assets/_Project/Scripts/HybridAccidentPresentation.cs",
+        "Assets/_Project/Scripts/PlayerMovement.cs",
+        "Assets/_Project/Scripts/GoalController.cs",
+        "Assets/_Project/Scripts/TitleButtonFeedback.cs",
+        "Assets/_Project/Scripts/BicycleController.cs"
+      ]
+    },
+    {
+      "script": "Assets/_Project/Scripts/OpenXRPlayerController.cs",
+      "serialized_references": [
+        "Assets/_Project/Scenes/TraficAcident.unity"
+      ],
+      "code_references": [
+        "Assets/_Project/Scripts/MetaEditorSimulationController.cs",
+        "Assets/_Project/Scripts/OpenXRScene.cs",
+        "Assets/_Project/Tests/PlayMode/MetaGameplaySmokeTests.cs"
+      ]
+    },
+    {
+      "script": "Assets/_Project/Scripts/OpenXRScene.cs",
+      "serialized_references": [],
+      "code_references": [
+        "Assets/_Project/Scripts/OpenXRPlayerController.cs",
+        "Assets/_Project/Scripts/CarFactory.cs",
+        "Assets/_Project/Scripts/HumanController.cs",
+        "Assets/_Project/Scripts/AccidentResultPresenter.cs",
+        "Assets/_Project/Scripts/GameDirector.cs",
+        "Assets/_Project/Scripts/CanvasController.cs",
+        "Assets/_Project/Scripts/CenterEyeCamera.cs",
+        "Assets/_Project/Scripts/GoalTextController.cs",
+        "Assets/_Project/Scripts/ButtonOption.cs",
+        "Assets/_Project/Scripts/AccidentOverheadView.cs",
+        "Assets/_Project/Scripts/HybridAccidentPresentation.cs",
+        "Assets/_Project/Scripts/CSVPrinter.cs",
+        "Assets/_Project/Scripts/FollowPhysicalMovement.cs",
+        "Assets/_Project/Scripts/GoalController.cs",
+        "Assets/_Project/Scripts/SmartPhoneDistractionPresenter.cs",
+        "Assets/_Project/Scripts/CarController.cs",
+        "Assets/_Project/Scripts/GameplayFlowController.cs",
+        "Assets/_Project/Scripts/AvatarPresenter.cs",
+        "Assets/_Project/Scripts/BicycleCrash.cs"
+      ]
+    },
+    {
+      "script": "Assets/_Project/Scripts/PlayerActor.cs",
+      "serialized_references": [
+        "Assets/_Project/Scenes/TraficAcident_Meta.unity"
+      ],
+      "code_references": [
+        "Assets/_Project/Scripts/AccidentCarFactory.cs",
+        "Assets/_Project/Scripts/MetaGameplaySceneSetup.cs",
+        "Assets/_Project/Scripts/GameDirector.cs",
+        "Assets/_Project/Scripts/HybridAccidentPresentation.cs",
+        "Assets/_Project/Scripts/GoalController.cs",
+        "Assets/_Project/Scripts/CarController.cs",
+        "Assets/_Project/Scripts/AvatarPresenter.cs",
+        "Assets/_Project/Scripts/DieFlashController.cs",
+        "Assets/_Project/Scripts/BicycleCrash.cs",
+        "Assets/_Project/Tests/PlayMode/MetaGameplaySmokeTests.cs",
+        "Assets/_Project/Tests/PlayMode/AccidentExperienceTests.cs"
+      ]
+    },
+    {
+      "script": "Assets/_Project/Scripts/PlayerMovement.cs",
+      "serialized_references": [
+        "Assets/_Project/Scenes/TraficAcident.unity"
+      ],
+      "code_references": [
+        "Assets/_Project/Scripts/GameDirector.cs",
+        "Assets/_Project/Scripts/OpenXRScene.cs"
+      ]
+    },
+    {
+      "script": "Assets/_Project/Scripts/ReverseCollider.cs",
+      "serialized_references": [
+        "Assets/_Project/Prefabs/Car_Left.prefab",
+        "Assets/_Project/Prefabs/Car_Right.prefab",
+        "Assets/_Project/Prefabs/Car_EndlessGo.prefab",
+        "Assets/_Project/Prefabs/Car_SideHit.prefab"
+      ],
+      "code_references": []
+    },
+    {
+      "script": "Assets/_Project/Scripts/ScenarioDefinitionAsset.cs",
+      "serialized_references": [
+        "Assets/_Project/ScenarioDefinitions/Scenario_08.asset",
+        "Assets/_Project/ScenarioDefinitions/Scenario_09.asset",
+        "Assets/_Project/ScenarioDefinitions/Scenario_05.asset",
+        "Assets/_Project/ScenarioDefinitions/Scenario_07.asset",
+        "Assets/_Project/ScenarioDefinitions/Scenario_03.asset",
+        "Assets/_Project/ScenarioDefinitions/Scenario_01.asset",
+        "Assets/_Project/ScenarioDefinitions/Scenario_06.asset",
+        "Assets/_Project/ScenarioDefinitions/Scenario_04.asset",
+        "Assets/_Project/ScenarioDefinitions/Scenario_00.asset",
+        "Assets/_Project/ScenarioDefinitions/Scenario_02.asset"
+      ],
+      "code_references": [
+        "Assets/_Project/Scripts/ScenarioRuntime.cs",
+        "Assets/_Project/Editor/TitleTextSdfMigration.cs"
+      ]
+    },
+    {
+      "script": "Assets/_Project/Scripts/ScenarioRetry.cs",
+      "serialized_references": [],
+      "code_references": [
+        "Assets/_Project/Scripts/AccidentResultPresenter.cs",
+        "Assets/_Project/Scripts/GameDirector.cs"
+      ]
+    },
+    {
+      "script": "Assets/_Project/Scripts/ScenarioRuntime.cs",
+      "serialized_references": [
+        "Assets/_Project/Scenes/TraficAcident_Meta.unity"
+      ],
+      "code_references": [
+        "Assets/_Project/Scripts/ScenarioDefinitionAsset.cs",
+        "Assets/_Project/Scripts/AccidentResultPresenter.cs",
+        "Assets/_Project/Scripts/GameDirector.cs",
+        "Assets/_Project/Scripts/SceneRoute.cs",
+        "Assets/_Project/Tests/PlayMode/MetaGameplaySmokeTests.cs",
+        "Assets/_Project/Tests/EditMode/MetaSceneConfigurationTests.cs"
+      ]
+    },
+    {
+      "script": "Assets/_Project/Scripts/SceneRoute.cs",
+      "serialized_references": [],
+      "code_references": [
+        "Assets/_Project/Scripts/ScenarioRetry.cs",
+        "Assets/_Project/Scripts/GameDirector_Title.cs",
+        "Assets/_Project/Scripts/AccidentResultPresenter.cs",
+        "Assets/_Project/Scripts/GameDirector.cs",
+        "Assets/_Project/Scripts/CanvasController.cs",
+        "Assets/_Project/Scripts/CenterEyeCamera.cs",
+        "Assets/_Project/Scripts/ButtonOption.cs",
+        "Assets/_Project/Scripts/CustomButton.cs",
+        "Assets/_Project/Scripts/GoalController.cs"
+      ]
+    },
+    {
+      "script": "Assets/_Project/Scripts/SmartPhoneDistractionPresenter.cs",
+      "serialized_references": [],
+      "code_references": [
+        "Assets/_Project/Scripts/GameDirector.cs",
+        "Assets/_Project/Scripts/HybridAccidentPresentation.cs",
+        "Assets/_Project/Tests/PlayMode/MetaGameplaySmokeTests.cs"
+      ]
+    },
+    {
+      "script": "Assets/_Project/Scripts/SoundTestController.cs",
+      "serialized_references": [
+        "Assets/_Project/Scenes/TraficAcidentTitle.unity"
+      ],
+      "code_references": []
+    },
+    {
+      "script": "Assets/_Project/Scripts/TitleButtonFeedback.cs",
+      "serialized_references": [
+        "Assets/_Project/Scenes/TraficAcidentTitle_Meta.unity",
+        "Assets/_Project/Scenes/TraficAcidentTitle.unity"
+      ],
+      "code_references": [
+        "Assets/_Project/Scripts/GameDirector_Title.cs",
+        "Assets/_Project/Scripts/TitleOptionToggle.cs",
+        "Assets/_Project/Editor/TitleMenuMigration.cs",
+        "Assets/_Project/Editor/TitleTextSdfMigration.cs"
+      ]
+    },
+    {
+      "script": "Assets/_Project/Scripts/TitleCommandButton.cs",
+      "serialized_references": [
+        "Assets/_Project/Scenes/TraficAcidentTitle_Meta.unity",
+        "Assets/_Project/Scenes/TraficAcidentTitle.unity"
+      ],
+      "code_references": [
+        "Assets/_Project/Scripts/MetaTitleSceneSetup.cs",
+        "Assets/_Project/Scripts/TitleSceneXRSetup.cs",
+        "Assets/_Project/Editor/TitleMenuMigration.cs",
+        "Assets/_Project/Tests/PlayMode/MetaGameplaySmokeTests.cs"
+      ]
+    },
+    {
+      "script": "Assets/_Project/Scripts/TitleOptionToggle.cs",
+      "serialized_references": [
+        "Assets/_Project/Scenes/TraficAcidentTitle_Meta.unity",
+        "Assets/_Project/Scenes/TraficAcidentTitle.unity"
+      ],
+      "code_references": [
+        "Assets/_Project/Scripts/GameDirector_Title.cs",
+        "Assets/_Project/Editor/TitleMenuMigration.cs",
+        "Assets/_Project/Editor/TitleTextSdfMigration.cs"
+      ]
+    },
+    {
+      "script": "Assets/_Project/Scripts/TitleSceneXRSetup.cs",
+      "serialized_references": [
+        "Assets/_Project/Scenes/TraficAcidentTitle.unity"
+      ],
+      "code_references": [
+        "Assets/_Project/Scripts/OpenXRAimPoseDriver.cs"
+      ]
+    },
+    {
+      "script": "Assets/_Project/Scripts/TitleSoundPreview.cs",
+      "serialized_references": [
+        "Assets/_Project/Scenes/TraficAcidentTitle_Meta.unity"
+      ],
+      "code_references": [
+        "Assets/_Project/Scripts/GameDirector_Title.cs"
+      ]
+    },
+    {
+      "script": "Assets/_Project/Scripts/TrafficLightController.cs",
+      "serialized_references": [
+        "Assets/_Project/Scenes/TraficAcident.unity",
+        "Assets/_Project/Scenes/TraficAcident_Meta.unity"
+      ],
+      "code_references": [
+        "Assets/_Project/Scripts/TrafficLightUP.cs"
+      ]
+    },
+    {
+      "script": "Assets/_Project/Scripts/TrafficLightUP.cs",
+      "serialized_references": [
+        "Assets/_Project/Scenes/TraficAcident.unity",
+        "Assets/_Project/Scenes/TraficAcident_Meta.unity"
+      ],
+      "code_references": []
+    },
+    {
+      "script": "Assets/_Project/Scripts/TrafficManager.cs",
+      "serialized_references": [
+        "Assets/_Project/Scenes/TraficAcident_Meta.unity"
+      ],
+      "code_references": [
+        "Assets/_Project/Scripts/ScenarioRuntime.cs"
+      ]
+    },
+    {
+      "script": "Assets/_Project/Scripts/VRRig.cs",
+      "serialized_references": [],
+      "code_references": []
+    },
+    {
+      "script": "Assets/_Project/Scripts/VariantContainer.cs",
+      "serialized_references": [],
+      "code_references": []
+    },
+    {
+      "script": "Assets/_Project/Scripts/VehiclePool.cs",
+      "serialized_references": [
+        "Assets/_Project/Scenes/TraficAcident_Meta.unity"
+      ],
+      "code_references": [
+        "Assets/_Project/Scripts/CarFactory.cs",
+        "Assets/_Project/Scripts/DestroyArea.cs",
+        "Assets/_Project/Scripts/CarController.cs",
+        "Assets/_Project/Tests/PlayMode/VehicleLifecycleTests.cs"
+      ]
+    },
+    {
+      "script": "Assets/_Project/Scripts/VehicleWheelVisuals.cs",
+      "serialized_references": [],
+      "code_references": [
+        "Assets/_Project/Scripts/CarController.cs"
+      ]
+    },
+    {
+      "script": "Assets/_Project/Scripts/WayPointController.cs",
+      "serialized_references": [],
+      "code_references": []
+    },
+    {
+      "script": "Assets/_Project/Scripts/WaypointPath.cs",
+      "serialized_references": [
+        "Assets/_Project/Scenes/TraficAcident_Meta.unity"
+      ],
+      "code_references": [
+        "Assets/_Project/Scripts/CarController.cs",
+        "Assets/_Project/Tests/PlayMode/VehicleLifecycleTests.cs"
+      ]
+    },
+    {
+      "script": "Assets/_Project/Scripts/WaypointRouteRegistry.cs",
+      "serialized_references": [
+        "Assets/_Project/Scenes/TraficAcident_Meta.unity"
+      ],
+      "code_references": [
+        "Assets/_Project/Scripts/CarFactory.cs",
+        "Assets/_Project/Tests/EditMode/MetaSceneConfigurationTests.cs"
+      ]
+    },
+    {
+      "script": "Assets/_Project/Scripts/XRUIRuntimePolicy.cs",
+      "serialized_references": [],
+      "code_references": [
+        "Assets/_Project/Editor/XRUIProjectMigration.cs"
+      ]
+    }
+  ],
+  "scanned_text_files": 1914,
+  "unreferenced_scenes": [
+    "Assets/InitTestScenedc619610-9cf8-4b7c-aca5-d2cb85b24d09.unity",
+    "Assets/InitTestSceneae2fffcc-91f4-401e-83c7-67825b526a9b.unity"
+  ],
+  "duplicate_project_scripts": []
+}

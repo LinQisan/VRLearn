@@ -1,0 +1,19 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f22c60f2b28464c319bb1aef98cc09bc, type: 3}
+  m_Name: Scenario_08
+  m_EditorClassIdentifier: Assembly-CSharp::ScenarioDefinitionAsset
+  id: 8
+  displayName: 左右から時間差で来る車両
+  eventSummary: "事故の状況：歩行横断中、反対方向から時間差で接近した車両と衝突しました。\n安全確認のポイント：片側だけで判断せず、横断中も左右の確認を続けましょう。"
+  playerMode: 0
+  trafficFlow: 0

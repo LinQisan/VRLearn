@@ -1,0 +1,17 @@
+{
+  "baseline_files": 2233,
+  "changed": [
+    "Assets/_Project/Scripts/ButtonTest.cs",
+    "Assets/_Project/Scripts/CenterEyeCamera.cs",
+    "Assets/_Project/Scripts/CSVPrinter.cs"
+  ],
+  "archived": [
+    "Assets/InitTestScenedc619610-9cf8-4b7c-aca5-d2cb85b24d09.unity",
+    "Assets/InitTestSceneae2fffcc-91f4-401e-83c7-67825b526a9b.unity",
+    "Assets/InitTestScenedc619610-9cf8-4b7c-aca5-d2cb85b24d09.unity.meta",
+    "Assets/InitTestSceneae2fffcc-91f4-401e-83c7-67825b526a9b.unity.meta"
+  ],
+  "added_under_assets_packages_projectsettings": [],
+  "backup_hashes_match": true,
+  "executable_tokens_equal_except_unused_imports": true
+}
