@@ -22,8 +22,7 @@ public class CanvasController : MonoBehaviour
         // The title menu is a fixed world-space panel. Moving it with the headset
         // makes its initial position depend on the Quest tracking origin and can
         // leave it behind or below the user's view.
-        if (SceneManager.GetActiveScene().name == SceneRoute.LegacyTitle
-            || SceneManager.GetActiveScene().name == SceneRoute.MetaTitle)
+        if (SceneManager.GetActiveScene().name == SceneRoute.MetaTitle)
         {
             enabled = false;
             return;

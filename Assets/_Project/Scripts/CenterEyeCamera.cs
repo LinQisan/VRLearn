@@ -447,8 +447,7 @@ public class CenterEyeCamera : MonoBehaviour
         // Accident-only objects such as DieImage do not exist there, so do not run
         // the gameplay initialization path in that scene.
         audioSource = GetComponent<AudioSource>();
-        if (SceneManager.GetActiveScene().name == SceneRoute.LegacyTitle ||
-            SceneManager.GetActiveScene().name == SceneRoute.MetaTitle)
+        if (SceneManager.GetActiveScene().name == SceneRoute.MetaTitle)
         {
             centereye = OpenXRScene.MainCamera != null
                 ? OpenXRScene.MainCamera.gameObject

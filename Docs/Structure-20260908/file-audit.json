@@ -1,0 +1,1815 @@
+{
+  "baseline_commit": "86e31ee778192f4063e574482a746f5bee64022f",
+  "unchanged_moves": [
+    {
+      "from": "Assets/_Project/Scenes/japanese_traffic_signals.fbx.meta",
+      "to": "Assets/_Project/Models/japanese_traffic_signals.fbx.meta",
+      "sha256": "37bf77ec8d2f58e9d40ef1d5a21bb46abcebeeb5c8a3f0c9c166f718bbadc52c"
+    },
+    {
+      "from": "Assets/_Project/Scenes/ModularBuildingsFramework.meta",
+      "to": "Assets/ThirdParty/ModularBuildingsFramework.meta",
+      "sha256": "3f82b4274fe1a276d61d0d374e0ba2f409738b8e9649986bc0799047d3e87ffe"
+    },
+    {
+      "from": "Assets/_Project/Scenes/japanese_traffic_signals.fbx",
+      "to": "Assets/_Project/Models/japanese_traffic_signals.fbx",
+      "sha256": "e5f9e107e04baf6401a377d198d9cb6cd7f8849713af268073a70c0a8791f997"
+    },
+    {
+      "from": "Assets/_Project/Art/Audio.meta",
+      "to": "Assets/_Project/Audio.meta",
+      "sha256": "ec3bd10f34d4be76f877704317b1315e8ded35ccdd991d83da4346efd2fb1e08"
+    },
+    {
+      "from": "Assets/_Project/Art/Models.meta",
+      "to": "Assets/_Project/Models.meta",
+      "sha256": "fce2f0bf60aedd3070b2c346d2501cb66d255b62678dd090809278d015fc64a9"
+    },
+    {
+      "from": "Assets/_Project/Meshes/TraficAcident_Meta.meta",
+      "to": "Assets/_Project/Models/Meshes.meta",
+      "sha256": "5ae56faee6373ec9bb1467bf3ec2ec383b3deee79817d3568133e393b99e0cdf"
+    },
+    {
+      "from": "Assets/_Project/Meshes/TraficAcident_Meta/pb_Mesh-142920_0.asset.meta",
+      "to": "Assets/_Project/Models/Meshes/pb_Mesh-142920_0.asset.meta",
+      "sha256": "90443f96a392cad864775ae5d7fcb6397bfbe73e314bfdcd665a7d0dde411465"
+    },
+    {
+      "from": "Assets/_Project/Meshes/TraficAcident_Meta/pb_Mesh-142920_8.asset",
+      "to": "Assets/_Project/Models/Meshes/pb_Mesh-142920_8.asset",
+      "sha256": "e2e2294406e993aaf2d244b98baf8bb0e00185207815a21e18235e98267e84e8"
+    },
+    {
+      "from": "Assets/_Project/Meshes/TraficAcident_Meta/pb_Mesh-142920_8.asset.meta",
+      "to": "Assets/_Project/Models/Meshes/pb_Mesh-142920_8.asset.meta",
+      "sha256": "03a1414c2aad3d372e92feb200122891287f78a449fb1c1a73d458ad9edf9472"
+    },
+    {
+      "from": "Assets/_Project/Meshes/TraficAcident_Meta/pb_Mesh-142920_5.asset.meta",
+      "to": "Assets/_Project/Models/Meshes/pb_Mesh-142920_5.asset.meta",
+      "sha256": "bbef9cc1e3fd99eeda30a393fb5cfb718c0a67631bd630f8facd3eaac5027098"
+    },
+    {
+      "from": "Assets/_Project/Meshes/TraficAcident_Meta/pb_Mesh-142920_2.asset.meta",
+      "to": "Assets/_Project/Models/Meshes/pb_Mesh-142920_2.asset.meta",
+      "sha256": "c169cccadf0a5535905575e5b47496a4d1b3f6041d748587a302a642e22bcaf0"
+    },
+    {
+      "from": "Assets/_Project/Meshes/TraficAcident_Meta/pb_Mesh-142920_9.asset",
+      "to": "Assets/_Project/Models/Meshes/pb_Mesh-142920_9.asset",
+      "sha256": "bbd3ee09fbe4d3e4b48052993d23dd50965139ef9b46326d34cf5182464edadb"
+    },
+    {
+      "from": "Assets/_Project/Meshes/TraficAcident_Meta/pb_Mesh-142920_7.asset.meta",
+      "to": "Assets/_Project/Models/Meshes/pb_Mesh-142920_7.asset.meta",
+      "sha256": "fee685bc635a84cce7aa578178c6e77cc60f17b6ad1f0d58b2fedcf77a7daf95"
+    },
+    {
+      "from": "Assets/_Project/Meshes/TraficAcident_Meta/pb_Mesh-142920_10.asset.meta",
+      "to": "Assets/_Project/Models/Meshes/pb_Mesh-142920_10.asset.meta",
+      "sha256": "581aa71d9f99f0183655454a4e11d9cdd9e08e181cd94aa81bec14ad7a0c5e6a"
+    },
+    {
+      "from": "Assets/_Project/Meshes/TraficAcident_Meta/pb_Mesh-142920_3.asset",
+      "to": "Assets/_Project/Models/Meshes/pb_Mesh-142920_3.asset",
+      "sha256": "d89e94fc12bcbce17b63a10c9bd78aca049f3da1ff822c172b7e892f8eef412b"
+    },
+    {
+      "from": "Assets/_Project/Meshes/TraficAcident_Meta/pb_Mesh-142920_10.asset",
+      "to": "Assets/_Project/Models/Meshes/pb_Mesh-142920_10.asset",
+      "sha256": "8c0e8f4fd2e0db71deb1f185896640bd886fedee8370cb77282554c90c9eff44"
+    },
+    {
+      "from": "Assets/_Project/Meshes/TraficAcident_Meta/pb_Mesh-142920_9.asset.meta",
+      "to": "Assets/_Project/Models/Meshes/pb_Mesh-142920_9.asset.meta",
+      "sha256": "938b0765fb85aa704a5ebb5d208ef42eedece6a559e7c16e00a3dda00e7c9258"
+    },
+    {
+      "from": "Assets/_Project/Meshes/TraficAcident_Meta/pb_Mesh-142920_4.asset.meta",
+      "to": "Assets/_Project/Models/Meshes/pb_Mesh-142920_4.asset.meta",
+      "sha256": "cc55bfddaed08c06bad37582dd248b45800b221d9624799d81fa2b75b4368d7b"
+    },
+    {
+      "from": "Assets/_Project/Meshes/TraficAcident_Meta/pb_Mesh-142920_1.asset",
+      "to": "Assets/_Project/Models/Meshes/pb_Mesh-142920_1.asset",
+      "sha256": "7036271af944087583c6a76fdfc346daff540d60aa8c6a95c11cdad78ff7d837"
+    },
+    {
+      "from": "Assets/_Project/Meshes/TraficAcident_Meta/pb_Mesh-142920_5.asset",
+      "to": "Assets/_Project/Models/Meshes/pb_Mesh-142920_5.asset",
+      "sha256": "221651743c8a818b248ad8001276864cc21acd42c804b3e9c53919d17a89ab65"
+    },
+    {
+      "from": "Assets/_Project/Meshes/TraficAcident_Meta/pb_Mesh-142920_1.asset.meta",
+      "to": "Assets/_Project/Models/Meshes/pb_Mesh-142920_1.asset.meta",
+      "sha256": "ffcbc6d5a2401f8328a09d22bf1be23f942c2bb4947d9c56a97ff247c3560c40"
+    },
+    {
+      "from": "Assets/_Project/Meshes/TraficAcident_Meta/pb_Mesh-142920_7.asset",
+      "to": "Assets/_Project/Models/Meshes/pb_Mesh-142920_7.asset",
+      "sha256": "a67dfaaa00364a5fd3dda4d362a6a00ba4276732286ea110bebf3ce657cbdf62"
+    },
+    {
+      "from": "Assets/_Project/Meshes/TraficAcident_Meta/pb_Mesh-142920_0.asset",
+      "to": "Assets/_Project/Models/Meshes/pb_Mesh-142920_0.asset",
+      "sha256": "8b6409f4e93f0d611e8086b11894dc6ff7651d759aac05840c1b524778392b82"
+    },
+    {
+      "from": "Assets/_Project/Meshes/TraficAcident_Meta/pb_Mesh-142920_11.asset",
+      "to": "Assets/_Project/Models/Meshes/pb_Mesh-142920_11.asset",
+      "sha256": "6b6c468bfa498ed3728550f8dcc8672e1bd00bf99f55cc009c351958f5233a97"
+    },
+    {
+      "from": "Assets/_Project/Meshes/TraficAcident_Meta/pb_Mesh-142920_2.asset",
+      "to": "Assets/_Project/Models/Meshes/pb_Mesh-142920_2.asset",
+      "sha256": "39e37c8f27fa3e0f0e3a72de83c007e9f7def294c296f2c5a9165af814f85c13"
+    },
+    {
+      "from": "Assets/_Project/Meshes/TraficAcident_Meta/pb_Mesh-142920_6.asset.meta",
+      "to": "Assets/_Project/Models/Meshes/pb_Mesh-142920_6.asset.meta",
+      "sha256": "4a6c4e5770809856279a3bb6baa629fbd89cfea8e8eb0830f2f55c3cadbc93cf"
+    },
+    {
+      "from": "Assets/_Project/Meshes/TraficAcident_Meta/pb_Mesh-142920_11.asset.meta",
+      "to": "Assets/_Project/Models/Meshes/pb_Mesh-142920_11.asset.meta",
+      "sha256": "9a2ea79041c47d9da2904b6c009ae4da3475d43d76ed0d10397db229850b855e"
+    },
+    {
+      "from": "Assets/_Project/Meshes/TraficAcident_Meta/pb_Mesh-142920_3.asset.meta",
+      "to": "Assets/_Project/Models/Meshes/pb_Mesh-142920_3.asset.meta",
+      "sha256": "ae9c1f877d00b38959e8da03b56c86040aab9aa81ca7aa9815bed8411e258236"
+    },
+    {
+      "from": "Assets/_Project/Meshes/TraficAcident_Meta/pb_Mesh-142920_6.asset",
+      "to": "Assets/_Project/Models/Meshes/pb_Mesh-142920_6.asset",
+      "sha256": "205ba90a86ebdb96b25fc6814963dc2d8cc25de318a181886837d8c7dac86930"
+    },
+    {
+      "from": "Assets/_Project/Meshes/TraficAcident_Meta/pb_Mesh-142920_4.asset",
+      "to": "Assets/_Project/Models/Meshes/pb_Mesh-142920_4.asset",
+      "sha256": "93b532fe5027f5bb7472af462ae96d8a4eb3aa3d6dd4abd72532934d7eaf8956"
+    },
+    {
+      "from": "Assets/_Project/Art/Materials/シナリオ0-2.png.meta",
+      "to": "Assets/_Project/Textures/シナリオ0-2.png.meta",
+      "sha256": "2e30274e1c3a78feed93a4f4b1c0c644ae0777399af9a821ff443d89cc2b3d65"
+    },
+    {
+      "from": "Assets/_Project/Art/Materials/TPSCamera.renderTexture.meta",
+      "to": "Assets/_Project/Textures/TPSCamera.renderTexture.meta",
+      "sha256": "82aaae4fea27447870bc492fb58bc828f605d5a887158735665f615e2902a442"
+    },
+    {
+      "from": "Assets/_Project/Art/Materials/TitleMenuGround_Meta.mat",
+      "to": "Assets/_Project/Materials/TitleMenuGround_Meta.mat",
+      "sha256": "57fa58ac351e10bf17dc4d5feb5065bbe4553953665f23a7aacad58d35fb4c54"
+    },
+    {
+      "from": "Assets/_Project/Art/Materials/DieFlash.mat.meta",
+      "to": "Assets/_Project/Materials/DieFlash.mat.meta",
+      "sha256": "4fd0f2c17fb74ed2ca364e4a9dfb3555b65b5b6b3f927d95abe0b1c2e3963c52"
+    },
+    {
+      "from": "Assets/_Project/Art/Materials/TitleMenuGround_Meta.mat.meta",
+      "to": "Assets/_Project/Materials/TitleMenuGround_Meta.mat.meta",
+      "sha256": "8629b758492eaaa47ae783f578557ff00648443d7c48a0ecafa22eb73f4f1f01"
+    },
+    {
+      "from": "Assets/_Project/Art/Materials/SmartPhoneImage.mat.meta",
+      "to": "Assets/_Project/Materials/SmartPhoneImage.mat.meta",
+      "sha256": "6f7256d673a054464c7c8efa3ecf4d57502727fd353739300d4f4d586024758c"
+    },
+    {
+      "from": "Assets/_Project/Art/Materials/Custom_Shader_BoxProjection_Transparent_vf.mat.meta",
+      "to": "Assets/_Project/Materials/Custom_Shader_BoxProjection_Transparent_vf.mat.meta",
+      "sha256": "4b45464557a3a2d5bebc399c9716f4b9c35a431ae1c01b7097d620f472e1bd3a"
+    },
+    {
+      "from": "Assets/_Project/Art/Materials/Material_Invisible.mat.meta",
+      "to": "Assets/_Project/Materials/Material_Invisible.mat.meta",
+      "sha256": "ee75ca247256e280df96193254d9c5ef710aa02eef32e831c13bed6f8d1e41bc"
+    },
+    {
+      "from": "Assets/_Project/Art/Materials/WhiteWall.mat.meta",
+      "to": "Assets/_Project/Materials/WhiteWall.mat.meta",
+      "sha256": "6dab23a21cdf6605d2852b3553128a0ba4363f56a6af5a655862cdca2e79877d"
+    },
+    {
+      "from": "Assets/_Project/Art/Materials/BlackOut.mat.meta",
+      "to": "Assets/_Project/Materials/BlackOut.mat.meta",
+      "sha256": "ff058f0489107f643b37777eaec27ba1b9122e8aa310ef3d6359863279054351"
+    },
+    {
+      "from": "Assets/_Project/Art/Materials/シナリオ2,3,5,8.png",
+      "to": "Assets/_Project/Textures/シナリオ2,3,5,8.png",
+      "sha256": "f460b2b224e84af0d166387661554374957a594e375d2f854c82586774dbe9cf"
+    },
+    {
+      "from": "Assets/_Project/Art/Materials/DieFlash.mat",
+      "to": "Assets/_Project/Materials/DieFlash.mat",
+      "sha256": "8c6cdb39c3366b35286d53b61f345493fa5a18516f5a6acb18b1a6f0ce8e2de9"
+    },
+    {
+      "from": "Assets/_Project/Art/Materials/YellowLight.mat",
+      "to": "Assets/_Project/Materials/YellowLight.mat",
+      "sha256": "a18c562374e0cb70716e5c4f96f58f4e9725ad80952dcceef08c05394c2f6f14"
+    },
+    {
+      "from": "Assets/_Project/Art/Materials/シナリオ1,4.png",
+      "to": "Assets/_Project/Textures/シナリオ1,4.png",
+      "sha256": "1ec07a12b80b419c1a3f1fc24dbb4aa72a6e96542a4864485498442daa6e007b"
+    },
+    {
+      "from": "Assets/_Project/Art/Materials/ホームページ2.png",
+      "to": "Assets/_Project/Textures/ホームページ2.png",
+      "sha256": "60cc20d3e474f8da2c55999e5a55253fe9f5c2336ae2e7b7d7aaa960fb72c4d2"
+    },
+    {
+      "from": "Assets/_Project/Art/Materials/シナリオ6,7,9.png.meta",
+      "to": "Assets/_Project/Textures/シナリオ6,7,9.png.meta",
+      "sha256": "805fdc24eec7cffaf1e29ecfb9a40844b0163067ace93255cf88ef6321b7c71a"
+    },
+    {
+      "from": "Assets/_Project/Art/Materials/シナリオ2,3,5,8.png.meta",
+      "to": "Assets/_Project/Textures/シナリオ2,3,5,8.png.meta",
+      "sha256": "360a5b805b7311e04c4a45b80092ebbcdfe09c9027e5ccc527f49f790304ac35"
+    },
+    {
+      "from": "Assets/_Project/Art/Materials/シナリオ1,4.png.meta",
+      "to": "Assets/_Project/Textures/シナリオ1,4.png.meta",
+      "sha256": "27213c13029be343cf436d2673dcafbd8cc8dd39f1c20bd58812c43a0c00bccb"
+    },
+    {
+      "from": "Assets/_Project/Art/Materials/シナリオ6,7,9.png",
+      "to": "Assets/_Project/Textures/シナリオ6,7,9.png",
+      "sha256": "eaf1e92eb3bd3c889a466ea01e350f16400242e0b610c95b838a2e0b34335150"
+    },
+    {
+      "from": "Assets/_Project/Art/Materials/SmartPhoneImage.mat",
+      "to": "Assets/_Project/Materials/SmartPhoneImage.mat",
+      "sha256": "4e783b85d425375c94bf31b9e6f1e3d1cebefe1e45cb809dc941429b6b68a16a"
+    },
+    {
+      "from": "Assets/_Project/Art/Materials/RedLight.mat",
+      "to": "Assets/_Project/Materials/RedLight.mat",
+      "sha256": "b55255565d34cedae74454e97506aa276fd83ff6243ae975333948029a0da8c0"
+    },
+    {
+      "from": "Assets/_Project/Art/Materials/GreenLight.mat.meta",
+      "to": "Assets/_Project/Materials/GreenLight.mat.meta",
+      "sha256": "ef6061127b05296a71a77a6c634a20a8cc02ef2b0bd3f1841eaef2e885fb86cf"
+    },
+    {
+      "from": "Assets/_Project/Art/Materials/GreenLight.mat",
+      "to": "Assets/_Project/Materials/GreenLight.mat",
+      "sha256": "2bbc1fa8d17f8c2288b99c23163dcca49aadfb22047ced34b31ab573a8269931"
+    },
+    {
+      "from": "Assets/_Project/Art/Materials/YellowLight.mat.meta",
+      "to": "Assets/_Project/Materials/YellowLight.mat.meta",
+      "sha256": "b9e440a037d6b2e0b7bda577bbda691c976de303a49c41d899a77b017916feb7"
+    },
+    {
+      "from": "Assets/_Project/Art/Materials/TPSCamera.renderTexture",
+      "to": "Assets/_Project/Textures/TPSCamera.renderTexture",
+      "sha256": "a0b0ec616fccb11af909d149c881b35a5203d17e69ca35aec05bfaeb3ec6df68"
+    },
+    {
+      "from": "Assets/_Project/Art/Materials/FrostGlass.shader.meta",
+      "to": "Assets/_Project/Shaders/FrostGlass.shader.meta",
+      "sha256": "3f7f5ae7cc19d00d5b2b36fe43f6931af5904d34fcad7442a620dfc4d8f86cbe"
+    },
+    {
+      "from": "Assets/_Project/Art/Materials/ColliderOnlyMaterial.mat.meta",
+      "to": "Assets/_Project/Materials/ColliderOnlyMaterial.mat.meta",
+      "sha256": "a29c7bd8de171d8cf9c69a4bb220fc08144b79f5d9499398f2b8c6061860a2f8"
+    },
+    {
+      "from": "Assets/_Project/Art/Materials/シナリオ0-2.png",
+      "to": "Assets/_Project/Textures/シナリオ0-2.png",
+      "sha256": "e529c4548c20452585dfaa3424b538c7f8b6c74a61a86cde3c181b898e4a3af7"
+    },
+    {
+      "from": "Assets/_Project/Art/Materials/BlackOut.mat",
+      "to": "Assets/_Project/Materials/BlackOut.mat",
+      "sha256": "ede20ab8875bdbc080fccd6d1ac628b54af204d7ff2deaedcd7e247815d1c45c"
+    },
+    {
+      "from": "Assets/_Project/Art/Materials/ホームページ2.png.meta",
+      "to": "Assets/_Project/Textures/ホームページ2.png.meta",
+      "sha256": "a1781fae482671b35231eb25ec286fb6ac492c62851ff16bea131d842aa29bad"
+    },
+    {
+      "from": "Assets/_Project/Art/Materials/Grey.mat",
+      "to": "Assets/_Project/Materials/Grey.mat",
+      "sha256": "f6631350b4db88c8b8004005d4887d961cb2a78fb0dc281ae570eea97bce700a"
+    },
+    {
+      "from": "Assets/_Project/Art/Materials/Custom_Shader_BoxProjection_Transparent_vf.mat",
+      "to": "Assets/_Project/Materials/Custom_Shader_BoxProjection_Transparent_vf.mat",
+      "sha256": "52dca9c9cbd23720964668e0f2cb7e9c3da6cfa2048f02e545807edc3eb6975d"
+    },
+    {
+      "from": "Assets/_Project/Art/Materials/Grey.mat.meta",
+      "to": "Assets/_Project/Materials/Grey.mat.meta",
+      "sha256": "22756a9a604c291475846eddf27ce68e15aab24c0c98205b8474f1fb515941b2"
+    },
+    {
+      "from": "Assets/_Project/Art/Materials/FrostGlass.shader",
+      "to": "Assets/_Project/Shaders/FrostGlass.shader",
+      "sha256": "81230a0db8760f36305d244b38dd7a21e3a2d67a58b550ae6fd4645239dec969"
+    },
+    {
+      "from": "Assets/_Project/Art/Materials/WhiteWall.mat",
+      "to": "Assets/_Project/Materials/WhiteWall.mat",
+      "sha256": "4ac0b742956cafa355a77c8cd265fa27988e2a962466a4fd71e9e996b586f650"
+    },
+    {
+      "from": "Assets/_Project/Art/Materials/NoFliction.physicMaterial.meta",
+      "to": "Assets/_Project/Materials/NoFliction.physicMaterial.meta",
+      "sha256": "4e8c631c8b0a97fc817879cd9caeea1188f766f460d9fdd1150315387af2495e"
+    },
+    {
+      "from": "Assets/_Project/Art/Materials/ColliderOnlyMaterial.mat",
+      "to": "Assets/_Project/Materials/ColliderOnlyMaterial.mat",
+      "sha256": "7859bdeb11caca1c579a7f09f2e846bfc69e65ba302bd6c2778a1fea2ebc7c5e"
+    },
+    {
+      "from": "Assets/_Project/Art/Materials/Material_Invisible.mat",
+      "to": "Assets/_Project/Materials/Material_Invisible.mat",
+      "sha256": "a790204405a031bf429bcac139c6ea7f653e8532a7715ec6c800df5030b37ec5"
+    },
+    {
+      "from": "Assets/_Project/Art/Materials/NoFliction.physicMaterial",
+      "to": "Assets/_Project/Materials/NoFliction.physicMaterial",
+      "sha256": "2d5fe7ad7cabd63d2b161f79acba1e08d70fd27121fa9de2826677ae431b98c8"
+    },
+    {
+      "from": "Assets/_Project/Art/Materials/BlackWall.mat.meta",
+      "to": "Assets/_Project/Materials/BlackWall.mat.meta",
+      "sha256": "a938c0f3e0e81bf36575022030425c98c42410e181026d5eeccd4f6306bf674b"
+    },
+    {
+      "from": "Assets/_Project/Art/Materials/BlackWall.mat",
+      "to": "Assets/_Project/Materials/BlackWall.mat",
+      "sha256": "0aa582a148a4482717251016c2340890ef5c47e2e39a25ef7cf1a9b613a5e9a0"
+    },
+    {
+      "from": "Assets/_Project/Art/Materials/RedLight.mat.meta",
+      "to": "Assets/_Project/Materials/RedLight.mat.meta",
+      "sha256": "a32b989fa5caf7b51bfdd24389706a906878c224c1d3bbb292263f86d260b00a"
+    },
+    {
+      "from": "Assets/_Project/Art/Images/Triangle2.png.meta",
+      "to": "Assets/_Project/UI/Textures/Triangle2.png.meta",
+      "sha256": "97110949ffb9f806490d5f23347d9de9f3b0bcf1b4caf9f43ce5827f1f90a425"
+    },
+    {
+      "from": "Assets/_Project/Art/Images/Triangle2.png",
+      "to": "Assets/_Project/UI/Textures/Triangle2.png",
+      "sha256": "1919ca2411600596c7a5f3139e9ad92a37422edc40f9be52076ba7e30b80fe2a"
+    },
+    {
+      "from": "Assets/_Project/Art/Models/Human.blend.meta",
+      "to": "Assets/_Project/Models/Human.blend.meta",
+      "sha256": "beeeb4f56efa05d85926039e6a0c09186b0d1a6e413ae90725f2ff2503e237f0"
+    },
+    {
+      "from": "Assets/_Project/Art/Models/HumanAnimatorController.controller",
+      "to": "Assets/_Project/Animations/HumanAnimatorController.controller",
+      "sha256": "5ecc4e73e89db345fe5b38c53424b0cc10cba9c106abff29738e03c8bbcf46ac"
+    },
+    {
+      "from": "Assets/_Project/Art/Models/sitpose.fbx",
+      "to": "Assets/_Project/Animations/sitpose.fbx",
+      "sha256": "b4ae9421ed72306bc0e8631f008a8e255e6e68022f1320edab3f5fd2c70ee18f"
+    },
+    {
+      "from": "Assets/_Project/Art/Models/Human.blend",
+      "to": "Assets/_Project/Models/Human.blend",
+      "sha256": "ce4685323b42fc2f477eb65d18c296033de50d6e008af3c851426ac1ae7aeb60"
+    },
+    {
+      "from": "Assets/_Project/Art/Models/sitpose.fbx.meta",
+      "to": "Assets/_Project/Animations/sitpose.fbx.meta",
+      "sha256": "7dd4add7618c074a22760c8e64c497ab21a6889495e80cbe6cddb28e019b25e5"
+    },
+    {
+      "from": "Assets/_Project/Art/Models/HumanAnimatorController.controller.meta",
+      "to": "Assets/_Project/Animations/HumanAnimatorController.controller.meta",
+      "sha256": "80521181ed2d7ed7d9a01d0aedc910f58bd758ee7d8c97fab80dc229d08a44f7"
+    },
+    {
+      "from": "Assets/_Project/Art/VFX/rain.image.png",
+      "to": "Assets/_Project/Textures/rain.image.png",
+      "sha256": "e574c12bd7ec467c8d6bbe44da619c294da06a3c7dbdaa33d0d042703d902599"
+    },
+    {
+      "from": "Assets/_Project/Art/VFX/RainParticle.prefab.meta",
+      "to": "Assets/_Project/Prefabs/RainParticle.prefab.meta",
+      "sha256": "9d166f5069cffe9fcab1347aae952cf565284b5cf3fd9265bdec53047efd090d"
+    },
+    {
+      "from": "Assets/_Project/Art/VFX/RainParticle.prefab",
+      "to": "Assets/_Project/Prefabs/RainParticle.prefab",
+      "sha256": "3b4349ef7451786634c0efc5c9453ff09fa2b65a1231a6a40df05c97f41b318d"
+    },
+    {
+      "from": "Assets/_Project/Art/VFX/rain.image.png.meta",
+      "to": "Assets/_Project/Textures/rain.image.png.meta",
+      "sha256": "32d35eef68978f10029d2ddc477b2846e60d2fba946c7c578a9a973be886c4d3"
+    },
+    {
+      "from": "Assets/_Project/Art/VFX/rain material.mat.meta",
+      "to": "Assets/_Project/Materials/rain material.mat.meta",
+      "sha256": "f6b1ba42ac2c9da3d97b09e7d6774d10341293364d9419677da492d1b43e199f"
+    },
+    {
+      "from": "Assets/_Project/Art/VFX/rain material.mat",
+      "to": "Assets/_Project/Materials/rain material.mat",
+      "sha256": "3a6360ff9bfb2642195ca25c0e8dfa20610775a7f9a73eb5d5928b82e29a5cbf"
+    },
+    {
+      "from": "Assets/_Project/Art/Audio/走行音.mp3",
+      "to": "Assets/_Project/Audio/走行音.mp3",
+      "sha256": "d74538504abbe1ef036af58037ad6fa4577d8b894ee2f52438c85086a9d26eb5"
+    },
+    {
+      "from": "Assets/_Project/Art/Audio/車のクラクション.mp3",
+      "to": "Assets/_Project/Audio/車のクラクション.mp3",
+      "sha256": "9a84170ecaff85548dbe7e349ac7e904032dd467847d70519574d0bb40a7746b"
+    },
+    {
+      "from": "Assets/_Project/Art/Audio/雨が降る2.mp3.meta",
+      "to": "Assets/_Project/Audio/雨が降る2.mp3.meta",
+      "sha256": "e3b75e8d38fed48e6e29dc20a7d0f2a9907889996a6bdbfb49fc334ec5f30370"
+    },
+    {
+      "from": "Assets/_Project/Art/Audio/HighSound.mixer",
+      "to": "Assets/_Project/Audio/HighSound.mixer",
+      "sha256": "7e4ceef839866377baaf3a72f9c32d3983f0e4c1cea4def08fa37fe7ec61f44e"
+    },
+    {
+      "from": "Assets/_Project/Art/Audio/雨が降る2.mp3",
+      "to": "Assets/_Project/Audio/雨が降る2.mp3",
+      "sha256": "97f44545568bdd1466d99251638d5336afaaccf0252db746e1d51837243317c4"
+    },
+    {
+      "from": "Assets/_Project/Art/Audio/アスファルトの上を歩く1.mp3",
+      "to": "Assets/_Project/Audio/アスファルトの上を歩く1.mp3",
+      "sha256": "2fee9f47acbd58f70a43773954e644a19990f223ff856ebc6bf505425b2b9bed"
+    },
+    {
+      "from": "Assets/_Project/Art/Audio/車のクラクション.mp3.meta",
+      "to": "Assets/_Project/Audio/車のクラクション.mp3.meta",
+      "sha256": "86717660fd16864bde70cacfaca0d8bf613cfa366120f536aa0386c473beb6f9"
+    },
+    {
+      "from": "Assets/_Project/Art/Audio/走行音.mp3.meta",
+      "to": "Assets/_Project/Audio/走行音.mp3.meta",
+      "sha256": "5a521d41a0cde10c9972aaae8958af015d6b5b64e920ce79d68e76fc850b9a3e"
+    },
+    {
+      "from": "Assets/_Project/Art/Audio/大都会の道路.mp3",
+      "to": "Assets/_Project/Audio/大都会の道路.mp3",
+      "sha256": "28f9b3f288b1a1345c981d059db353699070849d719b5e175250d1a07e07a6a2"
+    },
+    {
+      "from": "Assets/_Project/Art/Audio/自転車走行中.mp3.meta",
+      "to": "Assets/_Project/Audio/自転車走行中.mp3.meta",
+      "sha256": "6c4afaf1824bc08bcd558365f1f7d07796beea4bcb330bfe10691d018ff309fb"
+    },
+    {
+      "from": "Assets/_Project/Art/Audio/アスファルトの上を歩く1.mp3.meta",
+      "to": "Assets/_Project/Audio/アスファルトの上を歩く1.mp3.meta",
+      "sha256": "d9d25ae0584d4202b72fbbf11367b2448f03a279f9e83d786c3bdfc9458dec05"
+    },
+    {
+      "from": "Assets/_Project/Art/Audio/大都会の道路.mp3.meta",
+      "to": "Assets/_Project/Audio/大都会の道路.mp3.meta",
+      "sha256": "d7ef3049e66a9e6d1474f3a256cd9dd434ac355d428187f0aee652af51e05475"
+    },
+    {
+      "from": "Assets/_Project/Art/Audio/ゴール.mp3",
+      "to": "Assets/_Project/Audio/ゴール.mp3",
+      "sha256": "e85fbc28a05ac56002dae02a3e504f6ec4e8e225033d68dccbf67a042b4f3758"
+    },
+    {
+      "from": "Assets/_Project/Art/Audio/HighSound.mixer.meta",
+      "to": "Assets/_Project/Audio/HighSound.mixer.meta",
+      "sha256": "132954a402bbfe34ec108aa8c2ffd5e01e0dc29419f8b035e7e275c5733d2d23"
+    },
+    {
+      "from": "Assets/_Project/Art/Audio/noise3.mp3.meta",
+      "to": "Assets/_Project/Audio/noise3.mp3.meta",
+      "sha256": "1e282fc02aa1346a651ae44d344b5a78569cb936a8cbebb3d415c5b5fcfcb249"
+    },
+    {
+      "from": "Assets/_Project/Art/Audio/重いパンチ2.mp3",
+      "to": "Assets/_Project/Audio/重いパンチ2.mp3",
+      "sha256": "60d245c720edd7deb3d1ac6a3ef5a3d45cd72513d5e71e7379c1d55ce1524dc6"
+    },
+    {
+      "from": "Assets/_Project/Art/Audio/自転車走行中.mp3",
+      "to": "Assets/_Project/Audio/自転車走行中.mp3",
+      "sha256": "a3420f96e9ae741b9e282daeaf945c9fe3cef2420dd4d8f38a0602c53230f82f"
+    },
+    {
+      "from": "Assets/_Project/Art/Audio/車の急ブレーキ1.mp3.meta",
+      "to": "Assets/_Project/Audio/車の急ブレーキ1.mp3.meta",
+      "sha256": "ef4346d37bcee85b6942972271f3af2d83846b68536eb89eb1ec38f3b6ab598a"
+    },
+    {
+      "from": "Assets/_Project/Art/Audio/車の急ブレーキ1.mp3",
+      "to": "Assets/_Project/Audio/車の急ブレーキ1.mp3",
+      "sha256": "a4282c6d04ec1da499f6e3b5b55cfe70e3b73eba23c0a842013338b25d0a28f4"
+    },
+    {
+      "from": "Assets/_Project/Art/Audio/重いパンチ2.mp3.meta",
+      "to": "Assets/_Project/Audio/重いパンチ2.mp3.meta",
+      "sha256": "022657e7b38107905e9fc8e5a919d96c465d6bc0933a290149771325285d7c13"
+    },
+    {
+      "from": "Assets/_Project/Art/Audio/ゴール.mp3.meta",
+      "to": "Assets/_Project/Audio/ゴール.mp3.meta",
+      "sha256": "bd00b368fe7183c83d36675e83f6a13ec714400158ea3a51deb8732fd8effc92"
+    },
+    {
+      "from": "Assets/_Project/Art/Audio/noise3.mp3",
+      "to": "Assets/_Project/Audio/noise3.mp3",
+      "sha256": "5a589287cd3106132181cfda161e3a8147fe5d1a78ee9cea4dda32e10e585cc4"
+    },
+    {
+      "from": "Assets/_Project/Art/Materials/Materials/TPSCamera.mat",
+      "to": "Assets/_Project/Materials/TPSCamera.mat",
+      "sha256": "7e62a41a3cb3dd4b33da05179d069d00b9cd7eabb04984a0575d8334e1fbc2ae"
+    },
+    {
+      "from": "Assets/_Project/Art/Materials/Materials/シナリオ0-2.mat.meta",
+      "to": "Assets/_Project/Materials/シナリオ0-2.mat.meta",
+      "sha256": "ef1b86bbc6caa0e2c7ffa98a091ab37475a2e9f24c75cbe8f5f7059399c7f191"
+    },
+    {
+      "from": "Assets/_Project/Art/Materials/Materials/シナリオ2,3,5,8.mat",
+      "to": "Assets/_Project/Materials/シナリオ2,3,5,8.mat",
+      "sha256": "98c6f5fbfd4787e9d0fcf8e5f75164079d954c9ee3db373db6ae7cfc9c39019e"
+    },
+    {
+      "from": "Assets/_Project/Art/Materials/Materials/TPSCamera.mat.meta",
+      "to": "Assets/_Project/Materials/TPSCamera.mat.meta",
+      "sha256": "a2665bd469550e795b59e535bc163a300a9544ee689e87f61a685ad544d47c64"
+    },
+    {
+      "from": "Assets/_Project/Art/Materials/Materials/シナリオ6,7,9.mat.meta",
+      "to": "Assets/_Project/Materials/シナリオ6,7,9.mat.meta",
+      "sha256": "d484c2ee2bb82900f94d72251e1887baf7f8e37c79efa4157fd455434c345a73"
+    },
+    {
+      "from": "Assets/_Project/Art/Materials/Materials/シナリオ2,3,5,8.mat.meta",
+      "to": "Assets/_Project/Materials/シナリオ2,3,5,8.mat.meta",
+      "sha256": "4a6a8907f19523fd55a8a3e9c6f7fc0b6dfc49b61db3c26878e074e6797498e4"
+    },
+    {
+      "from": "Assets/_Project/Art/Materials/Materials/シナリオ1,4.mat.meta",
+      "to": "Assets/_Project/Materials/シナリオ1,4.mat.meta",
+      "sha256": "e0831719ad1a94e37d79ec23f3e8614c15ba63ec9a8b212ef21f13609919d8c6"
+    },
+    {
+      "from": "Assets/_Project/Art/Materials/Materials/シナリオ0-2.mat",
+      "to": "Assets/_Project/Materials/シナリオ0-2.mat",
+      "sha256": "c7a0839d447294b769591eb21d7c2dfa852f10f728d54e2de39b8df99585835d"
+    },
+    {
+      "from": "Assets/_Project/Art/Materials/Materials/シナリオ1,4.mat",
+      "to": "Assets/_Project/Materials/シナリオ1,4.mat",
+      "sha256": "051ce72842d12b32922235aa39b421c1df4a0efcea28959e7aca14662d62519a"
+    },
+    {
+      "from": "Assets/_Project/Art/Materials/Materials/シナリオ6,7,9.mat",
+      "to": "Assets/_Project/Materials/シナリオ6,7,9.mat",
+      "sha256": "d5aeaeea01cdabc911d4b295fc9584ec93c562319cc3016d7f599c615a567fe6"
+    },
+    {
+      "from": "Assets/_Project/Scenes/ModularBuildingsFramework/Scripts.meta",
+      "to": "Assets/ThirdParty/ModularBuildingsFramework/Scripts.meta",
+      "sha256": "0db72b7393ea7e25c44a712eb53821e84b81c7c13fdbd4aef4c921128d3ac06f"
+    },
+    {
+      "from": "Assets/_Project/Scenes/ModularBuildingsFramework/Examples.meta",
+      "to": "Assets/ThirdParty/ModularBuildingsFramework/Examples.meta",
+      "sha256": "ed130e25278b0dc85be8a74d8bedcfd2ca03097f38ca8fbabc224358a7eb208a"
+    },
+    {
+      "from": "Assets/_Project/Scenes/ModularBuildingsFramework/Examples/Content.meta",
+      "to": "Assets/ThirdParty/ModularBuildingsFramework/Examples/Content.meta",
+      "sha256": "d8aa1fd55f59c9c1d3ae3e5268aba93ed12be4a12daf87c845e495c4c7a7e1e5"
+    },
+    {
+      "from": "Assets/_Project/Scenes/ModularBuildingsFramework/Scripts/ILineBuilder.cs",
+      "to": "Assets/ThirdParty/ModularBuildingsFramework/Scripts/ILineBuilder.cs",
+      "sha256": "0a3280225e5ff18880ea467284ce87687728b886d6ec2743476f128c3b1d135b"
+    },
+    {
+      "from": "Assets/_Project/Scenes/ModularBuildingsFramework/Scripts/BoxRoofs.meta",
+      "to": "Assets/ThirdParty/ModularBuildingsFramework/Scripts/BoxRoofs.meta",
+      "sha256": "5e7d192ae566c32081ad8beaf4e3453779b14f63e319c8497a49de4a79376fa0"
+    },
+    {
+      "from": "Assets/_Project/Scenes/ModularBuildingsFramework/Scripts/Decorators.meta",
+      "to": "Assets/ThirdParty/ModularBuildingsFramework/Scripts/Decorators.meta",
+      "sha256": "402a6d88b7af55cf09d7b9fc4ff4e6aaddaf690a4e81341ce36a804aa9dc1cd1"
+    },
+    {
+      "from": "Assets/_Project/Scenes/ModularBuildingsFramework/Scripts/IColumnBuilder.cs.meta",
+      "to": "Assets/ThirdParty/ModularBuildingsFramework/Scripts/IColumnBuilder.cs.meta",
+      "sha256": "ab4af39fae29f24e5863d1f7b1760fcbe92aa6479f589c19bed8c9ff69907171"
+    },
+    {
+      "from": "Assets/_Project/Scenes/ModularBuildingsFramework/Scripts/ILineBuilder.cs.meta",
+      "to": "Assets/ThirdParty/ModularBuildingsFramework/Scripts/ILineBuilder.cs.meta",
+      "sha256": "bcdea4030ec7986a23e63990b21e6ef5969a42ca46bd9b63905b9d929ebb0b73"
+    },
+    {
+      "from": "Assets/_Project/Scenes/ModularBuildingsFramework/Scripts/Lines.meta",
+      "to": "Assets/ThirdParty/ModularBuildingsFramework/Scripts/Lines.meta",
+      "sha256": "a24790d1471a1e48118fd6df94ea17868ff7d91e72e560d7760bec78d5eb5a5d"
+    },
+    {
+      "from": "Assets/_Project/Scenes/ModularBuildingsFramework/Scripts/IColumnBuilder.cs",
+      "to": "Assets/ThirdParty/ModularBuildingsFramework/Scripts/IColumnBuilder.cs",
+      "sha256": "1e73ddf98a17e61ea8e7d069ac0ff5a2fd742ba84150194b15077be72624925a"
+    },
+    {
+      "from": "Assets/_Project/Scenes/ModularBuildingsFramework/Scripts/Editor.meta",
+      "to": "Assets/ThirdParty/ModularBuildingsFramework/Scripts/Editor.meta",
+      "sha256": "3a72a825bb533d4e91a6cec8e2aaeed8b641bf2b0da00724c23a7d5a67d2b4bf"
+    },
+    {
+      "from": "Assets/_Project/Scenes/ModularBuildingsFramework/Scripts/Core.meta",
+      "to": "Assets/ThirdParty/ModularBuildingsFramework/Scripts/Core.meta",
+      "sha256": "92e898bbf62d752d5f83a5829660438bcd0adbe2103bdc0df8757e6a12a93593"
+    },
+    {
+      "from": "Assets/_Project/Scenes/ModularBuildingsFramework/Scripts/Columns.meta",
+      "to": "Assets/ThirdParty/ModularBuildingsFramework/Scripts/Columns.meta",
+      "sha256": "fde5e9bf3aadd5219fa929ef49b10e25c9a66fca3bdb0469124161d65c5c54f2"
+    },
+    {
+      "from": "Assets/_Project/Scenes/ModularBuildingsFramework/Scripts/Elements.meta",
+      "to": "Assets/ThirdParty/ModularBuildingsFramework/Scripts/Elements.meta",
+      "sha256": "9e59cf0c4878bcc62609c84b17543c8b5ff27880fa7a7b2e94583e437d0b6c25"
+    },
+    {
+      "from": "Assets/_Project/Scenes/ModularBuildingsFramework/Scripts/IBoxBuilder.cs.meta",
+      "to": "Assets/ThirdParty/ModularBuildingsFramework/Scripts/IBoxBuilder.cs.meta",
+      "sha256": "94997895d46b3288d841d1467ca6784c2d0e272679101589d9c60c32a19b0cb6"
+    },
+    {
+      "from": "Assets/_Project/Scenes/ModularBuildingsFramework/Scripts/IBoxBuilder.cs",
+      "to": "Assets/ThirdParty/ModularBuildingsFramework/Scripts/IBoxBuilder.cs",
+      "sha256": "11931fe44b605e2f03b14a1476f4ad132c6841dee19ff83ec9ef3b7fc90b8461"
+    },
+    {
+      "from": "Assets/_Project/Scenes/ModularBuildingsFramework/Scripts/Meshes.meta",
+      "to": "Assets/ThirdParty/ModularBuildingsFramework/Scripts/Meshes.meta",
+      "sha256": "2628f6fc27b0e76ce134538845cb3bcf2996bd78b01ea244f6f993303671ad81"
+    },
+    {
+      "from": "Assets/_Project/Scenes/ModularBuildingsFramework/Scripts/Misc.meta",
+      "to": "Assets/ThirdParty/ModularBuildingsFramework/Scripts/Misc.meta",
+      "sha256": "e516fb28bbd417244e2aae9376029011f44c81aa4ec5c0b9d3ce786a1537c453"
+    },
+    {
+      "from": "Assets/_Project/Scenes/ModularBuildingsFramework/Scripts/IElementBuilder.cs.meta",
+      "to": "Assets/ThirdParty/ModularBuildingsFramework/Scripts/IElementBuilder.cs.meta",
+      "sha256": "97117f94bcae023ca7778e0d44b22628afe75b15ba49555e92d9aed58dc8174a"
+    },
+    {
+      "from": "Assets/_Project/Scenes/ModularBuildingsFramework/Scripts/BoxBuildings.meta",
+      "to": "Assets/ThirdParty/ModularBuildingsFramework/Scripts/BoxBuildings.meta",
+      "sha256": "3ed588f14cc7641c55b5979779661fdd3edfb597b8fdee4452f1fde9785ddc65"
+    },
+    {
+      "from": "Assets/_Project/Scenes/ModularBuildingsFramework/Scripts/Drafts.meta",
+      "to": "Assets/ThirdParty/ModularBuildingsFramework/Scripts/Drafts.meta",
+      "sha256": "7409ca5ac2fdcb0bb113fd5db8e67882c5b8f3453636e0bcaba59cf5c5a6797e"
+    },
+    {
+      "from": "Assets/_Project/Scenes/ModularBuildingsFramework/Scripts/IElementBuilder.cs",
+      "to": "Assets/ThirdParty/ModularBuildingsFramework/Scripts/IElementBuilder.cs",
+      "sha256": "7259a6bf4e195f2dfbcfb10c4afbb61f7f7cb7d65b0fd8810ce9442be0a6bf80"
+    },
+    {
+      "from": "Assets/_Project/Scenes/ModularBuildingsFramework/Scripts/Misc/IHeight.cs.meta",
+      "to": "Assets/ThirdParty/ModularBuildingsFramework/Scripts/Misc/IHeight.cs.meta",
+      "sha256": "6581f36d8799fe1b3004f02658451ce4dffa15329db3b285523463d2af906aeb"
+    },
+    {
+      "from": "Assets/_Project/Scenes/ModularBuildingsFramework/Scripts/Misc/IValidable.cs",
+      "to": "Assets/ThirdParty/ModularBuildingsFramework/Scripts/Misc/IValidable.cs",
+      "sha256": "d576315042389ad7ce38202d91726fbccf2469f9ebf5fdda1c603336cb7c7a98"
+    },
+    {
+      "from": "Assets/_Project/Scenes/ModularBuildingsFramework/Scripts/Misc/ILength.cs",
+      "to": "Assets/ThirdParty/ModularBuildingsFramework/Scripts/Misc/ILength.cs",
+      "sha256": "d487ed05c63a96d81df43e0b8548b0ae03dd859f037fc877bf10684003b793fd"
+    },
+    {
+      "from": "Assets/_Project/Scenes/ModularBuildingsFramework/Scripts/Misc/ILength.cs.meta",
+      "to": "Assets/ThirdParty/ModularBuildingsFramework/Scripts/Misc/ILength.cs.meta",
+      "sha256": "339037206870f9bdb40de61d0c31dfe9e9f8d9723ee38cb63c5abd15a09056ae"
+    },
+    {
+      "from": "Assets/_Project/Scenes/ModularBuildingsFramework/Scripts/Misc/IDepth.cs",
+      "to": "Assets/ThirdParty/ModularBuildingsFramework/Scripts/Misc/IDepth.cs",
+      "sha256": "a82abf5e335a1edb941fb29000e63ce0c7b0fce1f150b79bec0cac9bc4690255"
+    },
+    {
+      "from": "Assets/_Project/Scenes/ModularBuildingsFramework/Scripts/Misc/IHeightScalable.cs",
+      "to": "Assets/ThirdParty/ModularBuildingsFramework/Scripts/Misc/IHeightScalable.cs",
+      "sha256": "1258f0a3c149a3a3cddee5791c79d891ea46c04c8d7afea4358d47ccd0c1f947"
+    },
+    {
+      "from": "Assets/_Project/Scenes/ModularBuildingsFramework/Scripts/Misc/IRandomizable.cs.meta",
+      "to": "Assets/ThirdParty/ModularBuildingsFramework/Scripts/Misc/IRandomizable.cs.meta",
+      "sha256": "7bf1956dc9582e1ffbc6b1a524abd0cded4f8fb22a44dbd78c993741a0475fef"
+    },
+    {
+      "from": "Assets/_Project/Scenes/ModularBuildingsFramework/Scripts/Misc/IRequired.cs",
+      "to": "Assets/ThirdParty/ModularBuildingsFramework/Scripts/Misc/IRequired.cs",
+      "sha256": "eb182dfdbe03332301b8fd5b0079ffdee24071c39a4f4c2c9e831a5817ddc0b9"
+    },
+    {
+      "from": "Assets/_Project/Scenes/ModularBuildingsFramework/Scripts/Misc/IHeight.cs",
+      "to": "Assets/ThirdParty/ModularBuildingsFramework/Scripts/Misc/IHeight.cs",
+      "sha256": "0a88835b39a3181eeda38995ae8c10efc1fdb0964fa91f20d1b2de3094ecb26f"
+    },
+    {
+      "from": "Assets/_Project/Scenes/ModularBuildingsFramework/Scripts/Misc/IValidable.cs.meta",
+      "to": "Assets/ThirdParty/ModularBuildingsFramework/Scripts/Misc/IValidable.cs.meta",
+      "sha256": "48c50b7e04f6a21c5348472cb106a35360598410d7f6447110dc45d8eca9a43f"
+    },
+    {
+      "from": "Assets/_Project/Scenes/ModularBuildingsFramework/Scripts/Misc/ILengthScalable.cs",
+      "to": "Assets/ThirdParty/ModularBuildingsFramework/Scripts/Misc/ILengthScalable.cs",
+      "sha256": "9bc0e9e1bb2ffef44a865664889723a8ed62cd2d41765a1feefb3db6932fc1ad"
+    },
+    {
+      "from": "Assets/_Project/Scenes/ModularBuildingsFramework/Scripts/Misc/ILengthScalable.cs.meta",
+      "to": "Assets/ThirdParty/ModularBuildingsFramework/Scripts/Misc/ILengthScalable.cs.meta",
+      "sha256": "df593822550431e20ba4f0915b78c0bdb18d379b41caba5eeb4702cf924859d9"
+    },
+    {
+      "from": "Assets/_Project/Scenes/ModularBuildingsFramework/Scripts/Misc/IDecorator.cs.meta",
+      "to": "Assets/ThirdParty/ModularBuildingsFramework/Scripts/Misc/IDecorator.cs.meta",
+      "sha256": "9e2b12f0b2cfeba6503094ba01d27e23ac6a5249790203cfcddc48b7f0b549fd"
+    },
+    {
+      "from": "Assets/_Project/Scenes/ModularBuildingsFramework/Scripts/Misc/IRandomizable.cs",
+      "to": "Assets/ThirdParty/ModularBuildingsFramework/Scripts/Misc/IRandomizable.cs",
+      "sha256": "ea9b6a8001e5320efc422437476e5c144f3a0d77237ffec4b5d206e3c32dfa4e"
+    },
+    {
+      "from": "Assets/_Project/Scenes/ModularBuildingsFramework/Scripts/Misc/IRequired.cs.meta",
+      "to": "Assets/ThirdParty/ModularBuildingsFramework/Scripts/Misc/IRequired.cs.meta",
+      "sha256": "e0be144e799869f2bc167cb5877e25f2f6a5f276917df49fe8cc4f47ae547437"
+    },
+    {
+      "from": "Assets/_Project/Scenes/ModularBuildingsFramework/Scripts/Misc/IDecorator.cs",
+      "to": "Assets/ThirdParty/ModularBuildingsFramework/Scripts/Misc/IDecorator.cs",
+      "sha256": "748dc227a5cfc18c37a578a08acac95561304a689f049fef47dfe6c3daca3e3b"
+    },
+    {
+      "from": "Assets/_Project/Scenes/ModularBuildingsFramework/Scripts/Misc/IDepth.cs.meta",
+      "to": "Assets/ThirdParty/ModularBuildingsFramework/Scripts/Misc/IDepth.cs.meta",
+      "sha256": "2939ccf9859f1d989752dbdbfaea2df022fc40bb939f4a54cfe9a4844d4efad4"
+    },
+    {
+      "from": "Assets/_Project/Scenes/ModularBuildingsFramework/Scripts/Misc/IHeightScalable.cs.meta",
+      "to": "Assets/ThirdParty/ModularBuildingsFramework/Scripts/Misc/IHeightScalable.cs.meta",
+      "sha256": "295e76b4b16e71f0fec093eeac095f933986378a972514fbb30122e329ba5383"
+    },
+    {
+      "from": "Assets/_Project/Scenes/ModularBuildingsFramework/Scripts/Core/Utils.cs.meta",
+      "to": "Assets/ThirdParty/ModularBuildingsFramework/Scripts/Core/Utils.cs.meta",
+      "sha256": "5ee5e3d1bf59011ecb3733b1e579fe2b53687800f73358089b84235e349d73c3"
+    },
+    {
+      "from": "Assets/_Project/Scenes/ModularBuildingsFramework/Scripts/Core/Utils.cs",
+      "to": "Assets/ThirdParty/ModularBuildingsFramework/Scripts/Core/Utils.cs",
+      "sha256": "6eb756bc6a9a4a30fc7b953857823c87ae5cd5b9e2173f0788ac21b7930e1e84"
+    },
+    {
+      "from": "Assets/_Project/Scenes/ModularBuildingsFramework/Scripts/Decorators/Editor.meta",
+      "to": "Assets/ThirdParty/ModularBuildingsFramework/Scripts/Decorators/Editor.meta",
+      "sha256": "b5ceb82217abe908b9c2b16ee3934036008b2efe30cb7767038d4e5a4d32c26f"
+    },
+    {
+      "from": "Assets/_Project/Scenes/ModularBuildingsFramework/Scripts/Decorators/MaterialRandomizerItem.cs",
+      "to": "Assets/ThirdParty/ModularBuildingsFramework/Scripts/Decorators/MaterialRandomizerItem.cs",
+      "sha256": "354e140e151d409c06f5330b54f3d43846c4f25b29df040988c7c15590e32a93"
+    },
+    {
+      "from": "Assets/_Project/Scenes/ModularBuildingsFramework/Scripts/Decorators/MaterialRandomizerItem.cs.meta",
+      "to": "Assets/ThirdParty/ModularBuildingsFramework/Scripts/Decorators/MaterialRandomizerItem.cs.meta",
+      "sha256": "2be10188173755a5059b4a7c523b5dd92de1625a947e3b8526d8958a7d87788c"
+    },
+    {
+      "from": "Assets/_Project/Scenes/ModularBuildingsFramework/Scripts/Decorators/MaterialRandomizer.cs.meta",
+      "to": "Assets/ThirdParty/ModularBuildingsFramework/Scripts/Decorators/MaterialRandomizer.cs.meta",
+      "sha256": "143d987be6a90e4f66112b6982e2fbd45b20e076116cb307249f785c5601eab9"
+    },
+    {
+      "from": "Assets/_Project/Scenes/ModularBuildingsFramework/Scripts/Decorators/MaterialRandomizer.cs",
+      "to": "Assets/ThirdParty/ModularBuildingsFramework/Scripts/Decorators/MaterialRandomizer.cs",
+      "sha256": "d9bde93ff146d9605a54cd3121ac4f271a9c85e22b8772008824283c0ecabf5b"
+    },
+    {
+      "from": "Assets/_Project/Scenes/ModularBuildingsFramework/Scripts/Drafts/BoxDraft.cs.meta",
+      "to": "Assets/ThirdParty/ModularBuildingsFramework/Scripts/Drafts/BoxDraft.cs.meta",
+      "sha256": "d07c089b33bbe7bcac570cd3a8532e3e871a603f9630d4856654416157b1b99d"
+    },
+    {
+      "from": "Assets/_Project/Scenes/ModularBuildingsFramework/Scripts/Drafts/ColumnDraft.cs.meta",
+      "to": "Assets/ThirdParty/ModularBuildingsFramework/Scripts/Drafts/ColumnDraft.cs.meta",
+      "sha256": "4195c9c674bd34ec5e7779e409a8febdc7083f76bcad2f478afee7958d2b1ddb"
+    },
+    {
+      "from": "Assets/_Project/Scenes/ModularBuildingsFramework/Scripts/Drafts/ElementDraft.cs.meta",
+      "to": "Assets/ThirdParty/ModularBuildingsFramework/Scripts/Drafts/ElementDraft.cs.meta",
+      "sha256": "645d9f525294a43eec2bcb96c2e835e5b3b9d1f27148e4b11f9934428812da26"
+    },
+    {
+      "from": "Assets/_Project/Scenes/ModularBuildingsFramework/Scripts/Drafts/ColumnDraft.cs",
+      "to": "Assets/ThirdParty/ModularBuildingsFramework/Scripts/Drafts/ColumnDraft.cs",
+      "sha256": "f3579ed7d3061585bcad1f3d55764734ed1dd205e94ccde776db1adaed619707"
+    },
+    {
+      "from": "Assets/_Project/Scenes/ModularBuildingsFramework/Scripts/Drafts/LineDraft.cs.meta",
+      "to": "Assets/ThirdParty/ModularBuildingsFramework/Scripts/Drafts/LineDraft.cs.meta",
+      "sha256": "92a7aca748141bbb945661d639b61b39c908e8ff2e06c69f814111a9cec8b131"
+    },
+    {
+      "from": "Assets/_Project/Scenes/ModularBuildingsFramework/Scripts/Drafts/ElementDraft.cs",
+      "to": "Assets/ThirdParty/ModularBuildingsFramework/Scripts/Drafts/ElementDraft.cs",
+      "sha256": "1ede09b54d67b2a6d019e66893bd1c7f5a870bc7ab245f6bcb9d4e9d38afe5e2"
+    },
+    {
+      "from": "Assets/_Project/Scenes/ModularBuildingsFramework/Scripts/Drafts/LineDraft.cs",
+      "to": "Assets/ThirdParty/ModularBuildingsFramework/Scripts/Drafts/LineDraft.cs",
+      "sha256": "c1d5bb4f610410508db8c65b5bc967c3d4483021965178ddb9b2ae0faeb6f5b1"
+    },
+    {
+      "from": "Assets/_Project/Scenes/ModularBuildingsFramework/Scripts/Drafts/BoxDraft.cs",
+      "to": "Assets/ThirdParty/ModularBuildingsFramework/Scripts/Drafts/BoxDraft.cs",
+      "sha256": "5db2f2f9478c73cd728e2595325742cef7aacfe286c44cd3f345cde4a1ec4d48"
+    },
+    {
+      "from": "Assets/_Project/Scenes/ModularBuildingsFramework/Scripts/BoxBuildings/DummyBoxBuilder.cs.meta",
+      "to": "Assets/ThirdParty/ModularBuildingsFramework/Scripts/BoxBuildings/DummyBoxBuilder.cs.meta",
+      "sha256": "0d8d10ec53eb637554b715309ecc6da248eab3018ccf708799389ef854375916"
+    },
+    {
+      "from": "Assets/_Project/Scenes/ModularBuildingsFramework/Scripts/BoxBuildings/Standard.meta",
+      "to": "Assets/ThirdParty/ModularBuildingsFramework/Scripts/BoxBuildings/Standard.meta",
+      "sha256": "69bc09940425883ecc10c55d9774cfa258b9cbac4a965118ef19043fbda10d27"
+    },
+    {
+      "from": "Assets/_Project/Scenes/ModularBuildingsFramework/Scripts/BoxBuildings/StandardBoxBuilding.cs",
+      "to": "Assets/ThirdParty/ModularBuildingsFramework/Scripts/BoxBuildings/StandardBoxBuilding.cs",
+      "sha256": "2ffb9e57f080b949fece78477973e8ed4601c556b66921a611aab218827d3733"
+    },
+    {
+      "from": "Assets/_Project/Scenes/ModularBuildingsFramework/Scripts/BoxBuildings/DummyBoxBuilder.cs",
+      "to": "Assets/ThirdParty/ModularBuildingsFramework/Scripts/BoxBuildings/DummyBoxBuilder.cs",
+      "sha256": "8d67ac1fd345b83e7f8b00e913c6551ad55564a21a5b564ae15b7ee572541dd6"
+    },
+    {
+      "from": "Assets/_Project/Scenes/ModularBuildingsFramework/Scripts/BoxBuildings/StandardBoxBuilding.cs.meta",
+      "to": "Assets/ThirdParty/ModularBuildingsFramework/Scripts/BoxBuildings/StandardBoxBuilding.cs.meta",
+      "sha256": "8020c8a426b714d5b058c1abd67e26df30dbf52b1a896ff9455e52f9693a91bf"
+    },
+    {
+      "from": "Assets/_Project/Scenes/ModularBuildingsFramework/Scripts/Meshes/MeshCombiner.cs",
+      "to": "Assets/ThirdParty/ModularBuildingsFramework/Scripts/Meshes/MeshCombiner.cs",
+      "sha256": "b0b17c7ac90c28e105edfd4554ef8203f467ede4efd90d80e47dc9799d00e74c"
+    },
+    {
+      "from": "Assets/_Project/Scenes/ModularBuildingsFramework/Scripts/Meshes/Editor.meta",
+      "to": "Assets/ThirdParty/ModularBuildingsFramework/Scripts/Meshes/Editor.meta",
+      "sha256": "93221c95113e51767339303de2b58e575df61174abe1affbe686b409e156c75b"
+    },
+    {
+      "from": "Assets/_Project/Scenes/ModularBuildingsFramework/Scripts/Meshes/MeshCombineItem.cs",
+      "to": "Assets/ThirdParty/ModularBuildingsFramework/Scripts/Meshes/MeshCombineItem.cs",
+      "sha256": "25e395cc77434af8754f9c9bd60968871900f01589f4d2b25f0a1d142770b221"
+    },
+    {
+      "from": "Assets/_Project/Scenes/ModularBuildingsFramework/Scripts/Meshes/MeshCombiner.cs.meta",
+      "to": "Assets/ThirdParty/ModularBuildingsFramework/Scripts/Meshes/MeshCombiner.cs.meta",
+      "sha256": "74b38f291cecc2f85dfe199e65d113a90526f7f72e32d554db2b9393ab9eed68"
+    },
+    {
+      "from": "Assets/_Project/Scenes/ModularBuildingsFramework/Scripts/Meshes/MeshCombineItem.cs.meta",
+      "to": "Assets/ThirdParty/ModularBuildingsFramework/Scripts/Meshes/MeshCombineItem.cs.meta",
+      "sha256": "7274ff00ae23714d995908c63cef1967b01a24e54d5aaff931077940823ea1c2"
+    },
+    {
+      "from": "Assets/_Project/Scenes/ModularBuildingsFramework/Scripts/Elements/Standard.meta",
+      "to": "Assets/ThirdParty/ModularBuildingsFramework/Scripts/Elements/Standard.meta",
+      "sha256": "a55954b062b096dcf6a4bccd61966b66dd5d0bb9a8d468edf8dac0730f1ee5bc"
+    },
+    {
+      "from": "Assets/_Project/Scenes/ModularBuildingsFramework/Scripts/Elements/DummyElement.cs",
+      "to": "Assets/ThirdParty/ModularBuildingsFramework/Scripts/Elements/DummyElement.cs",
+      "sha256": "f65927845a356f83cbb8335a1000cf446afc69f190388b75ce3793f3ea9bd687"
+    },
+    {
+      "from": "Assets/_Project/Scenes/ModularBuildingsFramework/Scripts/Elements/DummyElement.cs.meta",
+      "to": "Assets/ThirdParty/ModularBuildingsFramework/Scripts/Elements/DummyElement.cs.meta",
+      "sha256": "f5cc3be32a18a242adc331aec54bff9791829c04c3a9f21434c3ab9e6181ffa2"
+    },
+    {
+      "from": "Assets/_Project/Scenes/ModularBuildingsFramework/Scripts/Elements/StandardElement.cs.meta",
+      "to": "Assets/ThirdParty/ModularBuildingsFramework/Scripts/Elements/StandardElement.cs.meta",
+      "sha256": "48ee82b79e5d9e749a5f21278d190ea38f7aa0efb5fc0ae6dd9bd9fcfbcf7ac9"
+    },
+    {
+      "from": "Assets/_Project/Scenes/ModularBuildingsFramework/Scripts/Elements/StandardElement.cs",
+      "to": "Assets/ThirdParty/ModularBuildingsFramework/Scripts/Elements/StandardElement.cs",
+      "sha256": "5c827c4a697ded36c9a0d36bdb39171e352b1dd4202cbcf0fb9f57f82430b657"
+    },
+    {
+      "from": "Assets/_Project/Scenes/ModularBuildingsFramework/Scripts/Columns/DummyColumn.cs.meta",
+      "to": "Assets/ThirdParty/ModularBuildingsFramework/Scripts/Columns/DummyColumn.cs.meta",
+      "sha256": "0f0f72c3adf7ef7c6f9d3564c36e80c89e4ea89eca178595c11fef208f35f899"
+    },
+    {
+      "from": "Assets/_Project/Scenes/ModularBuildingsFramework/Scripts/Columns/StandardColumn.cs.meta",
+      "to": "Assets/ThirdParty/ModularBuildingsFramework/Scripts/Columns/StandardColumn.cs.meta",
+      "sha256": "f047242a43938f46f9b5c0ea8bc65ef275648a9d316fe6c9c2fd765c38fe9b7f"
+    },
+    {
+      "from": "Assets/_Project/Scenes/ModularBuildingsFramework/Scripts/Columns/Standard.meta",
+      "to": "Assets/ThirdParty/ModularBuildingsFramework/Scripts/Columns/Standard.meta",
+      "sha256": "cac67db48d79f33f92091299b3705e83ae6f546fff5416fde10afa105fa35cbf"
+    },
+    {
+      "from": "Assets/_Project/Scenes/ModularBuildingsFramework/Scripts/Columns/DummyColumn.cs",
+      "to": "Assets/ThirdParty/ModularBuildingsFramework/Scripts/Columns/DummyColumn.cs",
+      "sha256": "f7f7d901f2766a83efc5c362876f294965d9febd0d34d1e9ad038757c08c816e"
+    },
+    {
+      "from": "Assets/_Project/Scenes/ModularBuildingsFramework/Scripts/Columns/StandardColumn.cs",
+      "to": "Assets/ThirdParty/ModularBuildingsFramework/Scripts/Columns/StandardColumn.cs",
+      "sha256": "33f29516cba2bfa961319002007d3c07f7c112d2f4717dbd59dbf8719c3bcfc4"
+    },
+    {
+      "from": "Assets/_Project/Scenes/ModularBuildingsFramework/Scripts/Lines/Standard.meta",
+      "to": "Assets/ThirdParty/ModularBuildingsFramework/Scripts/Lines/Standard.meta",
+      "sha256": "8e754058404957937c988bf10d38658c2a4fc7eb3a36bbbfe7c64bfef0272730"
+    },
+    {
+      "from": "Assets/_Project/Scenes/ModularBuildingsFramework/Scripts/Lines/StandardLine.cs",
+      "to": "Assets/ThirdParty/ModularBuildingsFramework/Scripts/Lines/StandardLine.cs",
+      "sha256": "25bb329fa2124cc747d5ea2f7738ff688f1faa25dc8b6b58477f872c071ed7d0"
+    },
+    {
+      "from": "Assets/_Project/Scenes/ModularBuildingsFramework/Scripts/Lines/StandardLine.cs.meta",
+      "to": "Assets/ThirdParty/ModularBuildingsFramework/Scripts/Lines/StandardLine.cs.meta",
+      "sha256": "4aebdedf3995e3bdfdbd854d7530f4e5f00973c5ae68e60647244ad8d4281319"
+    },
+    {
+      "from": "Assets/_Project/Scenes/ModularBuildingsFramework/Scripts/Lines/DummyLine.cs.meta",
+      "to": "Assets/ThirdParty/ModularBuildingsFramework/Scripts/Lines/DummyLine.cs.meta",
+      "sha256": "b2e5e5078816fc6551aa359e004bf99a1d57ff64087faccd5411a696a2e2c089"
+    },
+    {
+      "from": "Assets/_Project/Scenes/ModularBuildingsFramework/Scripts/Lines/DummyLine.cs",
+      "to": "Assets/ThirdParty/ModularBuildingsFramework/Scripts/Lines/DummyLine.cs",
+      "sha256": "b38488b74a43eecd0bcb58bb8736d86755e4fb879d0ab3be2747f0a89c61732d"
+    },
+    {
+      "from": "Assets/_Project/Scenes/ModularBuildingsFramework/Scripts/BoxRoofs/StandardFlatBox.meta",
+      "to": "Assets/ThirdParty/ModularBuildingsFramework/Scripts/BoxRoofs/StandardFlatBox.meta",
+      "sha256": "40a7d24751d4e7f5e21dd0b43f574e98c318fb911a714a98326e112ae1a01fc8"
+    },
+    {
+      "from": "Assets/_Project/Scenes/ModularBuildingsFramework/Scripts/BoxRoofs/StandardFlatBoxRoof.cs.meta",
+      "to": "Assets/ThirdParty/ModularBuildingsFramework/Scripts/BoxRoofs/StandardFlatBoxRoof.cs.meta",
+      "sha256": "37eb9cf3634ef0b09ab3e2bb80b3a627f10e52fa523620fff90c9cd31b6ca075"
+    },
+    {
+      "from": "Assets/_Project/Scenes/ModularBuildingsFramework/Scripts/BoxRoofs/StandardFlatBoxRoof.cs",
+      "to": "Assets/ThirdParty/ModularBuildingsFramework/Scripts/BoxRoofs/StandardFlatBoxRoof.cs",
+      "sha256": "c647e6165bb1359b600e717b4fe3c314609c4a307bc285156eda2b6d693837ff"
+    },
+    {
+      "from": "Assets/_Project/Scenes/ModularBuildingsFramework/Scripts/Editor/Editors.meta",
+      "to": "Assets/ThirdParty/ModularBuildingsFramework/Scripts/Editor/Editors.meta",
+      "sha256": "2f8d7d9208e8bbda733b7560ac3d197482c36b59effbdfd38acb725ee471c934"
+    },
+    {
+      "from": "Assets/_Project/Scenes/ModularBuildingsFramework/Scripts/Editor/EditorMenu.cs.meta",
+      "to": "Assets/ThirdParty/ModularBuildingsFramework/Scripts/Editor/EditorMenu.cs.meta",
+      "sha256": "3f50e875fc1a5f8a7834a5f3801ca8235e18f70d50347ba199fbc643406d94a5"
+    },
+    {
+      "from": "Assets/_Project/Scenes/ModularBuildingsFramework/Scripts/Editor/Windows.meta",
+      "to": "Assets/ThirdParty/ModularBuildingsFramework/Scripts/Editor/Windows.meta",
+      "sha256": "8699dff57197de23ebd8db0a35d2ab5cd80692109593a2265f59fcd277f817bc"
+    },
+    {
+      "from": "Assets/_Project/Scenes/ModularBuildingsFramework/Scripts/Editor/EditorMenu.cs",
+      "to": "Assets/ThirdParty/ModularBuildingsFramework/Scripts/Editor/EditorMenu.cs",
+      "sha256": "6c1fad64fe45ec54ccb0bd78ea2001dd6ff6c7d693a6d596da85e89258c5ee26"
+    },
+    {
+      "from": "Assets/_Project/Scenes/ModularBuildingsFramework/Scripts/Editor/Editors/StandardFlatBoxRoofEditor.cs.meta",
+      "to": "Assets/ThirdParty/ModularBuildingsFramework/Scripts/Editor/Editors/StandardFlatBoxRoofEditor.cs.meta",
+      "sha256": "e3c7ff8ab4d7a57e780fa1ed5d11207414eb66d6ef84e38f2a9aaa7a45d15185"
+    },
+    {
+      "from": "Assets/_Project/Scenes/ModularBuildingsFramework/Scripts/Editor/Editors/StandardBoxBuildingEditor.cs",
+      "to": "Assets/ThirdParty/ModularBuildingsFramework/Scripts/Editor/Editors/StandardBoxBuildingEditor.cs",
+      "sha256": "89eea1119dd235d213ac720b5a7dfe001dc6a9f04ddbad8531ff6348ec79cb3d"
+    },
+    {
+      "from": "Assets/_Project/Scenes/ModularBuildingsFramework/Scripts/Editor/Editors/StandardLineEditor.cs",
+      "to": "Assets/ThirdParty/ModularBuildingsFramework/Scripts/Editor/Editors/StandardLineEditor.cs",
+      "sha256": "6fdac22ac647be2c67d4d3f8aed69e438b000255b9f08553ccb9dfee734aea88"
+    },
+    {
+      "from": "Assets/_Project/Scenes/ModularBuildingsFramework/Scripts/Editor/Editors/StandardElementEditor.cs.meta",
+      "to": "Assets/ThirdParty/ModularBuildingsFramework/Scripts/Editor/Editors/StandardElementEditor.cs.meta",
+      "sha256": "58b71188d0c866ebfa14f691dc06b30499ccba34ff5da3ac214580d8c3cff390"
+    },
+    {
+      "from": "Assets/_Project/Scenes/ModularBuildingsFramework/Scripts/Editor/Editors/StandardColumnEditor.cs",
+      "to": "Assets/ThirdParty/ModularBuildingsFramework/Scripts/Editor/Editors/StandardColumnEditor.cs",
+      "sha256": "b18d7c4e71a1976a2d51712f6a9fbf081fee4161cb55111fb7eb208039db6853"
+    },
+    {
+      "from": "Assets/_Project/Scenes/ModularBuildingsFramework/Scripts/Editor/Editors/StandardBoxBuildingEditor.cs.meta",
+      "to": "Assets/ThirdParty/ModularBuildingsFramework/Scripts/Editor/Editors/StandardBoxBuildingEditor.cs.meta",
+      "sha256": "cbdecc1130f6465fc40a68f8069437ee62c9341cdaa38d024ea1019a785a4abd"
+    },
+    {
+      "from": "Assets/_Project/Scenes/ModularBuildingsFramework/Scripts/Editor/Editors/StandardFlatBoxRoofEditor.cs",
+      "to": "Assets/ThirdParty/ModularBuildingsFramework/Scripts/Editor/Editors/StandardFlatBoxRoofEditor.cs",
+      "sha256": "5621d6874ee39b82faf956adb482fc5a15f3ffaebc3d7125e02aa1898fffb1f0"
+    },
+    {
+      "from": "Assets/_Project/Scenes/ModularBuildingsFramework/Scripts/Editor/Editors/StandardElementEditor.cs",
+      "to": "Assets/ThirdParty/ModularBuildingsFramework/Scripts/Editor/Editors/StandardElementEditor.cs",
+      "sha256": "fac7b3b6128eb9edf066d795b74d428eeba40a9f1efc9eda93eedab2d0114ea3"
+    },
+    {
+      "from": "Assets/_Project/Scenes/ModularBuildingsFramework/Scripts/Editor/Editors/StandardColumnEditor.cs.meta",
+      "to": "Assets/ThirdParty/ModularBuildingsFramework/Scripts/Editor/Editors/StandardColumnEditor.cs.meta",
+      "sha256": "1d3c7aa3f64fd31542012f6a2b6dd1fc301941b8655ca8aa6466f43aba24300b"
+    },
+    {
+      "from": "Assets/_Project/Scenes/ModularBuildingsFramework/Scripts/Editor/Editors/StandardLineEditor.cs.meta",
+      "to": "Assets/ThirdParty/ModularBuildingsFramework/Scripts/Editor/Editors/StandardLineEditor.cs.meta",
+      "sha256": "a370edfa7aa5ef20131d6ef5800a5ebd2abb74eb86de461ded9f8221f58dbd7b"
+    },
+    {
+      "from": "Assets/_Project/Scenes/ModularBuildingsFramework/Scripts/Editor/Windows/MeshCombinerWindow.cs",
+      "to": "Assets/ThirdParty/ModularBuildingsFramework/Scripts/Editor/Windows/MeshCombinerWindow.cs",
+      "sha256": "4b83014f89591faeb25a5a157dd20be63d4748eee3fa1c750887662f7b948431"
+    },
+    {
+      "from": "Assets/_Project/Scenes/ModularBuildingsFramework/Scripts/Editor/Windows/MeshCombinerWindow.cs.meta",
+      "to": "Assets/ThirdParty/ModularBuildingsFramework/Scripts/Editor/Windows/MeshCombinerWindow.cs.meta",
+      "sha256": "982550d6e312e5d9b6e2ae4e8671d644e9e1ec32b2af72351edc9d62de70a4c0"
+    },
+    {
+      "from": "Assets/_Project/Scenes/ModularBuildingsFramework/Scripts/Editor/Windows/BoxBuilderWindow.cs",
+      "to": "Assets/ThirdParty/ModularBuildingsFramework/Scripts/Editor/Windows/BoxBuilderWindow.cs",
+      "sha256": "ccc61faca95a89a8c3a82f3632e4286d1292a027fbc3942039f3fbf8a3454ce8"
+    },
+    {
+      "from": "Assets/_Project/Scenes/ModularBuildingsFramework/Scripts/Editor/Windows/BoxBuilderWindow.cs.meta",
+      "to": "Assets/ThirdParty/ModularBuildingsFramework/Scripts/Editor/Windows/BoxBuilderWindow.cs.meta",
+      "sha256": "91af14803cd89fa08674f36054c6966791d9cac33c44ec35f0f58f0c901bba07"
+    },
+    {
+      "from": "Assets/_Project/Scenes/ModularBuildingsFramework/Scripts/Editor/Windows/ElementBuilderWindow.cs",
+      "to": "Assets/ThirdParty/ModularBuildingsFramework/Scripts/Editor/Windows/ElementBuilderWindow.cs",
+      "sha256": "cbe16cb68aef5267d47d2dade9d63587cc30dc03aed3e05b11efd082e5ed60ea"
+    },
+    {
+      "from": "Assets/_Project/Scenes/ModularBuildingsFramework/Scripts/Editor/Windows/LineBuilderWindow.cs.meta",
+      "to": "Assets/ThirdParty/ModularBuildingsFramework/Scripts/Editor/Windows/LineBuilderWindow.cs.meta",
+      "sha256": "24323eb7384bd688083d5b880356bc86b5a0839ea09ff63ca0f568f23aa50179"
+    },
+    {
+      "from": "Assets/_Project/Scenes/ModularBuildingsFramework/Scripts/Editor/Windows/ColumnBuilderWindow.cs",
+      "to": "Assets/ThirdParty/ModularBuildingsFramework/Scripts/Editor/Windows/ColumnBuilderWindow.cs",
+      "sha256": "495793a94f789c31a9765b8d4dd10ed01f94349ebfc72d0bd5a2a5d16f35db1d"
+    },
+    {
+      "from": "Assets/_Project/Scenes/ModularBuildingsFramework/Scripts/Editor/Windows/ElementBuilderWindow.cs.meta",
+      "to": "Assets/ThirdParty/ModularBuildingsFramework/Scripts/Editor/Windows/ElementBuilderWindow.cs.meta",
+      "sha256": "841b30b8e611bb8077b5a42ea1eb5c6638f060aef05c53874ce2bed54ae655b9"
+    },
+    {
+      "from": "Assets/_Project/Scenes/ModularBuildingsFramework/Scripts/Editor/Windows/ColumnBuilderWindow.cs.meta",
+      "to": "Assets/ThirdParty/ModularBuildingsFramework/Scripts/Editor/Windows/ColumnBuilderWindow.cs.meta",
+      "sha256": "4d971ad20c2fece1e36309df13028f38c826edf9cff3ea4a427796a45fc92af0"
+    },
+    {
+      "from": "Assets/_Project/Scenes/ModularBuildingsFramework/Scripts/Editor/Windows/LineBuilderWindow.cs",
+      "to": "Assets/ThirdParty/ModularBuildingsFramework/Scripts/Editor/Windows/LineBuilderWindow.cs",
+      "sha256": "bc64602ad986334e733ecd2e67ab94023588f1992fb76e206e1eb868233460d1"
+    },
+    {
+      "from": "Assets/_Project/Scenes/ModularBuildingsFramework/Scripts/BoxRoofs/StandardFlatBox/RoofParameters.cs",
+      "to": "Assets/ThirdParty/ModularBuildingsFramework/Scripts/BoxRoofs/StandardFlatBox/RoofParameters.cs",
+      "sha256": "294dd774d7b9aa0b33042b583343494cfaecfc03bc498a08e0730d23aa50710f"
+    },
+    {
+      "from": "Assets/_Project/Scenes/ModularBuildingsFramework/Scripts/BoxRoofs/StandardFlatBox/RoofMode.cs",
+      "to": "Assets/ThirdParty/ModularBuildingsFramework/Scripts/BoxRoofs/StandardFlatBox/RoofMode.cs",
+      "sha256": "bfc9a95f3a9610b352202129098ef3b79a4389be4ccf8d367567fbec86077092"
+    },
+    {
+      "from": "Assets/_Project/Scenes/ModularBuildingsFramework/Scripts/BoxRoofs/StandardFlatBox/RoofParameters.cs.meta",
+      "to": "Assets/ThirdParty/ModularBuildingsFramework/Scripts/BoxRoofs/StandardFlatBox/RoofParameters.cs.meta",
+      "sha256": "b93f1649b72416baec1d1b9c02c5b8564e647ae672d1182915de660987755cd8"
+    },
+    {
+      "from": "Assets/_Project/Scenes/ModularBuildingsFramework/Scripts/BoxRoofs/StandardFlatBox/RoofGenerationSettings.cs.meta",
+      "to": "Assets/ThirdParty/ModularBuildingsFramework/Scripts/BoxRoofs/StandardFlatBox/RoofGenerationSettings.cs.meta",
+      "sha256": "149e4051b5f700ff9b19db246908a2a75b99f8c5b3bb4aad7e25f49872f43df7"
+    },
+    {
+      "from": "Assets/_Project/Scenes/ModularBuildingsFramework/Scripts/BoxRoofs/StandardFlatBox/RoofMode.cs.meta",
+      "to": "Assets/ThirdParty/ModularBuildingsFramework/Scripts/BoxRoofs/StandardFlatBox/RoofMode.cs.meta",
+      "sha256": "a8fc0a781b98a19499cc552a0c7c22dd7fbef871248b9ef0c22dd7bdcb673b1e"
+    },
+    {
+      "from": "Assets/_Project/Scenes/ModularBuildingsFramework/Scripts/BoxRoofs/StandardFlatBox/RoofGenerationSettings.cs",
+      "to": "Assets/ThirdParty/ModularBuildingsFramework/Scripts/BoxRoofs/StandardFlatBox/RoofGenerationSettings.cs",
+      "sha256": "a144a73de0f99f2e698992afb021f0017f8880e590915db4b4c5881a188486f5"
+    },
+    {
+      "from": "Assets/_Project/Scenes/ModularBuildingsFramework/Scripts/Lines/Standard/LineGenerationSettings.cs.meta",
+      "to": "Assets/ThirdParty/ModularBuildingsFramework/Scripts/Lines/Standard/LineGenerationSettings.cs.meta",
+      "sha256": "bc4a2ba21be2e09a3d891ea33bf256cfd3b2f2a02594338a17b39a97489dba53"
+    },
+    {
+      "from": "Assets/_Project/Scenes/ModularBuildingsFramework/Scripts/Lines/Standard/LineItem.cs",
+      "to": "Assets/ThirdParty/ModularBuildingsFramework/Scripts/Lines/Standard/LineItem.cs",
+      "sha256": "47e8a96004facf0ad64adde5cb706d9ccd0f6def3c9939b51f1199eebb6b58f2"
+    },
+    {
+      "from": "Assets/_Project/Scenes/ModularBuildingsFramework/Scripts/Lines/Standard/LineItem.cs.meta",
+      "to": "Assets/ThirdParty/ModularBuildingsFramework/Scripts/Lines/Standard/LineItem.cs.meta",
+      "sha256": "da9e5c23acc47da0296dcdf9236f9001045c59156bd34302abb4882607ff12a9"
+    },
+    {
+      "from": "Assets/_Project/Scenes/ModularBuildingsFramework/Scripts/Lines/Standard/LineItemsCollection.cs",
+      "to": "Assets/ThirdParty/ModularBuildingsFramework/Scripts/Lines/Standard/LineItemsCollection.cs",
+      "sha256": "dbacf9305b61d34261851125c3ee5e3b661e92e25a39579ccf0e3e372defa015"
+    },
+    {
+      "from": "Assets/_Project/Scenes/ModularBuildingsFramework/Scripts/Lines/Standard/LineItemsCollection.cs.meta",
+      "to": "Assets/ThirdParty/ModularBuildingsFramework/Scripts/Lines/Standard/LineItemsCollection.cs.meta",
+      "sha256": "59c126dec1e817894f3e5162a50415ab9954c8e4c68935525d5faad22f1f05ad"
+    },
+    {
+      "from": "Assets/_Project/Scenes/ModularBuildingsFramework/Scripts/Lines/Standard/LineGenerationSettings.cs",
+      "to": "Assets/ThirdParty/ModularBuildingsFramework/Scripts/Lines/Standard/LineGenerationSettings.cs",
+      "sha256": "8860783129a77b9f71d4132ac3a4440aff7b917609bfb627ab9c55250aa18dac"
+    },
+    {
+      "from": "Assets/_Project/Scenes/ModularBuildingsFramework/Scripts/Columns/Standard/ColumnItemsCollection.cs",
+      "to": "Assets/ThirdParty/ModularBuildingsFramework/Scripts/Columns/Standard/ColumnItemsCollection.cs",
+      "sha256": "d5b954609e0552a9e01ee7aab9eaa4bed7390cd7409d1d2c1542d918f0d433dc"
+    },
+    {
+      "from": "Assets/_Project/Scenes/ModularBuildingsFramework/Scripts/Columns/Standard/ColumnItem.cs",
+      "to": "Assets/ThirdParty/ModularBuildingsFramework/Scripts/Columns/Standard/ColumnItem.cs",
+      "sha256": "0cc1b96f0c7dae294a49eb54bc4feaac3454264b828b733482b6f8a52c6dac0f"
+    },
+    {
+      "from": "Assets/_Project/Scenes/ModularBuildingsFramework/Scripts/Columns/Standard/ColumnItem.cs.meta",
+      "to": "Assets/ThirdParty/ModularBuildingsFramework/Scripts/Columns/Standard/ColumnItem.cs.meta",
+      "sha256": "2240fcfb320a607076d8df2e040d28fc977e762b09cb7ea5b8673f2852fafcd6"
+    },
+    {
+      "from": "Assets/_Project/Scenes/ModularBuildingsFramework/Scripts/Columns/Standard/ColumnGenerationSettings.cs.meta",
+      "to": "Assets/ThirdParty/ModularBuildingsFramework/Scripts/Columns/Standard/ColumnGenerationSettings.cs.meta",
+      "sha256": "3df2e8f42f5c2954f1dea2e03ef06bf1a049a39b7c4d79e31ae094a49946c8aa"
+    },
+    {
+      "from": "Assets/_Project/Scenes/ModularBuildingsFramework/Scripts/Columns/Standard/ColumnGenerationSettings.cs",
+      "to": "Assets/ThirdParty/ModularBuildingsFramework/Scripts/Columns/Standard/ColumnGenerationSettings.cs",
+      "sha256": "0fa61df5d50ae8da244455ab8d4b4e28576715bf141a3c282e58f46dd76c564b"
+    },
+    {
+      "from": "Assets/_Project/Scenes/ModularBuildingsFramework/Scripts/Columns/Standard/ColumnItemsCollection.cs.meta",
+      "to": "Assets/ThirdParty/ModularBuildingsFramework/Scripts/Columns/Standard/ColumnItemsCollection.cs.meta",
+      "sha256": "6533a509b14311a5a26d69650d093d677b32bd610d53fbb7e94a6bd892f27a60"
+    },
+    {
+      "from": "Assets/_Project/Scenes/ModularBuildingsFramework/Scripts/Elements/Standard/ElementItemsCollection.cs.meta",
+      "to": "Assets/ThirdParty/ModularBuildingsFramework/Scripts/Elements/Standard/ElementItemsCollection.cs.meta",
+      "sha256": "9424c4ee1abe94649f4a0a65c02b89d39c78b53559bcff1418a0bfd2d7fc807a"
+    },
+    {
+      "from": "Assets/_Project/Scenes/ModularBuildingsFramework/Scripts/Elements/Standard/ElementItemsCollection.cs",
+      "to": "Assets/ThirdParty/ModularBuildingsFramework/Scripts/Elements/Standard/ElementItemsCollection.cs",
+      "sha256": "0e6e3382dcdaf89cc0698786d5745cc02a50899efc9d8d681881285c67067009"
+    },
+    {
+      "from": "Assets/_Project/Scenes/ModularBuildingsFramework/Scripts/Elements/Standard/ElementItem.cs",
+      "to": "Assets/ThirdParty/ModularBuildingsFramework/Scripts/Elements/Standard/ElementItem.cs",
+      "sha256": "24a3c4ceeb3cef71e7a7f0c2dca2c487ff3081ed851f226d304be6297bbf3cff"
+    },
+    {
+      "from": "Assets/_Project/Scenes/ModularBuildingsFramework/Scripts/Elements/Standard/ElementParameters.cs",
+      "to": "Assets/ThirdParty/ModularBuildingsFramework/Scripts/Elements/Standard/ElementParameters.cs",
+      "sha256": "3e622c215957eee7d08dc063caa32a797c349837d286f4c1af917ade5752d639"
+    },
+    {
+      "from": "Assets/_Project/Scenes/ModularBuildingsFramework/Scripts/Elements/Standard/ElementItem.cs.meta",
+      "to": "Assets/ThirdParty/ModularBuildingsFramework/Scripts/Elements/Standard/ElementItem.cs.meta",
+      "sha256": "dbbf27e9f307943ec58ad269f48791591d836c1747587e548bdd4dfadf9be3c4"
+    },
+    {
+      "from": "Assets/_Project/Scenes/ModularBuildingsFramework/Scripts/Elements/Standard/ElementParameters.cs.meta",
+      "to": "Assets/ThirdParty/ModularBuildingsFramework/Scripts/Elements/Standard/ElementParameters.cs.meta",
+      "sha256": "9fa60b0e53bd864f05828ddf1e455ba328e45db368f65e701fdcf623dd90ea51"
+    },
+    {
+      "from": "Assets/_Project/Scenes/ModularBuildingsFramework/Scripts/Elements/Standard/ElementGenerationSettings.cs",
+      "to": "Assets/ThirdParty/ModularBuildingsFramework/Scripts/Elements/Standard/ElementGenerationSettings.cs",
+      "sha256": "464112e8202d612745a0dabfa366189140c4216ac03ece0a72b7bfefd5fd25d3"
+    },
+    {
+      "from": "Assets/_Project/Scenes/ModularBuildingsFramework/Scripts/Elements/Standard/ElementGenerationSettings.cs.meta",
+      "to": "Assets/ThirdParty/ModularBuildingsFramework/Scripts/Elements/Standard/ElementGenerationSettings.cs.meta",
+      "sha256": "ac847fb6b798e141f8bc7184823ccbc6d863db0dca22b6e778d879e2d282790a"
+    },
+    {
+      "from": "Assets/_Project/Scenes/ModularBuildingsFramework/Scripts/Meshes/Editor/MeshExporter.cs.meta",
+      "to": "Assets/ThirdParty/ModularBuildingsFramework/Scripts/Meshes/Editor/MeshExporter.cs.meta",
+      "sha256": "a8de18ac9a707c85d79e78dbf5aa0fcd0aa947f9a64266ae1557941b808fda08"
+    },
+    {
+      "from": "Assets/_Project/Scenes/ModularBuildingsFramework/Scripts/Meshes/Editor/MeshExporter.cs",
+      "to": "Assets/ThirdParty/ModularBuildingsFramework/Scripts/Meshes/Editor/MeshExporter.cs",
+      "sha256": "55484be631c7d510ff59104f52e75449438921aa36293d587dacd5b77c475653"
+    },
+    {
+      "from": "Assets/_Project/Scenes/ModularBuildingsFramework/Scripts/BoxBuildings/Standard/CapItem.cs.meta",
+      "to": "Assets/ThirdParty/ModularBuildingsFramework/Scripts/BoxBuildings/Standard/CapItem.cs.meta",
+      "sha256": "de7408909df20f33788dd2fcdbcb3c61d56b4b344c37becdb6e535d6d961cb80"
+    },
+    {
+      "from": "Assets/_Project/Scenes/ModularBuildingsFramework/Scripts/BoxBuildings/Standard/SideItemsCollection.cs",
+      "to": "Assets/ThirdParty/ModularBuildingsFramework/Scripts/BoxBuildings/Standard/SideItemsCollection.cs",
+      "sha256": "889e7f5b364572b92fd4ce0e9070a255d7caa78b8aeaacf034d7736c35ce6b8b"
+    },
+    {
+      "from": "Assets/_Project/Scenes/ModularBuildingsFramework/Scripts/BoxBuildings/Standard/SideItem.cs.meta",
+      "to": "Assets/ThirdParty/ModularBuildingsFramework/Scripts/BoxBuildings/Standard/SideItem.cs.meta",
+      "sha256": "14b9e430b50e24c6703987d447292aba374628ee51aa7bea0aa9e3fb97c9eeff"
+    },
+    {
+      "from": "Assets/_Project/Scenes/ModularBuildingsFramework/Scripts/BoxBuildings/Standard/CapItem.cs",
+      "to": "Assets/ThirdParty/ModularBuildingsFramework/Scripts/BoxBuildings/Standard/CapItem.cs",
+      "sha256": "f16dd03eb09e0a32df8d8d93f669e869161d893ed0b0cec5287840ba16dd3b96"
+    },
+    {
+      "from": "Assets/_Project/Scenes/ModularBuildingsFramework/Scripts/BoxBuildings/Standard/CapGenerationSettings.cs.meta",
+      "to": "Assets/ThirdParty/ModularBuildingsFramework/Scripts/BoxBuildings/Standard/CapGenerationSettings.cs.meta",
+      "sha256": "a29d6ea8a4f85cbd129fbd93e7e8bcc6b8376cc84212dc4d1d91f79a1f347915"
+    },
+    {
+      "from": "Assets/_Project/Scenes/ModularBuildingsFramework/Scripts/BoxBuildings/Standard/BoxGenerationSettings.cs",
+      "to": "Assets/ThirdParty/ModularBuildingsFramework/Scripts/BoxBuildings/Standard/BoxGenerationSettings.cs",
+      "sha256": "322d86536dc332bce12bfd8f66be078d662dfcab2900b5a70c249d02f1cb628c"
+    },
+    {
+      "from": "Assets/_Project/Scenes/ModularBuildingsFramework/Scripts/BoxBuildings/Standard/SideGenerationSettings.cs",
+      "to": "Assets/ThirdParty/ModularBuildingsFramework/Scripts/BoxBuildings/Standard/SideGenerationSettings.cs",
+      "sha256": "d844121e5697f7601e50ae4106764cc8c260350364ed2f1c4de6b496c097b780"
+    },
+    {
+      "from": "Assets/_Project/Scenes/ModularBuildingsFramework/Scripts/BoxBuildings/Standard/SideGenerationSettings.cs.meta",
+      "to": "Assets/ThirdParty/ModularBuildingsFramework/Scripts/BoxBuildings/Standard/SideGenerationSettings.cs.meta",
+      "sha256": "27f5a61c222ea877f01bb82979dc9e6cbe7476c8d06a3609b30b2e539eaaa49a"
+    },
+    {
+      "from": "Assets/_Project/Scenes/ModularBuildingsFramework/Scripts/BoxBuildings/Standard/SideItem.cs",
+      "to": "Assets/ThirdParty/ModularBuildingsFramework/Scripts/BoxBuildings/Standard/SideItem.cs",
+      "sha256": "a8ccf3a2efbae59c98e4a50bc5a6a8b6e1c6db8c865bf68b94933adeb0fe5237"
+    },
+    {
+      "from": "Assets/_Project/Scenes/ModularBuildingsFramework/Scripts/BoxBuildings/Standard/BoxGenerationSettings.cs.meta",
+      "to": "Assets/ThirdParty/ModularBuildingsFramework/Scripts/BoxBuildings/Standard/BoxGenerationSettings.cs.meta",
+      "sha256": "565592fe2f80e75730afeede59eb08fcc161ca36917ad8e33cc95be511107f45"
+    },
+    {
+      "from": "Assets/_Project/Scenes/ModularBuildingsFramework/Scripts/BoxBuildings/Standard/CapGenerationSettings.cs",
+      "to": "Assets/ThirdParty/ModularBuildingsFramework/Scripts/BoxBuildings/Standard/CapGenerationSettings.cs",
+      "sha256": "a57559ba6b7a5ad7796d7b57f278437136ffbbd7c8735ca5e6b40306d0407f29"
+    },
+    {
+      "from": "Assets/_Project/Scenes/ModularBuildingsFramework/Scripts/BoxBuildings/Standard/SideItemsCollection.cs.meta",
+      "to": "Assets/ThirdParty/ModularBuildingsFramework/Scripts/BoxBuildings/Standard/SideItemsCollection.cs.meta",
+      "sha256": "94019dd4649a57cd46d3487e85d78f8d5cb89f337d1e2c7f88045951e4c0135b"
+    },
+    {
+      "from": "Assets/_Project/Scenes/ModularBuildingsFramework/Scripts/Decorators/Editor/MaterialRandomizerItemDrawer.cs.meta",
+      "to": "Assets/ThirdParty/ModularBuildingsFramework/Scripts/Decorators/Editor/MaterialRandomizerItemDrawer.cs.meta",
+      "sha256": "541592e04e8036969f6e12db51840b114dbcaebed76d16d73d16c8a17d39b88f"
+    },
+    {
+      "from": "Assets/_Project/Scenes/ModularBuildingsFramework/Scripts/Decorators/Editor/MaterialRandomizerItemDrawer.cs",
+      "to": "Assets/ThirdParty/ModularBuildingsFramework/Scripts/Decorators/Editor/MaterialRandomizerItemDrawer.cs",
+      "sha256": "86cf6be8d67c05ffc3cb04336c0f33dde7842fe3b865f23d93944c46655e85b9"
+    },
+    {
+      "from": "Assets/_Project/Scenes/ModularBuildingsFramework/Examples/Content/Textures.meta",
+      "to": "Assets/ThirdParty/ModularBuildingsFramework/Examples/Content/Textures.meta",
+      "sha256": "ee0d97ce9309eea806f561808d4bc6902c63d8096b3ee29194a4ea399e7d2b28"
+    },
+    {
+      "from": "Assets/_Project/Scenes/ModularBuildingsFramework/Examples/Content/Props.meta",
+      "to": "Assets/ThirdParty/ModularBuildingsFramework/Examples/Content/Props.meta",
+      "sha256": "bc4e22c417fbab7be511cdfcb8282ec41604a689815124ea8b7f1d024582abf9"
+    },
+    {
+      "from": "Assets/_Project/Scenes/ModularBuildingsFramework/Examples/Content/OfficeC.meta",
+      "to": "Assets/ThirdParty/ModularBuildingsFramework/Examples/Content/OfficeC.meta",
+      "sha256": "c75b627ae6003bd588aa3db34e5d133c5e0b2af3e9c4d8adc28fdc15257681e3"
+    },
+    {
+      "from": "Assets/_Project/Scenes/ModularBuildingsFramework/Examples/Content/Textures/BitumenBareA.tga.meta",
+      "to": "Assets/ThirdParty/ModularBuildingsFramework/Examples/Content/Textures/BitumenBareA.tga.meta",
+      "sha256": "6952f4533e58af7b3c306de7bda3a84f9bd1a5884c0100d872d8921be42d85cd"
+    },
+    {
+      "from": "Assets/_Project/Scenes/ModularBuildingsFramework/Examples/Content/Textures/WallTilesA.tga",
+      "to": "Assets/ThirdParty/ModularBuildingsFramework/Examples/Content/Textures/WallTilesA.tga",
+      "sha256": "f51a0382bd470d792216f30659deb153973640660006e1d7020dd1c2a2d694e6"
+    },
+    {
+      "from": "Assets/_Project/Scenes/ModularBuildingsFramework/Examples/Content/Textures/BitumenBareA.tga",
+      "to": "Assets/ThirdParty/ModularBuildingsFramework/Examples/Content/Textures/BitumenBareA.tga",
+      "sha256": "43eb5f14208b6de677b46cf56ed9f14f8fd9fbf56ad49d5155396b5421bbcec5"
+    },
+    {
+      "from": "Assets/_Project/Scenes/ModularBuildingsFramework/Examples/Content/Textures/WallTilesA_N.tga.meta",
+      "to": "Assets/ThirdParty/ModularBuildingsFramework/Examples/Content/Textures/WallTilesA_N.tga.meta",
+      "sha256": "80b352de512817dddfe1af28dbbcc3aaa6c6c6cbd6e677d49ed046e13fb7377b"
+    },
+    {
+      "from": "Assets/_Project/Scenes/ModularBuildingsFramework/Examples/Content/Textures/WallTilesA_N.tga",
+      "to": "Assets/ThirdParty/ModularBuildingsFramework/Examples/Content/Textures/WallTilesA_N.tga",
+      "sha256": "63b1fc6635c572cca7f28b67269e8f594a3894d2cd31ff519d2d64781757f860"
+    },
+    {
+      "from": "Assets/_Project/Scenes/ModularBuildingsFramework/Examples/Content/Textures/WallTilesA.tga.meta",
+      "to": "Assets/ThirdParty/ModularBuildingsFramework/Examples/Content/Textures/WallTilesA.tga.meta",
+      "sha256": "683c049ecc42fa9b0804e350ecb55d3f763566ac5933d355953901dfc96e4b49"
+    },
+    {
+      "from": "Assets/_Project/Scenes/ModularBuildingsFramework/Examples/Content/OfficeC/Textures.meta",
+      "to": "Assets/ThirdParty/ModularBuildingsFramework/Examples/Content/OfficeC/Textures.meta",
+      "sha256": "a6ab1c432beddff358d5c2a4994a40f7f0e2aaae335df632732f95756fc6392b"
+    },
+    {
+      "from": "Assets/_Project/Scenes/ModularBuildingsFramework/Examples/Content/OfficeC/Prefabs.meta",
+      "to": "Assets/ThirdParty/ModularBuildingsFramework/Examples/Content/OfficeC/Prefabs.meta",
+      "sha256": "cb1efeb2c8912553bf8551825a969b31a10940f04d02d32bf1ae34fcfab9e479"
+    },
+    {
+      "from": "Assets/_Project/Scenes/ModularBuildingsFramework/Examples/Content/OfficeC/Models.meta",
+      "to": "Assets/ThirdParty/ModularBuildingsFramework/Examples/Content/OfficeC/Models.meta",
+      "sha256": "1260071d775840466c807dad4b2ca4ed3492eba4c89ced85f71b805674074e5f"
+    },
+    {
+      "from": "Assets/_Project/Scenes/ModularBuildingsFramework/Examples/Content/Props/AirConditioner.meta",
+      "to": "Assets/ThirdParty/ModularBuildingsFramework/Examples/Content/Props/AirConditioner.meta",
+      "sha256": "4a25e04badc0d186b2afc75fd89336e51ab9fde90291fc544e43e6f5579b1656"
+    },
+    {
+      "from": "Assets/_Project/Scenes/ModularBuildingsFramework/Examples/Content/Props/AirConditioner/Materials.meta",
+      "to": "Assets/ThirdParty/ModularBuildingsFramework/Examples/Content/Props/AirConditioner/Materials.meta",
+      "sha256": "607d0e306fd32736bcf1ac62d4b9dda818ce80f66166cbe3b15b2c9e696d2bab"
+    },
+    {
+      "from": "Assets/_Project/Scenes/ModularBuildingsFramework/Examples/Content/Props/AirConditioner/AirConditioner.FBX",
+      "to": "Assets/ThirdParty/ModularBuildingsFramework/Examples/Content/Props/AirConditioner/AirConditioner.FBX",
+      "sha256": "bcc768724ca318967791d6875960edd0de6f4a3cb9025a0156e5eebbad5ec5dc"
+    },
+    {
+      "from": "Assets/_Project/Scenes/ModularBuildingsFramework/Examples/Content/Props/AirConditioner/AirConditioner.tga",
+      "to": "Assets/ThirdParty/ModularBuildingsFramework/Examples/Content/Props/AirConditioner/AirConditioner.tga",
+      "sha256": "9b491191688afb1c791393181ed55f702c0d26df11cd2ca4016efab516fdbf14"
+    },
+    {
+      "from": "Assets/_Project/Scenes/ModularBuildingsFramework/Examples/Content/Props/AirConditioner/AirConditioner.tga.meta",
+      "to": "Assets/ThirdParty/ModularBuildingsFramework/Examples/Content/Props/AirConditioner/AirConditioner.tga.meta",
+      "sha256": "5fdc6641828eaf58e05b737f61fd71d3b6587418ae611e50e641e33a5c98ec20"
+    },
+    {
+      "from": "Assets/_Project/Scenes/ModularBuildingsFramework/Examples/Content/Props/AirConditioner/AirConditioner.FBX.meta",
+      "to": "Assets/ThirdParty/ModularBuildingsFramework/Examples/Content/Props/AirConditioner/AirConditioner.FBX.meta",
+      "sha256": "3459b3c64d5a01a67eb103871e0d7560aaceb64debe32e0ef0502eb6b0d9bce4"
+    },
+    {
+      "from": "Assets/_Project/Scenes/ModularBuildingsFramework/Examples/Content/Props/AirConditioner/Materials/AirConditioner.mat.meta",
+      "to": "Assets/ThirdParty/ModularBuildingsFramework/Examples/Content/Props/AirConditioner/Materials/AirConditioner.mat.meta",
+      "sha256": "8bb44969b4ed61d971cbd2c1a1cf37282f01e2d0a38598fdb09c4a3b50f63c73"
+    },
+    {
+      "from": "Assets/_Project/Scenes/ModularBuildingsFramework/Examples/Content/Props/AirConditioner/Materials/AirConditioner.mat",
+      "to": "Assets/ThirdParty/ModularBuildingsFramework/Examples/Content/Props/AirConditioner/Materials/AirConditioner.mat",
+      "sha256": "4cfb7ae2f10f2a2138981018d29598069254e54dc9b4c498170cebaad47c7978"
+    },
+    {
+      "from": "Assets/_Project/Scenes/ModularBuildingsFramework/Examples/Content/OfficeC/Textures/OfficeC_SocleA.tga.meta",
+      "to": "Assets/ThirdParty/ModularBuildingsFramework/Examples/Content/OfficeC/Textures/OfficeC_SocleA.tga.meta",
+      "sha256": "1250077001125b6250570ff25d6f12e0fee453c29cf6cd50a45219136db478bd"
+    },
+    {
+      "from": "Assets/_Project/Scenes/ModularBuildingsFramework/Examples/Content/OfficeC/Textures/OfficeC_SocleA.tga",
+      "to": "Assets/ThirdParty/ModularBuildingsFramework/Examples/Content/OfficeC/Textures/OfficeC_SocleA.tga",
+      "sha256": "907239af9fa884c4dc6e69cc5b82021a0d6d6c0e365a507300d24cb605079b57"
+    },
+    {
+      "from": "Assets/_Project/Scenes/ModularBuildingsFramework/Examples/Content/OfficeC/Textures/OfficeC_Windows.tga.meta",
+      "to": "Assets/ThirdParty/ModularBuildingsFramework/Examples/Content/OfficeC/Textures/OfficeC_Windows.tga.meta",
+      "sha256": "36d2eabbd89c611af5838e494ee67a9ec92c7e7e6a511b69c7e76d84a9615837"
+    },
+    {
+      "from": "Assets/_Project/Scenes/ModularBuildingsFramework/Examples/Content/OfficeC/Textures/OfficeC_Windows.tga",
+      "to": "Assets/ThirdParty/ModularBuildingsFramework/Examples/Content/OfficeC/Textures/OfficeC_Windows.tga",
+      "sha256": "e82c7ac3aa685673eb73efb219dfd846384738b0d69b1ce94ce0bf19b8e1f860"
+    },
+    {
+      "from": "Assets/_Project/Scenes/ModularBuildingsFramework/Examples/Content/OfficeC/Prefabs/SideCornerRepeatA.prefab.meta",
+      "to": "Assets/ThirdParty/ModularBuildingsFramework/Examples/Content/OfficeC/Prefabs/SideCornerRepeatA.prefab.meta",
+      "sha256": "ccdeae9e77c13722b48b73074661d7ba87447541cbd40b372c2f7c606bf82524"
+    },
+    {
+      "from": "Assets/_Project/Scenes/ModularBuildingsFramework/Examples/Content/OfficeC/Prefabs/SideCornerRepeatA.prefab",
+      "to": "Assets/ThirdParty/ModularBuildingsFramework/Examples/Content/OfficeC/Prefabs/SideCornerRepeatA.prefab",
+      "sha256": "7ab3808dcde0432075fd1d119e801413d35dde33eb9e5066003e9b90fa6afe33"
+    },
+    {
+      "from": "Assets/_Project/Scenes/ModularBuildingsFramework/Examples/Content/OfficeC/Prefabs/SideCornerSocleA.prefab.meta",
+      "to": "Assets/ThirdParty/ModularBuildingsFramework/Examples/Content/OfficeC/Prefabs/SideCornerSocleA.prefab.meta",
+      "sha256": "b26de950d1bde05e7ebb7e98f2a84e76b0a80923bcc222e631b9dd24aeb793f3"
+    },
+    {
+      "from": "Assets/_Project/Scenes/ModularBuildingsFramework/Examples/Content/OfficeC/Prefabs/SideSocleA.prefab",
+      "to": "Assets/ThirdParty/ModularBuildingsFramework/Examples/Content/OfficeC/Prefabs/SideSocleA.prefab",
+      "sha256": "793807c01bb8d3ccc57a4c0c58cfd85055bd5e0e18c2295df60c7c39c48c6e92"
+    },
+    {
+      "from": "Assets/_Project/Scenes/ModularBuildingsFramework/Examples/Content/OfficeC/Prefabs/FacadeRepeatA_AirConditioner.prefab",
+      "to": "Assets/ThirdParty/ModularBuildingsFramework/Examples/Content/OfficeC/Prefabs/FacadeRepeatA_AirConditioner.prefab",
+      "sha256": "219c5e3aed233de06e145d8ce31ef6956feb952eeba2741a6843b82d5644b672"
+    },
+    {
+      "from": "Assets/_Project/Scenes/ModularBuildingsFramework/Examples/Content/OfficeC/Prefabs/Roof.prefab.meta",
+      "to": "Assets/ThirdParty/ModularBuildingsFramework/Examples/Content/OfficeC/Prefabs/Roof.prefab.meta",
+      "sha256": "e464c327a2d74601a6709e0d0724f412ab76d6677cb0d39b1a7cb0b97df946eb"
+    },
+    {
+      "from": "Assets/_Project/Scenes/ModularBuildingsFramework/Examples/Content/OfficeC/Prefabs/Roof.prefab",
+      "to": "Assets/ThirdParty/ModularBuildingsFramework/Examples/Content/OfficeC/Prefabs/Roof.prefab",
+      "sha256": "a9df29a6bb396589d9bd27a5deaeb2b9d00c2c7f48b792702d006b88c067dc58"
+    },
+    {
+      "from": "Assets/_Project/Scenes/ModularBuildingsFramework/Examples/Content/OfficeC/Prefabs/SideTopA.prefab",
+      "to": "Assets/ThirdParty/ModularBuildingsFramework/Examples/Content/OfficeC/Prefabs/SideTopA.prefab",
+      "sha256": "114e8816c0f69da7c665ec1c44151eaf821159b0fae56c06343834b2c4f7caca"
+    },
+    {
+      "from": "Assets/_Project/Scenes/ModularBuildingsFramework/Examples/Content/OfficeC/Prefabs/FacadeRepeatA_AirConditioner.prefab.meta",
+      "to": "Assets/ThirdParty/ModularBuildingsFramework/Examples/Content/OfficeC/Prefabs/FacadeRepeatA_AirConditioner.prefab.meta",
+      "sha256": "b1bbc57e91107eb6e7890e39e03dfff1761ab4dac466e93732a31c455349e795"
+    },
+    {
+      "from": "Assets/_Project/Scenes/ModularBuildingsFramework/Examples/Content/OfficeC/Prefabs/FacadeRepeatA.prefab",
+      "to": "Assets/ThirdParty/ModularBuildingsFramework/Examples/Content/OfficeC/Prefabs/FacadeRepeatA.prefab",
+      "sha256": "9a831c6232441e078b65f05f8da8513d806185d84c3880ec74476a95e71c875a"
+    },
+    {
+      "from": "Assets/_Project/Scenes/ModularBuildingsFramework/Examples/Content/OfficeC/Prefabs/SideRepeatA.prefab.meta",
+      "to": "Assets/ThirdParty/ModularBuildingsFramework/Examples/Content/OfficeC/Prefabs/SideRepeatA.prefab.meta",
+      "sha256": "f0ffe266bc5b05be979b22715725424bcf4252d2bc4021b368ff9c334d32c8c2"
+    },
+    {
+      "from": "Assets/_Project/Scenes/ModularBuildingsFramework/Examples/Content/OfficeC/Prefabs/SideRepeatA.prefab",
+      "to": "Assets/ThirdParty/ModularBuildingsFramework/Examples/Content/OfficeC/Prefabs/SideRepeatA.prefab",
+      "sha256": "b0b03457918a8df141fdda795c39cf0352a2327628a32ad6c796f30f4af7a763"
+    },
+    {
+      "from": "Assets/_Project/Scenes/ModularBuildingsFramework/Examples/Content/OfficeC/Prefabs/SideCornerTopA.prefab",
+      "to": "Assets/ThirdParty/ModularBuildingsFramework/Examples/Content/OfficeC/Prefabs/SideCornerTopA.prefab",
+      "sha256": "cd09dc342285687df3a972786274ca2f2c2767beef6f2ae1e1a49a323501f4e7"
+    },
+    {
+      "from": "Assets/_Project/Scenes/ModularBuildingsFramework/Examples/Content/OfficeC/Prefabs/SideCornerTopA.prefab.meta",
+      "to": "Assets/ThirdParty/ModularBuildingsFramework/Examples/Content/OfficeC/Prefabs/SideCornerTopA.prefab.meta",
+      "sha256": "daf80427ddae8f79a023249606b625c9d6916448003d178ad9ac71c332729985"
+    },
+    {
+      "from": "Assets/_Project/Scenes/ModularBuildingsFramework/Examples/Content/OfficeC/Prefabs/FacadeRepeatA.prefab.meta",
+      "to": "Assets/ThirdParty/ModularBuildingsFramework/Examples/Content/OfficeC/Prefabs/FacadeRepeatA.prefab.meta",
+      "sha256": "69919ce1740461bb57d36627df47486db323ddb353d374a0aeeba33665528b83"
+    },
+    {
+      "from": "Assets/_Project/Scenes/ModularBuildingsFramework/Examples/Content/OfficeC/Prefabs/FacadeSocleA.prefab",
+      "to": "Assets/ThirdParty/ModularBuildingsFramework/Examples/Content/OfficeC/Prefabs/FacadeSocleA.prefab",
+      "sha256": "46859a1b9d3d10f470734721db3b967974ff318fdaf85f43d45117e6b1f4c49d"
+    },
+    {
+      "from": "Assets/_Project/Scenes/ModularBuildingsFramework/Examples/Content/OfficeC/Prefabs/FacadeSocleA.prefab.meta",
+      "to": "Assets/ThirdParty/ModularBuildingsFramework/Examples/Content/OfficeC/Prefabs/FacadeSocleA.prefab.meta",
+      "sha256": "42516a2feb48764a70d24d26d5aaa145dd6e86e9c553179da47294f550175c4c"
+    },
+    {
+      "from": "Assets/_Project/Scenes/ModularBuildingsFramework/Examples/Content/OfficeC/Prefabs/SideSocleA.prefab.meta",
+      "to": "Assets/ThirdParty/ModularBuildingsFramework/Examples/Content/OfficeC/Prefabs/SideSocleA.prefab.meta",
+      "sha256": "cd1045f5064225ca22346bd75ba41221ddb2f5b1ac46129c59a57900f8ba60ae"
+    },
+    {
+      "from": "Assets/_Project/Scenes/ModularBuildingsFramework/Examples/Content/OfficeC/Prefabs/SideTopA.prefab.meta",
+      "to": "Assets/ThirdParty/ModularBuildingsFramework/Examples/Content/OfficeC/Prefabs/SideTopA.prefab.meta",
+      "sha256": "abbfc1f0b7df65ab29d0a3f1505669aad536d5d08230854b4e0619d84e6aa488"
+    },
+    {
+      "from": "Assets/_Project/Scenes/ModularBuildingsFramework/Examples/Content/OfficeC/Prefabs/SideCornerSocleA.prefab",
+      "to": "Assets/ThirdParty/ModularBuildingsFramework/Examples/Content/OfficeC/Prefabs/SideCornerSocleA.prefab",
+      "sha256": "adee1f123d907b2d2a5b879bfa7100266a4c829f729cf226c769dcaa3b583d3c"
+    },
+    {
+      "from": "Assets/_Project/Scenes/ModularBuildingsFramework/Examples/Content/OfficeC/Models/SideCornerSocleA.FBX",
+      "to": "Assets/ThirdParty/ModularBuildingsFramework/Examples/Content/OfficeC/Models/SideCornerSocleA.FBX",
+      "sha256": "9da90b0d3f59fc3147f38c6dfb05d432782bca02c942928284b1baee022ebb7e"
+    },
+    {
+      "from": "Assets/_Project/Scenes/ModularBuildingsFramework/Examples/Content/OfficeC/Models/SideRepeatA.FBX",
+      "to": "Assets/ThirdParty/ModularBuildingsFramework/Examples/Content/OfficeC/Models/SideRepeatA.FBX",
+      "sha256": "dc0bd4001cdf231b4e79d1b2177eb56272976449d145bc3afb0a87e85f0ce97d"
+    },
+    {
+      "from": "Assets/_Project/Scenes/ModularBuildingsFramework/Examples/Content/OfficeC/Models/FacadeRepeatA.FBX",
+      "to": "Assets/ThirdParty/ModularBuildingsFramework/Examples/Content/OfficeC/Models/FacadeRepeatA.FBX",
+      "sha256": "4ff50e470fd05ccd48b77a0d48eded36abf75d9795f12f57c425c510c4dc1202"
+    },
+    {
+      "from": "Assets/_Project/Scenes/ModularBuildingsFramework/Examples/Content/OfficeC/Models/SideTopA.FBX.meta",
+      "to": "Assets/ThirdParty/ModularBuildingsFramework/Examples/Content/OfficeC/Models/SideTopA.FBX.meta",
+      "sha256": "732d7afee7af437f4ab1e5b9ad59655a8d054defa972f754b7ec0cded904a6ec"
+    },
+    {
+      "from": "Assets/_Project/Scenes/ModularBuildingsFramework/Examples/Content/OfficeC/Models/SideTopA.FBX",
+      "to": "Assets/ThirdParty/ModularBuildingsFramework/Examples/Content/OfficeC/Models/SideTopA.FBX",
+      "sha256": "927f4f38733a611e7046f10132ac1d8dd5d343d0b0658cc622ae9cdf11242d5c"
+    },
+    {
+      "from": "Assets/_Project/Scenes/ModularBuildingsFramework/Examples/Content/OfficeC/Models/SideSocleA.FBX.meta",
+      "to": "Assets/ThirdParty/ModularBuildingsFramework/Examples/Content/OfficeC/Models/SideSocleA.FBX.meta",
+      "sha256": "04eae0758e9c4119bd0e486611c0d334084b824a9265527c827531d37585d478"
+    },
+    {
+      "from": "Assets/_Project/Scenes/ModularBuildingsFramework/Examples/Content/OfficeC/Models/Materials.meta",
+      "to": "Assets/ThirdParty/ModularBuildingsFramework/Examples/Content/OfficeC/Models/Materials.meta",
+      "sha256": "7bf7e5473e2118c68331d7ebbb6d159d923880b694382e6c08ed171b2d126e3d"
+    },
+    {
+      "from": "Assets/_Project/Scenes/ModularBuildingsFramework/Examples/Content/OfficeC/Models/SideCornerSocleA.FBX.meta",
+      "to": "Assets/ThirdParty/ModularBuildingsFramework/Examples/Content/OfficeC/Models/SideCornerSocleA.FBX.meta",
+      "sha256": "33e322cb0c5d58eb647d1fd457a5487baaec968c018cdb749bca7994e48ba2e3"
+    },
+    {
+      "from": "Assets/_Project/Scenes/ModularBuildingsFramework/Examples/Content/OfficeC/Models/SideCornerTopA.FBX",
+      "to": "Assets/ThirdParty/ModularBuildingsFramework/Examples/Content/OfficeC/Models/SideCornerTopA.FBX",
+      "sha256": "c68d10778a214fb55480c15efa94c483231766752bbb5050e97d1ac17f5242c0"
+    },
+    {
+      "from": "Assets/_Project/Scenes/ModularBuildingsFramework/Examples/Content/OfficeC/Models/SideRepeatA.FBX.meta",
+      "to": "Assets/ThirdParty/ModularBuildingsFramework/Examples/Content/OfficeC/Models/SideRepeatA.FBX.meta",
+      "sha256": "6619c8320b2deedc1a14a5bd5f0b33aae728c9d9814200f07c44e542575d9682"
+    },
+    {
+      "from": "Assets/_Project/Scenes/ModularBuildingsFramework/Examples/Content/OfficeC/Models/FacadeSocleA.FBX",
+      "to": "Assets/ThirdParty/ModularBuildingsFramework/Examples/Content/OfficeC/Models/FacadeSocleA.FBX",
+      "sha256": "c9b7b7c1deaa175c588c102858d546f6128a370103e77d5f3eb6a2f28f47a4cc"
+    },
+    {
+      "from": "Assets/_Project/Scenes/ModularBuildingsFramework/Examples/Content/OfficeC/Models/SideSocleA.FBX",
+      "to": "Assets/ThirdParty/ModularBuildingsFramework/Examples/Content/OfficeC/Models/SideSocleA.FBX",
+      "sha256": "af2e96c8f25cd2ec8c64cde154f529ff0406d4a6866d118a001f6ecccd7b68df"
+    },
+    {
+      "from": "Assets/_Project/Scenes/ModularBuildingsFramework/Examples/Content/OfficeC/Models/SideCornerTopA.FBX.meta",
+      "to": "Assets/ThirdParty/ModularBuildingsFramework/Examples/Content/OfficeC/Models/SideCornerTopA.FBX.meta",
+      "sha256": "e2877b179a7154164d0365b8b895f7f331e9d9fb368fb2b9d84a41e7e9e7f2cb"
+    },
+    {
+      "from": "Assets/_Project/Scenes/ModularBuildingsFramework/Examples/Content/OfficeC/Models/FacadeRepeatA.FBX.meta",
+      "to": "Assets/ThirdParty/ModularBuildingsFramework/Examples/Content/OfficeC/Models/FacadeRepeatA.FBX.meta",
+      "sha256": "24f2ee251206f408aa2b0c514e777b4564d6323d9eed72ca1dfc5783e80568ce"
+    },
+    {
+      "from": "Assets/_Project/Scenes/ModularBuildingsFramework/Examples/Content/OfficeC/Models/SideCornerRepeatA.FBX.meta",
+      "to": "Assets/ThirdParty/ModularBuildingsFramework/Examples/Content/OfficeC/Models/SideCornerRepeatA.FBX.meta",
+      "sha256": "f010a1bff7b384f10b9bdac2ae61ccdd46a1bc56168e26306f4157e8e29cb0c0"
+    },
+    {
+      "from": "Assets/_Project/Scenes/ModularBuildingsFramework/Examples/Content/OfficeC/Models/SideCornerRepeatA.FBX",
+      "to": "Assets/ThirdParty/ModularBuildingsFramework/Examples/Content/OfficeC/Models/SideCornerRepeatA.FBX",
+      "sha256": "6f77eda679f7b4b39b8b057c2440d67eb66f953ce86b45b182dffb52214af44d"
+    },
+    {
+      "from": "Assets/_Project/Scenes/ModularBuildingsFramework/Examples/Content/OfficeC/Models/FacadeSocleA.FBX.meta",
+      "to": "Assets/ThirdParty/ModularBuildingsFramework/Examples/Content/OfficeC/Models/FacadeSocleA.FBX.meta",
+      "sha256": "8d7f5b7c54f3868e672d8bbc23ba6a216776dfac6d3e048ec2c67213b7e5f363"
+    },
+    {
+      "from": "Assets/_Project/Scenes/ModularBuildingsFramework/Examples/Content/OfficeC/Models/Materials/OfficeC_Windows_20.mat",
+      "to": "Assets/ThirdParty/ModularBuildingsFramework/Examples/Content/OfficeC/Models/Materials/OfficeC_Windows_20.mat",
+      "sha256": "bf22123db661ef5ccd54da7ded360d27c16ec4713894e33fdabd707a12886080"
+    },
+    {
+      "from": "Assets/_Project/Scenes/ModularBuildingsFramework/Examples/Content/OfficeC/Models/Materials/OfficeC_Windows_21.mat",
+      "to": "Assets/ThirdParty/ModularBuildingsFramework/Examples/Content/OfficeC/Models/Materials/OfficeC_Windows_21.mat",
+      "sha256": "63dfd5dbc344d6d038dcc0b8ea381213c4bc41e1ddfe0bad4c887f1841645417"
+    },
+    {
+      "from": "Assets/_Project/Scenes/ModularBuildingsFramework/Examples/Content/OfficeC/Models/Materials/OfficeC_Wnidows.mat.meta",
+      "to": "Assets/ThirdParty/ModularBuildingsFramework/Examples/Content/OfficeC/Models/Materials/OfficeC_Wnidows.mat.meta",
+      "sha256": "e5fbc7369e30a2e01595fae873051cecbac21bcf9cb7e0f7ca3ce4668579a342"
+    },
+    {
+      "from": "Assets/_Project/Scenes/ModularBuildingsFramework/Examples/Content/OfficeC/Models/Materials/WallTilesA.mat",
+      "to": "Assets/ThirdParty/ModularBuildingsFramework/Examples/Content/OfficeC/Models/Materials/WallTilesA.mat",
+      "sha256": "f091a92f0c61d18f448137d023509487b385adfd1545b7f8d42d6cacbc921f62"
+    },
+    {
+      "from": "Assets/_Project/Scenes/ModularBuildingsFramework/Examples/Content/OfficeC/Models/Materials/OfficeC_Windows_00.mat.meta",
+      "to": "Assets/ThirdParty/ModularBuildingsFramework/Examples/Content/OfficeC/Models/Materials/OfficeC_Windows_00.mat.meta",
+      "sha256": "0517db2589d2bca4a6356cfbc01fe6777275902b6ca1b44de5b4ae5b8c6ada66"
+    },
+    {
+      "from": "Assets/_Project/Scenes/ModularBuildingsFramework/Examples/Content/OfficeC/Models/Materials/OfficeC_Windows_22.mat",
+      "to": "Assets/ThirdParty/ModularBuildingsFramework/Examples/Content/OfficeC/Models/Materials/OfficeC_Windows_22.mat",
+      "sha256": "bd3703a6f8491da9d42604d683e1dddb5d2a9826c6f1d3298168d0a454cb93dd"
+    },
+    {
+      "from": "Assets/_Project/Scenes/ModularBuildingsFramework/Examples/Content/OfficeC/Models/Materials/OfficeC_Windows_01.mat.meta",
+      "to": "Assets/ThirdParty/ModularBuildingsFramework/Examples/Content/OfficeC/Models/Materials/OfficeC_Windows_01.mat.meta",
+      "sha256": "70559a1960c3c3d36b7c6864d5082d2aa5f8185248768e0c0b7491ad8ecae2a9"
+    },
+    {
+      "from": "Assets/_Project/Scenes/ModularBuildingsFramework/Examples/Content/OfficeC/Models/Materials/OfficeC_Windows_22.mat.meta",
+      "to": "Assets/ThirdParty/ModularBuildingsFramework/Examples/Content/OfficeC/Models/Materials/OfficeC_Windows_22.mat.meta",
+      "sha256": "e41cb76698431e6a2c185f2fa1aa3b64f34c53748451c99c62d01c5c704ebe0f"
+    },
+    {
+      "from": "Assets/_Project/Scenes/ModularBuildingsFramework/Examples/Content/OfficeC/Models/Materials/OfficeC_Windows.mat.meta",
+      "to": "Assets/ThirdParty/ModularBuildingsFramework/Examples/Content/OfficeC/Models/Materials/OfficeC_Windows.mat.meta",
+      "sha256": "ea46b620559867a264d6e72a6a9ea1a711fbc7e2df4c25a378c2a908fe467246"
+    },
+    {
+      "from": "Assets/_Project/Scenes/ModularBuildingsFramework/Examples/Content/OfficeC/Models/Materials/OfficeC_Wnidows.mat",
+      "to": "Assets/ThirdParty/ModularBuildingsFramework/Examples/Content/OfficeC/Models/Materials/OfficeC_Wnidows.mat",
+      "sha256": "975080d6d299b15db72decde5555fef0abaed57b8011f7cf81fbae5974b1b721"
+    },
+    {
+      "from": "Assets/_Project/Scenes/ModularBuildingsFramework/Examples/Content/OfficeC/Models/Materials/OfficeC_SocleA.mat",
+      "to": "Assets/ThirdParty/ModularBuildingsFramework/Examples/Content/OfficeC/Models/Materials/OfficeC_SocleA.mat",
+      "sha256": "8aff87378bf321e1c5d1aa5fcf54021fb9d5b65bc6465d5879a3846f58e185d8"
+    },
+    {
+      "from": "Assets/_Project/Scenes/ModularBuildingsFramework/Examples/Content/OfficeC/Models/Materials/WallTilesA.mat.meta",
+      "to": "Assets/ThirdParty/ModularBuildingsFramework/Examples/Content/OfficeC/Models/Materials/WallTilesA.mat.meta",
+      "sha256": "858a8fb43775ed66a6f17ce3be0c41bb728d169857c6b19155f69f2ce1ae7eff"
+    },
+    {
+      "from": "Assets/_Project/Scenes/ModularBuildingsFramework/Examples/Content/OfficeC/Models/Materials/BitumenRoof.mat",
+      "to": "Assets/ThirdParty/ModularBuildingsFramework/Examples/Content/OfficeC/Models/Materials/BitumenRoof.mat",
+      "sha256": "f3e0c36c983bc23ba9b40aff38a8366351baa09c6bc0947c8f21e27b5a49f23e"
+    },
+    {
+      "from": "Assets/_Project/Scenes/ModularBuildingsFramework/Examples/Content/OfficeC/Models/Materials/OfficeC_Windows_10.mat.meta",
+      "to": "Assets/ThirdParty/ModularBuildingsFramework/Examples/Content/OfficeC/Models/Materials/OfficeC_Windows_10.mat.meta",
+      "sha256": "df710a95951fbf1945a848c710e6d8e3d06631fc85d96ac3b00647de1998ad7a"
+    },
+    {
+      "from": "Assets/_Project/Scenes/ModularBuildingsFramework/Examples/Content/OfficeC/Models/Materials/OfficeC_Windows_11.mat.meta",
+      "to": "Assets/ThirdParty/ModularBuildingsFramework/Examples/Content/OfficeC/Models/Materials/OfficeC_Windows_11.mat.meta",
+      "sha256": "92482c891d0e6efe53d70c8a44f8022bd91f5779205ca5405c96de2b2b3b94f0"
+    },
+    {
+      "from": "Assets/_Project/Scenes/ModularBuildingsFramework/Examples/Content/OfficeC/Models/Materials/OfficeC_Windows_20.mat.meta",
+      "to": "Assets/ThirdParty/ModularBuildingsFramework/Examples/Content/OfficeC/Models/Materials/OfficeC_Windows_20.mat.meta",
+      "sha256": "c4cf82bd39fcfcce99aa609fcde593733b30502cbec0461c20f196d489002266"
+    },
+    {
+      "from": "Assets/_Project/Scenes/ModularBuildingsFramework/Examples/Content/OfficeC/Models/Materials/OfficeC_Windows_21.mat.meta",
+      "to": "Assets/ThirdParty/ModularBuildingsFramework/Examples/Content/OfficeC/Models/Materials/OfficeC_Windows_21.mat.meta",
+      "sha256": "898df11c720a59a7a22a310379aca3a22fa2888e76f9b7fdcd5decefc9b17d34"
+    },
+    {
+      "from": "Assets/_Project/Scenes/ModularBuildingsFramework/Examples/Content/OfficeC/Models/Materials/OfficeC_SocleA.mat.meta",
+      "to": "Assets/ThirdParty/ModularBuildingsFramework/Examples/Content/OfficeC/Models/Materials/OfficeC_SocleA.mat.meta",
+      "sha256": "db048ac164d460b26de2d6c9ac3b3e0970c328eba3f9364afb1c84702ed21a53"
+    },
+    {
+      "from": "Assets/_Project/Scenes/ModularBuildingsFramework/Examples/Content/OfficeC/Models/Materials/OfficeC_Windows_02.mat.meta",
+      "to": "Assets/ThirdParty/ModularBuildingsFramework/Examples/Content/OfficeC/Models/Materials/OfficeC_Windows_02.mat.meta",
+      "sha256": "dbdd0119f019d6da1631f2ee1bf5db8991d66e99bf23d595402df0a7a4196dcc"
+    },
+    {
+      "from": "Assets/_Project/Scenes/ModularBuildingsFramework/Examples/Content/OfficeC/Models/Materials/OfficeC_Windows_01.mat",
+      "to": "Assets/ThirdParty/ModularBuildingsFramework/Examples/Content/OfficeC/Models/Materials/OfficeC_Windows_01.mat",
+      "sha256": "d78f2ba0f7268a2a4ecd20b70e9da51629bfc24a36da0af353482b671fd15933"
+    },
+    {
+      "from": "Assets/_Project/Scenes/ModularBuildingsFramework/Examples/Content/OfficeC/Models/Materials/OfficeC_Windows_00.mat",
+      "to": "Assets/ThirdParty/ModularBuildingsFramework/Examples/Content/OfficeC/Models/Materials/OfficeC_Windows_00.mat",
+      "sha256": "0ab1cc2c4347a4ab9c425a9e2f65f295b9a8c433516359acc85dc56e416b0547"
+    },
+    {
+      "from": "Assets/_Project/Scenes/ModularBuildingsFramework/Examples/Content/OfficeC/Models/Materials/BitumenRoof.mat.meta",
+      "to": "Assets/ThirdParty/ModularBuildingsFramework/Examples/Content/OfficeC/Models/Materials/BitumenRoof.mat.meta",
+      "sha256": "11ca870a8ef98d9c5b7c484a6cd7db9d99bdb23a0a6727d57fd9a9e9e575354e"
+    },
+    {
+      "from": "Assets/_Project/Scenes/ModularBuildingsFramework/Examples/Content/OfficeC/Models/Materials/OfficeC_Windows.mat",
+      "to": "Assets/ThirdParty/ModularBuildingsFramework/Examples/Content/OfficeC/Models/Materials/OfficeC_Windows.mat",
+      "sha256": "dc38624beb063a64ffc212cd51fdc8bf7fda9e76842374b1446c6a59806479a7"
+    },
+    {
+      "from": "Assets/_Project/Scenes/ModularBuildingsFramework/Examples/Content/OfficeC/Models/Materials/OfficeC_Windows_02.mat",
+      "to": "Assets/ThirdParty/ModularBuildingsFramework/Examples/Content/OfficeC/Models/Materials/OfficeC_Windows_02.mat",
+      "sha256": "b558cde1d2173cbc060a16c6508e84a433c84866645a3c2bf750a13236287bf5"
+    },
+    {
+      "from": "Assets/_Project/Scenes/ModularBuildingsFramework/Examples/Content/OfficeC/Models/Materials/OfficeC_Windows_12.mat",
+      "to": "Assets/ThirdParty/ModularBuildingsFramework/Examples/Content/OfficeC/Models/Materials/OfficeC_Windows_12.mat",
+      "sha256": "7f20282e90dbafd3881df2946747ba39b4403927f46fea27171316ea406bdede"
+    },
+    {
+      "from": "Assets/_Project/Scenes/ModularBuildingsFramework/Examples/Content/OfficeC/Models/Materials/OfficeC_Windows_12.mat.meta",
+      "to": "Assets/ThirdParty/ModularBuildingsFramework/Examples/Content/OfficeC/Models/Materials/OfficeC_Windows_12.mat.meta",
+      "sha256": "e4081137928fcd968ccc4c2d419b09255528ab8a6ce26d291706f5e50fbaa97a"
+    },
+    {
+      "from": "Assets/_Project/Scenes/ModularBuildingsFramework/Examples/Content/OfficeC/Models/Materials/OfficeC_Windows_10.mat",
+      "to": "Assets/ThirdParty/ModularBuildingsFramework/Examples/Content/OfficeC/Models/Materials/OfficeC_Windows_10.mat",
+      "sha256": "0065329e828609ba3a41d64858aff72755e6bb7de885938b07cd08404650a372"
+    },
+    {
+      "from": "Assets/_Project/Scenes/ModularBuildingsFramework/Examples/Content/OfficeC/Models/Materials/OfficeC_Windows_11.mat",
+      "to": "Assets/ThirdParty/ModularBuildingsFramework/Examples/Content/OfficeC/Models/Materials/OfficeC_Windows_11.mat",
+      "sha256": "c98e96e7cf2388f8df3a31f0f4d5c758e089c7e252672db4b5f3c23d67083d90"
+    }
+  ],
+  "changed_existing_files": [
+    "Assets/_Project/Scripts/CanvasController.cs",
+    "Assets/_Project/Scripts/CenterEyeCamera.cs",
+    "Assets/_Project/Scripts/SceneRoute.cs",
+    "Assets/_Project/Editor/TitleTextSdfMigration.cs",
+    "ProjectSettings/EditorBuildSettings.asset"
+  ],
+  "deleted_files": [
+    "Assets/_Project/Art.meta",
+    "Assets/_Project/Meshes.meta",
+    "Assets/_Project/Scenes/TraficAcident.meta",
+    "Assets/_Project/Scenes/TraficAcident.unity",
+    "Assets/_Project/Scenes/TraficAcidentTitle.unity.meta",
+    "Assets/_Project/Scenes/TraficAcidentTitle.unity",
+    "Assets/_Project/Scenes/TraficAcident.unity.meta",
+    "Assets/_Project/Art/VFX.meta",
+    "Assets/_Project/Art/Materials.meta",
+    "Assets/_Project/Art/Images.meta",
+    "Assets/_Project/Editor/TitleMenuMigration.cs.meta",
+    "Assets/_Project/Editor/TitleMenuMigration.cs",
+    "Assets/_Project/Editor/XRUIProjectMigration.cs",
+    "Assets/_Project/Editor/XRUIProjectMigration.cs.meta",
+    "Assets/_Project/Art/Materials/Materials.meta",
+    "Assets/_Project/Scenes/TraficAcident/NavMesh-Ground_Road.asset.meta",
+    "Assets/_Project/Scenes/TraficAcident/NavMesh-Ground_Road.asset"
+  ],
+  "new_unresolved_guids": [],
+  "duplicate_guids": {},
+  "orphan_meta": [],
+  "missing_meta": []
+}

@@ -1,0 +1,320 @@
+[
+  {
+    "path": "Assets/ThirdParty/BuildingsModels/Models/Building1/M_Building1_m.mat",
+    "line": 40,
+    "guid": "8c34d448be639b94c8881591b5987c3a",
+    "field": "m_Texture: {fileID: 8900000, guid: 8c34d448be639b94c8881591b5987c3a, type: 3}"
+  },
+  {
+    "path": "Assets/ThirdParty/BuildingsModels/Models/Building6/M_building6.mat",
+    "line": 40,
+    "guid": "8c34d448be639b94c8881591b5987c3a",
+    "field": "m_Texture: {fileID: 8900000, guid: 8c34d448be639b94c8881591b5987c3a, type: 3}"
+  },
+  {
+    "path": "Assets/ThirdParty/BuildingsModels/Models/Building5/M_building5.mat",
+    "line": 53,
+    "guid": "ee6d29ba32da74c4ca18117ff3e2855d",
+    "field": "m_Texture: {fileID: 8900000, guid: ee6d29ba32da74c4ca18117ff3e2855d, type: 3}"
+  },
+  {
+    "path": "Assets/ThirdParty/BuildingsModels/Models/Building2/M_Building2_m.mat",
+    "line": 40,
+    "guid": "8c34d448be639b94c8881591b5987c3a",
+    "field": "m_Texture: {fileID: 8900000, guid: 8c34d448be639b94c8881591b5987c3a, type: 3}"
+  },
+  {
+    "path": "Assets/ThirdParty/BuildingsModels/Models/Kiosk2/Regroup01Mat.mat",
+    "line": 40,
+    "guid": "8c34d448be639b94c8881591b5987c3a",
+    "field": "m_Texture: {fileID: 8900000, guid: 8c34d448be639b94c8881591b5987c3a, type: 3}"
+  },
+  {
+    "path": "Assets/ThirdParty/BuildingsModels/Models/Kiosk/kiosk1Mat.mat",
+    "line": 40,
+    "guid": "8c34d448be639b94c8881591b5987c3a",
+    "field": "m_Texture: {fileID: 8900000, guid: 8c34d448be639b94c8881591b5987c3a, type: 3}"
+  },
+  {
+    "path": "Assets/ThirdParty/ModularBuildingsFramework/Examples/Content/OfficeC/Models/Materials/OfficeC_Windows_20.mat",
+    "line": 47,
+    "guid": "4c4630e31bb30184d806d76a59c24f82",
+    "field": "m_Texture: {fileID: 2800000, guid: 4c4630e31bb30184d806d76a59c24f82, type: 3}"
+  },
+  {
+    "path": "Assets/ThirdParty/ModularBuildingsFramework/Examples/Content/OfficeC/Models/Materials/OfficeC_Windows_20.mat",
+    "line": 59,
+    "guid": "fed90ad8f0e4378408724c322fe656c0",
+    "field": "m_Texture: {fileID: 2800000, guid: fed90ad8f0e4378408724c322fe656c0, type: 3}"
+  },
+  {
+    "path": "Assets/ThirdParty/ModularBuildingsFramework/Examples/Content/OfficeC/Models/Materials/OfficeC_Windows_21.mat",
+    "line": 34,
+    "guid": "4c4630e31bb30184d806d76a59c24f82",
+    "field": "m_Texture: {fileID: 2800000, guid: 4c4630e31bb30184d806d76a59c24f82, type: 3}"
+  },
+  {
+    "path": "Assets/ThirdParty/ModularBuildingsFramework/Examples/Content/OfficeC/Models/Materials/OfficeC_Windows_21.mat",
+    "line": 46,
+    "guid": "fed90ad8f0e4378408724c322fe656c0",
+    "field": "m_Texture: {fileID: 2800000, guid: fed90ad8f0e4378408724c322fe656c0, type: 3}"
+  },
+  {
+    "path": "Assets/ThirdParty/ModularBuildingsFramework/Examples/Content/OfficeC/Models/Materials/OfficeC_Windows_22.mat",
+    "line": 34,
+    "guid": "4c4630e31bb30184d806d76a59c24f82",
+    "field": "m_Texture: {fileID: 2800000, guid: 4c4630e31bb30184d806d76a59c24f82, type: 3}"
+  },
+  {
+    "path": "Assets/ThirdParty/ModularBuildingsFramework/Examples/Content/OfficeC/Models/Materials/OfficeC_Windows_22.mat",
+    "line": 46,
+    "guid": "fed90ad8f0e4378408724c322fe656c0",
+    "field": "m_Texture: {fileID: 2800000, guid: fed90ad8f0e4378408724c322fe656c0, type: 3}"
+  },
+  {
+    "path": "Assets/ThirdParty/ModularBuildingsFramework/Examples/Content/OfficeC/Models/Materials/OfficeC_SocleA.mat",
+    "line": 46,
+    "guid": "5bfba8592e2c7dc44b3861357e25501c",
+    "field": "m_Texture: {fileID: 2800000, guid: 5bfba8592e2c7dc44b3861357e25501c, type: 3}"
+  },
+  {
+    "path": "Assets/ThirdParty/ModularBuildingsFramework/Examples/Content/OfficeC/Models/Materials/OfficeC_Windows_01.mat",
+    "line": 47,
+    "guid": "4c4630e31bb30184d806d76a59c24f82",
+    "field": "m_Texture: {fileID: 2800000, guid: 4c4630e31bb30184d806d76a59c24f82, type: 3}"
+  },
+  {
+    "path": "Assets/ThirdParty/ModularBuildingsFramework/Examples/Content/OfficeC/Models/Materials/OfficeC_Windows_01.mat",
+    "line": 59,
+    "guid": "fed90ad8f0e4378408724c322fe656c0",
+    "field": "m_Texture: {fileID: 2800000, guid: fed90ad8f0e4378408724c322fe656c0, type: 3}"
+  },
+  {
+    "path": "Assets/ThirdParty/ModularBuildingsFramework/Examples/Content/OfficeC/Models/Materials/OfficeC_Windows_00.mat",
+    "line": 34,
+    "guid": "4c4630e31bb30184d806d76a59c24f82",
+    "field": "m_Texture: {fileID: 2800000, guid: 4c4630e31bb30184d806d76a59c24f82, type: 3}"
+  },
+  {
+    "path": "Assets/ThirdParty/ModularBuildingsFramework/Examples/Content/OfficeC/Models/Materials/OfficeC_Windows_00.mat",
+    "line": 46,
+    "guid": "fed90ad8f0e4378408724c322fe656c0",
+    "field": "m_Texture: {fileID: 2800000, guid: fed90ad8f0e4378408724c322fe656c0, type: 3}"
+  },
+  {
+    "path": "Assets/ThirdParty/ModularBuildingsFramework/Examples/Content/OfficeC/Models/Materials/OfficeC_Windows.mat",
+    "line": 47,
+    "guid": "4c4630e31bb30184d806d76a59c24f82",
+    "field": "m_Texture: {fileID: 2800000, guid: 4c4630e31bb30184d806d76a59c24f82, type: 3}"
+  },
+  {
+    "path": "Assets/ThirdParty/ModularBuildingsFramework/Examples/Content/OfficeC/Models/Materials/OfficeC_Windows.mat",
+    "line": 59,
+    "guid": "fed90ad8f0e4378408724c322fe656c0",
+    "field": "m_Texture: {fileID: 2800000, guid: fed90ad8f0e4378408724c322fe656c0, type: 3}"
+  },
+  {
+    "path": "Assets/ThirdParty/ModularBuildingsFramework/Examples/Content/OfficeC/Models/Materials/OfficeC_Windows_02.mat",
+    "line": 47,
+    "guid": "4c4630e31bb30184d806d76a59c24f82",
+    "field": "m_Texture: {fileID: 2800000, guid: 4c4630e31bb30184d806d76a59c24f82, type: 3}"
+  },
+  {
+    "path": "Assets/ThirdParty/ModularBuildingsFramework/Examples/Content/OfficeC/Models/Materials/OfficeC_Windows_02.mat",
+    "line": 59,
+    "guid": "fed90ad8f0e4378408724c322fe656c0",
+    "field": "m_Texture: {fileID: 2800000, guid: fed90ad8f0e4378408724c322fe656c0, type: 3}"
+  },
+  {
+    "path": "Assets/ThirdParty/ModularBuildingsFramework/Examples/Content/OfficeC/Models/Materials/OfficeC_Windows_12.mat",
+    "line": 47,
+    "guid": "4c4630e31bb30184d806d76a59c24f82",
+    "field": "m_Texture: {fileID: 2800000, guid: 4c4630e31bb30184d806d76a59c24f82, type: 3}"
+  },
+  {
+    "path": "Assets/ThirdParty/ModularBuildingsFramework/Examples/Content/OfficeC/Models/Materials/OfficeC_Windows_12.mat",
+    "line": 59,
+    "guid": "fed90ad8f0e4378408724c322fe656c0",
+    "field": "m_Texture: {fileID: 2800000, guid: fed90ad8f0e4378408724c322fe656c0, type: 3}"
+  },
+  {
+    "path": "Assets/ThirdParty/ModularBuildingsFramework/Examples/Content/OfficeC/Models/Materials/OfficeC_Windows_10.mat",
+    "line": 47,
+    "guid": "4c4630e31bb30184d806d76a59c24f82",
+    "field": "m_Texture: {fileID: 2800000, guid: 4c4630e31bb30184d806d76a59c24f82, type: 3}"
+  },
+  {
+    "path": "Assets/ThirdParty/ModularBuildingsFramework/Examples/Content/OfficeC/Models/Materials/OfficeC_Windows_10.mat",
+    "line": 59,
+    "guid": "fed90ad8f0e4378408724c322fe656c0",
+    "field": "m_Texture: {fileID: 2800000, guid: fed90ad8f0e4378408724c322fe656c0, type: 3}"
+  },
+  {
+    "path": "Assets/ThirdParty/ModularBuildingsFramework/Examples/Content/OfficeC/Models/Materials/OfficeC_Windows_11.mat",
+    "line": 34,
+    "guid": "4c4630e31bb30184d806d76a59c24f82",
+    "field": "m_Texture: {fileID: 2800000, guid: 4c4630e31bb30184d806d76a59c24f82, type: 3}"
+  },
+  {
+    "path": "Assets/ThirdParty/ModularBuildingsFramework/Examples/Content/OfficeC/Models/Materials/OfficeC_Windows_11.mat",
+    "line": 46,
+    "guid": "fed90ad8f0e4378408724c322fe656c0",
+    "field": "m_Texture: {fileID: 2800000, guid: fed90ad8f0e4378408724c322fe656c0, type: 3}"
+  },
+  {
+    "path": "Assets/ThirdParty/ModularLowpolyStreetsFree/FBX/Roads.fbx.meta",
+    "line": 31,
+    "guid": "f8a6e7ef54bd558469e70efa71698273",
+    "field": "second: {fileID: 2100000, guid: f8a6e7ef54bd558469e70efa71698273, type: 2}"
+  },
+  {
+    "path": "Assets/ThirdParty/ModularLowpolyStreetsFree/FBX/Poles.fbx.meta",
+    "line": 11,
+    "guid": "cbfad6e76dc35a84ea1556be39d04de7",
+    "field": "second: {fileID: 2100000, guid: cbfad6e76dc35a84ea1556be39d04de7, type: 2}"
+  },
+  {
+    "path": "Assets/ThirdParty/ParkGarage/Prefabs/parkgarage/Materials/stairwell_wall.mat",
+    "line": 33,
+    "guid": "7f918d7a9b3cdde4d8e99c65528f65fd",
+    "field": "m_Texture: {fileID: 2800000, guid: 7f918d7a9b3cdde4d8e99c65528f65fd, type: 3}"
+  },
+  {
+    "path": "Assets/ThirdParty/ParkGarage/Prefabs/parkgarage/Materials/Poles.mat",
+    "line": 33,
+    "guid": "acf2a76e052a7d84295aab74bb2e86e7",
+    "field": "m_Texture: {fileID: 2800000, guid: acf2a76e052a7d84295aab74bb2e86e7, type: 3}"
+  },
+  {
+    "path": "Assets/ThirdParty/ParkGarage/Prefabs/parkgarage/Materials/Wall_front_in.mat",
+    "line": 47,
+    "guid": "7f918d7a9b3cdde4d8e99c65528f65fd",
+    "field": "m_Texture: {fileID: 2800000, guid: 7f918d7a9b3cdde4d8e99c65528f65fd, type: 3}"
+  },
+  {
+    "path": "Assets/ThirdParty/ParkGarage/Prefabs/parkgarage/Materials/sidewalk_B.mat",
+    "line": 46,
+    "guid": "6d5be9e76a239c24c95241f3f2745457",
+    "field": "m_Texture: {fileID: 2800000, guid: 6d5be9e76a239c24c95241f3f2745457, type: 3}"
+  },
+  {
+    "path": "Assets/ThirdParty/ParkGarage/Prefabs/parkgarage/Materials/Big_poles.mat",
+    "line": 33,
+    "guid": "7f918d7a9b3cdde4d8e99c65528f65fd",
+    "field": "m_Texture: {fileID: 2800000, guid: 7f918d7a9b3cdde4d8e99c65528f65fd, type: 3}"
+  },
+  {
+    "path": "Assets/ThirdParty/ParkGarage/Prefabs/parkgarage/Materials/ramp.mat",
+    "line": 34,
+    "guid": "acf2a76e052a7d84295aab74bb2e86e7",
+    "field": "m_Texture: {fileID: 2800000, guid: acf2a76e052a7d84295aab74bb2e86e7, type: 3}"
+  },
+  {
+    "path": "Assets/ThirdParty/OfficeBuilding/environment/Office building/Prefabs/office building Prefab.prefab",
+    "line": 353173,
+    "guid": "01571ba68fb2dad46aa03094ab219579",
+    "field": "m_Material: {fileID: 13400000, guid: 01571ba68fb2dad46aa03094ab219579, type: 2}"
+  },
+  {
+    "path": "Assets/ThirdParty/OfficeBuilding/environment/Office building/Prefabs/office building Prefab.prefab",
+    "line": 365801,
+    "guid": "01571ba68fb2dad46aa03094ab219579",
+    "field": "m_Material: {fileID: 13400000, guid: 01571ba68fb2dad46aa03094ab219579, type: 2}"
+  },
+  {
+    "path": "Assets/ThirdParty/SingleDetailedTruck/3dobjects/Materials/truck-alu.mat",
+    "line": 50,
+    "guid": "2a313569912cba344af3d45de25989d2",
+    "field": "m_Texture: {fileID: 8900000, guid: 2a313569912cba344af3d45de25989d2, type: 2}"
+  },
+  {
+    "path": "Assets/ThirdParty/SingleDetailedTruck/3dobjects/Materials/trailer-wheels_metal.mat",
+    "line": 37,
+    "guid": "2a313569912cba344af3d45de25989d2",
+    "field": "m_Texture: {fileID: 8900000, guid: 2a313569912cba344af3d45de25989d2, type: 2}"
+  },
+  {
+    "path": "Assets/ThirdParty/SingleDetailedTruck/3dobjects/Materials/truck-metal_chromed.mat",
+    "line": 37,
+    "guid": "2a313569912cba344af3d45de25989d2",
+    "field": "m_Texture: {fileID: 8900000, guid: 2a313569912cba344af3d45de25989d2, type: 2}"
+  },
+  {
+    "path": "Assets/ThirdParty/SingleDetailedTruck/3dobjects/Materials/truck-windows.mat",
+    "line": 50,
+    "guid": "2a313569912cba344af3d45de25989d2",
+    "field": "m_Texture: {fileID: 8900000, guid: 2a313569912cba344af3d45de25989d2, type: 2}"
+  },
+  {
+    "path": "Assets/ThirdParty/SingleDetailedTruck/3dobjects/Materials/trailer-metal_chromed.mat",
+    "line": 50,
+    "guid": "2a313569912cba344af3d45de25989d2",
+    "field": "m_Texture: {fileID: 8900000, guid: 2a313569912cba344af3d45de25989d2, type: 2}"
+  },
+  {
+    "path": "Assets/ThirdParty/SingleDetailedTruck/3dobjects/Materials/truck-exhaust.mat",
+    "line": 50,
+    "guid": "2a313569912cba344af3d45de25989d2",
+    "field": "m_Texture: {fileID: 8900000, guid: 2a313569912cba344af3d45de25989d2, type: 2}"
+  },
+  {
+    "path": "Assets/ThirdParty/SingleDetailedTruck/3dobjects/Materials/trailer-alu.mat",
+    "line": 50,
+    "guid": "2a313569912cba344af3d45de25989d2",
+    "field": "m_Texture: {fileID: 8900000, guid: 2a313569912cba344af3d45de25989d2, type: 2}"
+  },
+  {
+    "path": "Assets/ThirdParty/SingleDetailedTruck/3dobjects/Materials/truck-metal_dark.mat",
+    "line": 50,
+    "guid": "2a313569912cba344af3d45de25989d2",
+    "field": "m_Texture: {fileID: 8900000, guid: 2a313569912cba344af3d45de25989d2, type: 2}"
+  },
+  {
+    "path": "Assets/ThirdParty/SingleDetailedTruck/3dobjects/Materials/truck-main_color.mat",
+    "line": 37,
+    "guid": "2a313569912cba344af3d45de25989d2",
+    "field": "m_Texture: {fileID: 8900000, guid: 2a313569912cba344af3d45de25989d2, type: 2}"
+  },
+  {
+    "path": "Assets/ThirdParty/SingleDetailedTruck/3dobjects/Materials/trailer-trailer_main_color.mat",
+    "line": 37,
+    "guid": "2a313569912cba344af3d45de25989d2",
+    "field": "m_Texture: {fileID: 8900000, guid: 2a313569912cba344af3d45de25989d2, type: 2}"
+  },
+  {
+    "path": "Assets/ThirdParty/SingleDetailedTruck/3dobjects/Materials/truck-wheel_metal.mat",
+    "line": 50,
+    "guid": "2a313569912cba344af3d45de25989d2",
+    "field": "m_Texture: {fileID: 8900000, guid: 2a313569912cba344af3d45de25989d2, type: 2}"
+  },
+  {
+    "path": "Assets/_Project/Settings/DefaultVolumeProfile.asset",
+    "line": 78,
+    "guid": "60f3b30c03e6ba64d9a27dc9dba8f28d",
+    "field": "m_Script: {fileID: 11500000, guid: 60f3b30c03e6ba64d9a27dc9dba8f28d, type: 3}"
+  },
+  {
+    "path": "Assets/_Project/Settings/DefaultVolumeProfile.asset",
+    "line": 119,
+    "guid": "0fd9ee276a1023e439cf7a9c393195fa",
+    "field": "m_Script: {fileID: 11500000, guid: 0fd9ee276a1023e439cf7a9c393195fa, type: 3}"
+  },
+  {
+    "path": "Assets/_Project/Settings/DefaultVolumeProfile.asset",
+    "line": 264,
+    "guid": "5a00a63fdd6bd2a45ab1f2d869305ffd",
+    "field": "m_Script: {fileID: 11500000, guid: 5a00a63fdd6bd2a45ab1f2d869305ffd, type: 3}"
+  },
+  {
+    "path": "Assets/_Project/Settings/DefaultVolumeProfile.asset",
+    "line": 836,
+    "guid": "74955a4b0b4243bc87231e8b59ed9140",
+    "field": "m_Script: {fileID: 11500000, guid: 74955a4b0b4243bc87231e8b59ed9140, type: 3}"
+  },
+  {
+    "path": "Assets/_Project/Scenes/TraficAcident_Meta.unity",
+    "line": 48912,
+    "guid": "2c59325cff8447d47899d7e518a87833",
+    "field": "m_Material: {fileID: 2100000, guid: 2c59325cff8447d47899d7e518a87833, type: 2}"
+  }
+]

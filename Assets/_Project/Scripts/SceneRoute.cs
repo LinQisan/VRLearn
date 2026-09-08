@@ -1,12 +1,10 @@
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
-/// <summary>Centralizes legacy and Meta scene routing without coupling either menu to one build.</summary>
+/// <summary>Centralizes routing for the supported Meta title and gameplay scenes.</summary>
 public static class SceneRoute
 {
-    public const string LegacyTitle = "TraficAcidentTitle";
     public const string MetaTitle = "TraficAcidentTitle_Meta";
-    public const string LegacyGameplay = "TraficAcident";
     public const string MetaGameplay = "TraficAcident_Meta";
 
     /// <summary>Valid accident scenario ID range. Must match ScenarioRuntime (exactly 10 entries, 0-9).</summary>
@@ -43,10 +41,10 @@ public static class SceneRoute
     public static bool IsMetaScene(string sceneName) => sceneName.EndsWith("_Meta");
 
     public static string GameplayForCurrentScene =>
-        IsMetaScene(SceneManager.GetActiveScene().name) ? MetaGameplay : LegacyGameplay;
+        MetaGameplay;
 
     public static string TitleForCurrentScene =>
-        IsMetaScene(SceneManager.GetActiveScene().name) ? MetaTitle : LegacyTitle;
+        MetaTitle;
 
     public static string CurrentScene => SceneManager.GetActiveScene().name;
 }

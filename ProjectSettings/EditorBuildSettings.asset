@@ -5,15 +5,9 @@ EditorBuildSettings:
   m_ObjectHideFlags: 0
   serializedVersion: 2
   m_Scenes:
-  - enabled: 0
-    path: Assets/_Project/Scenes/TraficAcidentTitle.unity
-    guid: b643342f6381e4a6dadda5509a328047
   - enabled: 1
     path: Assets/_Project/Scenes/TraficAcidentTitle_Meta.unity
     guid: 170db8a87ea114f20b6931b5e2bdd128
-  - enabled: 0
-    path: Assets/_Project/Scenes/TraficAcident.unity
-    guid: c60ab532ef59d4ff5add80eb7d0e7c45
   - enabled: 1
     path: Assets/_Project/Scenes/TraficAcident_Meta.unity
     guid: c4d31785f27df4a739b06cc8aa6eadd8

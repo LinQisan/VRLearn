@@ -1,0 +1,267 @@
+<?xml version="1.0" encoding="utf-8"?>
+<test-run id="2" testcasecount="23" result="Passed" total="23" passed="23" failed="0" inconclusive="0" skipped="0" asserts="0" engine-version="3.5.0.0" clr-version="4.0.30319.42000" start-time="2026-09-08 08:59:22Z" end-time="2026-09-08 08:59:56Z" duration="33.5888166">
+  <test-suite type="TestSuite" id="1036" name="VRLearn" fullname="VRLearn" runstate="Runnable" testcasecount="23" result="Passed" start-time="2026-09-08 08:59:22Z" end-time="2026-09-08 08:59:56Z" duration="33.588817" total="23" passed="23" failed="0" inconclusive="0" skipped="0" asserts="0">
+    <properties>
+      <property name="platform" value="PlayMode" />
+    </properties>
+    <test-suite type="Assembly" id="1032" name="VRLearn.PlayModeTests.dll" fullname="/Users/xinyu/VRLearn/Library/ScriptAssemblies/VRLearn.PlayModeTests.dll" runstate="Runnable" testcasecount="23" result="Passed" start-time="2026-09-08 08:59:22Z" end-time="2026-09-08 08:59:56Z" duration="33.573535" total="23" passed="23" failed="0" inconclusive="0" skipped="0" asserts="0">
+      <properties>
+        <property name="_PID" value="42545" />
+        <property name="_APPDOMAIN" value="Unity Child Domain" />
+        <property name="platform" value="PlayMode" />
+        <property name="EditorOnly" value="False" />
+      </properties>
+      <test-suite type="TestSuite" id="1033" name="VRLearn" fullname="VRLearn" runstate="Runnable" testcasecount="23" result="Passed" start-time="2026-09-08 08:59:22Z" end-time="2026-09-08 08:59:56Z" duration="33.572382" total="23" passed="23" failed="0" inconclusive="0" skipped="0" asserts="0">
+        <properties />
+        <test-suite type="TestSuite" id="1034" name="Tests" fullname="VRLearn.Tests" runstate="Runnable" testcasecount="23" result="Passed" start-time="2026-09-08 08:59:22Z" end-time="2026-09-08 08:59:56Z" duration="33.571697" total="23" passed="23" failed="0" inconclusive="0" skipped="0" asserts="0">
+          <properties />
+          <test-suite type="TestSuite" id="1035" name="PlayMode" fullname="VRLearn.Tests.PlayMode" runstate="Runnable" testcasecount="23" result="Passed" start-time="2026-09-08 08:59:22Z" end-time="2026-09-08 08:59:56Z" duration="33.570940" total="23" passed="23" failed="0" inconclusive="0" skipped="0" asserts="0">
+            <properties />
+            <test-suite type="TestFixture" id="1004" name="AccidentExperienceTests" fullname="VRLearn.Tests.PlayMode.AccidentExperienceTests" classname="VRLearn.Tests.PlayMode.AccidentExperienceTests" runstate="Runnable" testcasecount="3" result="Passed" start-time="2026-09-08 08:59:22Z" end-time="2026-09-08 08:59:39Z" duration="16.256573" total="3" passed="3" failed="0" inconclusive="0" skipped="0" asserts="0">
+              <properties />
+              <test-case id="1006" name="CollisionUsesActualSpeedBeforeTrafficFreeze" fullname="VRLearn.Tests.PlayMode.AccidentExperienceTests.CollisionUsesActualSpeedBeforeTrafficFreeze" methodname="CollisionUsesActualSpeedBeforeTrafficFreeze" classname="VRLearn.Tests.PlayMode.AccidentExperienceTests" runstate="Runnable" seed="1381324098" result="Passed" start-time="2026-09-08 08:59:22Z" end-time="2026-09-08 08:59:26Z" duration="4.059354" asserts="0">
+                <properties>
+                  <property name="_JOINTYPE" value="UnityCombinatorial" />
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+                <output><![CDATA[Camera "CenterEyeAnchor" does not use a Tracked Pose Driver (Input System), so its transform will not be updated by an XR device.  In order for this to be updated, please add a Tracked Pose Driver (Input System) with bindings for position and rotation of the center eye.
+Unable to process a controller whose SampleRateHz is 0 now.
+Unable to process a controller whose SampleRateHz is 0 now.
+��������
+Meta_XR_Player
+]]></output>
+              </test-case>
+              <test-case id="1007" name="DeformationUsesPrivateMeshAndPoolResetRestoresOriginal" fullname="VRLearn.Tests.PlayMode.AccidentExperienceTests.DeformationUsesPrivateMeshAndPoolResetRestoresOriginal" methodname="DeformationUsesPrivateMeshAndPoolResetRestoresOriginal" classname="VRLearn.Tests.PlayMode.AccidentExperienceTests" runstate="Runnable" seed="2130522840" result="Passed" start-time="2026-09-08 08:59:26Z" end-time="2026-09-08 08:59:27Z" duration="0.147749" asserts="0">
+                <properties>
+                  <property name="_JOINTYPE" value="UnityCombinatorial" />
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+              </test-case>
+              <test-case id="1005" name="RecordedReplayCompletesAndRetryRetainsParticipantSettings" fullname="VRLearn.Tests.PlayMode.AccidentExperienceTests.RecordedReplayCompletesAndRetryRetainsParticipantSettings" methodname="RecordedReplayCompletesAndRetryRetainsParticipantSettings" classname="VRLearn.Tests.PlayMode.AccidentExperienceTests" runstate="Runnable" seed="597973579" result="Passed" start-time="2026-09-08 08:59:27Z" end-time="2026-09-08 08:59:39Z" duration="12.025120" asserts="0">
+                <properties>
+                  <property name="_JOINTYPE" value="UnityCombinatorial" />
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+                <output><![CDATA[[OVRManager] OnDestroy
+Camera "CenterEyeAnchor" does not use a Tracked Pose Driver (Input System), so its transform will not be updated by an XR device.  In order for this to be updated, please add a Tracked Pose Driver (Input System) with bindings for position and rotation of the center eye.
+Recorded duration: 1.000863
+Your project uses a scriptable render pipeline. You can use Camera.stereoTargetEye only with the built-in renderer.
+[OVRManager] OnDestroy
+Camera "CenterEyeAnchor" does not use a Tracked Pose Driver (Input System), so its transform will not be updated by an XR device.  In order for this to be updated, please add a Tracked Pose Driver (Input System) with bindings for position and rotation of the center eye.
+]]></output>
+              </test-case>
+            </test-suite>
+            <test-suite type="TestFixture" id="1008" name="MetaGameplaySmokeTests" fullname="VRLearn.Tests.PlayMode.MetaGameplaySmokeTests" classname="VRLearn.Tests.PlayMode.MetaGameplaySmokeTests" runstate="Runnable" testcasecount="16" result="Passed" start-time="2026-09-08 08:59:39Z" end-time="2026-09-08 08:59:53Z" duration="14.321520" total="16" passed="16" failed="0" inconclusive="0" skipped="0" asserts="0">
+              <properties />
+              <test-case id="1021" name="AccidentReplayUsesIndependentOverheadCamera" fullname="VRLearn.Tests.PlayMode.MetaGameplaySmokeTests.AccidentReplayUsesIndependentOverheadCamera" methodname="AccidentReplayUsesIndependentOverheadCamera" classname="VRLearn.Tests.PlayMode.MetaGameplaySmokeTests" runstate="Runnable" seed="1990357666" result="Passed" start-time="2026-09-08 08:59:39Z" end-time="2026-09-08 08:59:41Z" duration="2.399665" asserts="0">
+                <properties>
+                  <property name="_JOINTYPE" value="UnityCombinatorial" />
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+                <output><![CDATA[[OVRManager] OnDestroy
+Camera "CenterEyeAnchor" does not use a Tracked Pose Driver (Input System), so its transform will not be updated by an XR device.  In order for this to be updated, please add a Tracked Pose Driver (Input System) with bindings for position and rotation of the center eye.
+Your project uses a scriptable render pipeline. You can use Camera.stereoTargetEye only with the built-in renderer.
+]]></output>
+              </test-case>
+              <test-suite type="ParameterizedMethod" id="1026" name="AvatarObservesTransferredScenario" fullname="VRLearn.Tests.PlayMode.MetaGameplaySmokeTests.AvatarObservesTransferredScenario" classname="VRLearn.Tests.PlayMode.MetaGameplaySmokeTests" runstate="Runnable" testcasecount="2" result="Passed" start-time="2026-09-08 08:59:41Z" end-time="2026-09-08 08:59:43Z" duration="1.485140" total="2" passed="2" failed="0" inconclusive="0" skipped="0" asserts="0">
+                <properties>
+                  <property name="_JOINTYPE" value="UnityCombinatorial" />
+                </properties>
+                <test-case id="1024" name="AvatarObservesTransferredScenario(2)" fullname="VRLearn.Tests.PlayMode.MetaGameplaySmokeTests.AvatarObservesTransferredScenario(2)" methodname="AvatarObservesTransferredScenario" classname="VRLearn.Tests.PlayMode.MetaGameplaySmokeTests" runstate="Runnable" seed="777222454" result="Passed" start-time="2026-09-08 08:59:41Z" end-time="2026-09-08 08:59:42Z" duration="0.742113" asserts="0">
+                  <properties>
+                    <property name="retryIteration" value="0" />
+                    <property name="repeatIteration" value="0" />
+                  </properties>
+                  <output><![CDATA[[OVRManager] OnDestroy
+Camera "CenterEyeAnchor" does not use a Tracked Pose Driver (Input System), so its transform will not be updated by an XR device.  In order for this to be updated, please add a Tracked Pose Driver (Input System) with bindings for position and rotation of the center eye.
+]]></output>
+                </test-case>
+                <test-case id="1025" name="AvatarObservesTransferredScenario(6)" fullname="VRLearn.Tests.PlayMode.MetaGameplaySmokeTests.AvatarObservesTransferredScenario(6)" methodname="AvatarObservesTransferredScenario" classname="VRLearn.Tests.PlayMode.MetaGameplaySmokeTests" runstate="Runnable" seed="1624724612" result="Passed" start-time="2026-09-08 08:59:42Z" end-time="2026-09-08 08:59:43Z" duration="0.739713" asserts="0">
+                  <properties>
+                    <property name="retryIteration" value="0" />
+                    <property name="repeatIteration" value="0" />
+                  </properties>
+                  <output><![CDATA[[OVRManager] OnDestroy
+Camera "CenterEyeAnchor" does not use a Tracked Pose Driver (Input System), so its transform will not be updated by an XR device.  In order for this to be updated, please add a Tracked Pose Driver (Input System) with bindings for position and rotation of the center eye.
+]]></output>
+                </test-case>
+              </test-suite>
+              <test-suite type="ParameterizedMethod" id="1020" name="EveryScenarioActivatesAndSupportsBothOutcomeStates" fullname="VRLearn.Tests.PlayMode.MetaGameplaySmokeTests.EveryScenarioActivatesAndSupportsBothOutcomeStates" classname="VRLearn.Tests.PlayMode.MetaGameplaySmokeTests" runstate="Runnable" testcasecount="10" result="Passed" start-time="2026-09-08 08:59:43Z" end-time="2026-09-08 08:59:50Z" duration="7.611654" total="10" passed="10" failed="0" inconclusive="0" skipped="0" asserts="0">
+                <properties>
+                  <property name="_JOINTYPE" value="UnityCombinatorial" />
+                </properties>
+                <test-case id="1010" name="EveryScenarioActivatesAndSupportsBothOutcomeStates(0)" fullname="VRLearn.Tests.PlayMode.MetaGameplaySmokeTests.EveryScenarioActivatesAndSupportsBothOutcomeStates(0)" methodname="EveryScenarioActivatesAndSupportsBothOutcomeStates" classname="VRLearn.Tests.PlayMode.MetaGameplaySmokeTests" runstate="Runnable" seed="68646137" result="Passed" start-time="2026-09-08 08:59:43Z" end-time="2026-09-08 08:59:43Z" duration="0.796301" asserts="0">
+                  <properties>
+                    <property name="retryIteration" value="0" />
+                    <property name="repeatIteration" value="0" />
+                  </properties>
+                  <output><![CDATA[[OVRManager] OnDestroy
+Camera "CenterEyeAnchor" does not use a Tracked Pose Driver (Input System), so its transform will not be updated by an XR device.  In order for this to be updated, please add a Tracked Pose Driver (Input System) with bindings for position and rotation of the center eye.
+]]></output>
+                </test-case>
+                <test-case id="1011" name="EveryScenarioActivatesAndSupportsBothOutcomeStates(1)" fullname="VRLearn.Tests.PlayMode.MetaGameplaySmokeTests.EveryScenarioActivatesAndSupportsBothOutcomeStates(1)" methodname="EveryScenarioActivatesAndSupportsBothOutcomeStates" classname="VRLearn.Tests.PlayMode.MetaGameplaySmokeTests" runstate="Runnable" seed="1766082235" result="Passed" start-time="2026-09-08 08:59:43Z" end-time="2026-09-08 08:59:44Z" duration="0.821855" asserts="0">
+                  <properties>
+                    <property name="retryIteration" value="0" />
+                    <property name="repeatIteration" value="0" />
+                  </properties>
+                  <output><![CDATA[[OVRManager] OnDestroy
+Camera "CenterEyeAnchor" does not use a Tracked Pose Driver (Input System), so its transform will not be updated by an XR device.  In order for this to be updated, please add a Tracked Pose Driver (Input System) with bindings for position and rotation of the center eye.
+]]></output>
+                </test-case>
+                <test-case id="1012" name="EveryScenarioActivatesAndSupportsBothOutcomeStates(2)" fullname="VRLearn.Tests.PlayMode.MetaGameplaySmokeTests.EveryScenarioActivatesAndSupportsBothOutcomeStates(2)" methodname="EveryScenarioActivatesAndSupportsBothOutcomeStates" classname="VRLearn.Tests.PlayMode.MetaGameplaySmokeTests" runstate="Runnable" seed="1307137959" result="Passed" start-time="2026-09-08 08:59:44Z" end-time="2026-09-08 08:59:45Z" duration="0.728511" asserts="0">
+                  <properties>
+                    <property name="retryIteration" value="0" />
+                    <property name="repeatIteration" value="0" />
+                  </properties>
+                  <output><![CDATA[[OVRManager] OnDestroy
+Camera "CenterEyeAnchor" does not use a Tracked Pose Driver (Input System), so its transform will not be updated by an XR device.  In order for this to be updated, please add a Tracked Pose Driver (Input System) with bindings for position and rotation of the center eye.
+]]></output>
+                </test-case>
+                <test-case id="1013" name="EveryScenarioActivatesAndSupportsBothOutcomeStates(3)" fullname="VRLearn.Tests.PlayMode.MetaGameplaySmokeTests.EveryScenarioActivatesAndSupportsBothOutcomeStates(3)" methodname="EveryScenarioActivatesAndSupportsBothOutcomeStates" classname="VRLearn.Tests.PlayMode.MetaGameplaySmokeTests" runstate="Runnable" seed="826447593" result="Passed" start-time="2026-09-08 08:59:45Z" end-time="2026-09-08 08:59:46Z" duration="0.720956" asserts="0">
+                  <properties>
+                    <property name="retryIteration" value="0" />
+                    <property name="repeatIteration" value="0" />
+                  </properties>
+                  <output><![CDATA[[OVRManager] OnDestroy
+Camera "CenterEyeAnchor" does not use a Tracked Pose Driver (Input System), so its transform will not be updated by an XR device.  In order for this to be updated, please add a Tracked Pose Driver (Input System) with bindings for position and rotation of the center eye.
+]]></output>
+                </test-case>
+                <test-case id="1014" name="EveryScenarioActivatesAndSupportsBothOutcomeStates(4)" fullname="VRLearn.Tests.PlayMode.MetaGameplaySmokeTests.EveryScenarioActivatesAndSupportsBothOutcomeStates(4)" methodname="EveryScenarioActivatesAndSupportsBothOutcomeStates" classname="VRLearn.Tests.PlayMode.MetaGameplaySmokeTests" runstate="Runnable" seed="1408199393" result="Passed" start-time="2026-09-08 08:59:46Z" end-time="2026-09-08 08:59:46Z" duration="0.736477" asserts="0">
+                  <properties>
+                    <property name="retryIteration" value="0" />
+                    <property name="repeatIteration" value="0" />
+                  </properties>
+                  <output><![CDATA[[OVRManager] OnDestroy
+Camera "CenterEyeAnchor" does not use a Tracked Pose Driver (Input System), so its transform will not be updated by an XR device.  In order for this to be updated, please add a Tracked Pose Driver (Input System) with bindings for position and rotation of the center eye.
+]]></output>
+                </test-case>
+                <test-case id="1015" name="EveryScenarioActivatesAndSupportsBothOutcomeStates(5)" fullname="VRLearn.Tests.PlayMode.MetaGameplaySmokeTests.EveryScenarioActivatesAndSupportsBothOutcomeStates(5)" methodname="EveryScenarioActivatesAndSupportsBothOutcomeStates" classname="VRLearn.Tests.PlayMode.MetaGameplaySmokeTests" runstate="Runnable" seed="1078902029" result="Passed" start-time="2026-09-08 08:59:46Z" end-time="2026-09-08 08:59:47Z" duration="0.733875" asserts="0">
+                  <properties>
+                    <property name="retryIteration" value="0" />
+                    <property name="repeatIteration" value="0" />
+                  </properties>
+                  <output><![CDATA[[OVRManager] OnDestroy
+Camera "CenterEyeAnchor" does not use a Tracked Pose Driver (Input System), so its transform will not be updated by an XR device.  In order for this to be updated, please add a Tracked Pose Driver (Input System) with bindings for position and rotation of the center eye.
+]]></output>
+                </test-case>
+                <test-case id="1016" name="EveryScenarioActivatesAndSupportsBothOutcomeStates(6)" fullname="VRLearn.Tests.PlayMode.MetaGameplaySmokeTests.EveryScenarioActivatesAndSupportsBothOutcomeStates(6)" methodname="EveryScenarioActivatesAndSupportsBothOutcomeStates" classname="VRLearn.Tests.PlayMode.MetaGameplaySmokeTests" runstate="Runnable" seed="148887720" result="Passed" start-time="2026-09-08 08:59:47Z" end-time="2026-09-08 08:59:48Z" duration="0.862393" asserts="0">
+                  <properties>
+                    <property name="retryIteration" value="0" />
+                    <property name="repeatIteration" value="0" />
+                  </properties>
+                  <output><![CDATA[[OVRManager] OnDestroy
+Camera "CenterEyeAnchor" does not use a Tracked Pose Driver (Input System), so its transform will not be updated by an XR device.  In order for this to be updated, please add a Tracked Pose Driver (Input System) with bindings for position and rotation of the center eye.
+]]></output>
+                </test-case>
+                <test-case id="1017" name="EveryScenarioActivatesAndSupportsBothOutcomeStates(7)" fullname="VRLearn.Tests.PlayMode.MetaGameplaySmokeTests.EveryScenarioActivatesAndSupportsBothOutcomeStates(7)" methodname="EveryScenarioActivatesAndSupportsBothOutcomeStates" classname="VRLearn.Tests.PlayMode.MetaGameplaySmokeTests" runstate="Runnable" seed="2137578865" result="Passed" start-time="2026-09-08 08:59:48Z" end-time="2026-09-08 08:59:49Z" duration="0.757787" asserts="0">
+                  <properties>
+                    <property name="retryIteration" value="0" />
+                    <property name="repeatIteration" value="0" />
+                  </properties>
+                  <output><![CDATA[[OVRManager] OnDestroy
+Camera "CenterEyeAnchor" does not use a Tracked Pose Driver (Input System), so its transform will not be updated by an XR device.  In order for this to be updated, please add a Tracked Pose Driver (Input System) with bindings for position and rotation of the center eye.
+]]></output>
+                </test-case>
+                <test-case id="1018" name="EveryScenarioActivatesAndSupportsBothOutcomeStates(8)" fullname="VRLearn.Tests.PlayMode.MetaGameplaySmokeTests.EveryScenarioActivatesAndSupportsBothOutcomeStates(8)" methodname="EveryScenarioActivatesAndSupportsBothOutcomeStates" classname="VRLearn.Tests.PlayMode.MetaGameplaySmokeTests" runstate="Runnable" seed="2116971867" result="Passed" start-time="2026-09-08 08:59:49Z" end-time="2026-09-08 08:59:49Z" duration="0.718801" asserts="0">
+                  <properties>
+                    <property name="retryIteration" value="0" />
+                    <property name="repeatIteration" value="0" />
+                  </properties>
+                  <output><![CDATA[[OVRManager] OnDestroy
+Camera "CenterEyeAnchor" does not use a Tracked Pose Driver (Input System), so its transform will not be updated by an XR device.  In order for this to be updated, please add a Tracked Pose Driver (Input System) with bindings for position and rotation of the center eye.
+]]></output>
+                </test-case>
+                <test-case id="1019" name="EveryScenarioActivatesAndSupportsBothOutcomeStates(9)" fullname="VRLearn.Tests.PlayMode.MetaGameplaySmokeTests.EveryScenarioActivatesAndSupportsBothOutcomeStates(9)" methodname="EveryScenarioActivatesAndSupportsBothOutcomeStates" classname="VRLearn.Tests.PlayMode.MetaGameplaySmokeTests" runstate="Runnable" seed="1837170524" result="Passed" start-time="2026-09-08 08:59:49Z" end-time="2026-09-08 08:59:50Z" duration="0.729661" asserts="0">
+                  <properties>
+                    <property name="retryIteration" value="0" />
+                    <property name="repeatIteration" value="0" />
+                  </properties>
+                  <output><![CDATA[[OVRManager] OnDestroy
+Camera "CenterEyeAnchor" does not use a Tracked Pose Driver (Input System), so its transform will not be updated by an XR device.  In order for this to be updated, please add a Tracked Pose Driver (Input System) with bindings for position and rotation of the center eye.
+]]></output>
+                </test-case>
+              </test-suite>
+              <test-case id="1009" name="MetaTitleUsesOneStandardMouseInputPathInEditor" fullname="VRLearn.Tests.PlayMode.MetaGameplaySmokeTests.MetaTitleUsesOneStandardMouseInputPathInEditor" methodname="MetaTitleUsesOneStandardMouseInputPathInEditor" classname="VRLearn.Tests.PlayMode.MetaGameplaySmokeTests" runstate="Runnable" seed="1633965036" result="Passed" start-time="2026-09-08 08:59:50Z" end-time="2026-09-08 08:59:51Z" duration="0.636537" asserts="0">
+                <properties>
+                  <property name="_JOINTYPE" value="UnityCombinatorial" />
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+                <output><![CDATA[[OVRManager] OnDestroy
+]]></output>
+              </test-case>
+              <test-case id="1023" name="ResultParameterTransferPreservesAllTitleValues" fullname="VRLearn.Tests.PlayMode.MetaGameplaySmokeTests.ResultParameterTransferPreservesAllTitleValues" methodname="ResultParameterTransferPreservesAllTitleValues" classname="VRLearn.Tests.PlayMode.MetaGameplaySmokeTests" runstate="Runnable" seed="929676634" result="Passed" start-time="2026-09-08 08:59:51Z" end-time="2026-09-08 08:59:52Z" duration="1.453485" asserts="0">
+                <properties>
+                  <property name="_JOINTYPE" value="UnityCombinatorial" />
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+                <output><![CDATA[[OVRManager] OnDestroy
+Camera "CenterEyeAnchor" does not use a Tracked Pose Driver (Input System), so its transform will not be updated by an XR device.  In order for this to be updated, please add a Tracked Pose Driver (Input System) with bindings for position and rotation of the center eye.
+]]></output>
+              </test-case>
+              <test-case id="1022" name="WalkingPhoneModePresentsPhoneInView" fullname="VRLearn.Tests.PlayMode.MetaGameplaySmokeTests.WalkingPhoneModePresentsPhoneInView" methodname="WalkingPhoneModePresentsPhoneInView" classname="VRLearn.Tests.PlayMode.MetaGameplaySmokeTests" runstate="Runnable" seed="253161489" result="Passed" start-time="2026-09-08 08:59:52Z" end-time="2026-09-08 08:59:53Z" duration="0.729896" asserts="0">
+                <properties>
+                  <property name="_JOINTYPE" value="UnityCombinatorial" />
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+                <output><![CDATA[[OVRManager] OnDestroy
+Camera "CenterEyeAnchor" does not use a Tracked Pose Driver (Input System), so its transform will not be updated by an XR device.  In order for this to be updated, please add a Tracked Pose Driver (Input System) with bindings for position and rotation of the center eye.
+]]></output>
+              </test-case>
+            </test-suite>
+            <test-suite type="TestFixture" id="1027" name="VehicleLifecycleTests" fullname="VRLearn.Tests.PlayMode.VehicleLifecycleTests" classname="VRLearn.Tests.PlayMode.VehicleLifecycleTests" runstate="Runnable" testcasecount="4" result="Passed" start-time="2026-09-08 08:59:53Z" end-time="2026-09-08 08:59:56Z" duration="2.990184" total="4" passed="4" failed="0" inconclusive="0" skipped="0" asserts="0">
+              <properties />
+              <test-case id="1029" name="DifferentSpawnConfigDoesNotBleedAcrossReuse" fullname="VRLearn.Tests.PlayMode.VehicleLifecycleTests.DifferentSpawnConfigDoesNotBleedAcrossReuse" methodname="DifferentSpawnConfigDoesNotBleedAcrossReuse" classname="VRLearn.Tests.PlayMode.VehicleLifecycleTests" runstate="Runnable" seed="102838080" result="Passed" start-time="2026-09-08 08:59:53Z" end-time="2026-09-08 08:59:54Z" duration="0.717041" asserts="0">
+                <properties>
+                  <property name="_JOINTYPE" value="UnityCombinatorial" />
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+                <output><![CDATA[[OVRManager] OnDestroy
+Camera "CenterEyeAnchor" does not use a Tracked Pose Driver (Input System), so its transform will not be updated by an XR device.  In order for this to be updated, please add a Tracked Pose Driver (Input System) with bindings for position and rotation of the center eye.
+]]></output>
+              </test-case>
+              <test-case id="1030" name="DoubleReleasePoolsExactlyOnce" fullname="VRLearn.Tests.PlayMode.VehicleLifecycleTests.DoubleReleasePoolsExactlyOnce" methodname="DoubleReleasePoolsExactlyOnce" classname="VRLearn.Tests.PlayMode.VehicleLifecycleTests" runstate="Runnable" seed="731161079" result="Passed" start-time="2026-09-08 08:59:54Z" end-time="2026-09-08 08:59:54Z" duration="0.725526" asserts="0">
+                <properties>
+                  <property name="_JOINTYPE" value="UnityCombinatorial" />
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+                <output><![CDATA[[OVRManager] OnDestroy
+Camera "CenterEyeAnchor" does not use a Tracked Pose Driver (Input System), so its transform will not be updated by an XR device.  In order for this to be updated, please add a Tracked Pose Driver (Input System) with bindings for position and rotation of the center eye.
+]]></output>
+              </test-case>
+              <test-case id="1028" name="FirstUseAndReuseObserveIdenticalSpawnConfig" fullname="VRLearn.Tests.PlayMode.VehicleLifecycleTests.FirstUseAndReuseObserveIdenticalSpawnConfig" methodname="FirstUseAndReuseObserveIdenticalSpawnConfig" classname="VRLearn.Tests.PlayMode.VehicleLifecycleTests" runstate="Runnable" seed="1489030351" result="Passed" start-time="2026-09-08 08:59:54Z" end-time="2026-09-08 08:59:55Z" duration="0.758126" asserts="0">
+                <properties>
+                  <property name="_JOINTYPE" value="UnityCombinatorial" />
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+                <output><![CDATA[[OVRManager] OnDestroy
+Camera "CenterEyeAnchor" does not use a Tracked Pose Driver (Input System), so its transform will not be updated by an XR device.  In order for this to be updated, please add a Tracked Pose Driver (Input System) with bindings for position and rotation of the center eye.
+]]></output>
+              </test-case>
+              <test-case id="1031" name="RuntimeWaypointEditIsIsolatedPerVehicle" fullname="VRLearn.Tests.PlayMode.VehicleLifecycleTests.RuntimeWaypointEditIsIsolatedPerVehicle" methodname="RuntimeWaypointEditIsIsolatedPerVehicle" classname="VRLearn.Tests.PlayMode.VehicleLifecycleTests" runstate="Runnable" seed="199971579" result="Passed" start-time="2026-09-08 08:59:55Z" end-time="2026-09-08 08:59:56Z" duration="0.785293" asserts="0">
+                <properties>
+                  <property name="_JOINTYPE" value="UnityCombinatorial" />
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+                <output><![CDATA[[OVRManager] OnDestroy
+Camera "CenterEyeAnchor" does not use a Tracked Pose Driver (Input System), so its transform will not be updated by an XR device.  In order for this to be updated, please add a Tracked Pose Driver (Input System) with bindings for position and rotation of the center eye.
+Saving results to: /Users/xinyu/Library/Application Support/DefaultCompany/VRLearn/TestResults.xml
+]]></output>
+              </test-case>
+            </test-suite>
+          </test-suite>
+        </test-suite>
+      </test-suite>
+    </test-suite>
+  </test-suite>
+</test-run>
