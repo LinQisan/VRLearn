@@ -12,6 +12,7 @@ namespace VRLearn.Tests.EditMode
     {
         const string TitleScene = "Assets/_Project/Scenes/TraficAcidentTitle_Meta.unity";
         const string GameplayScene = "Assets/_Project/Scenes/TraficAcident_Meta.unity";
+        const string HikoneGameplayScene = "Assets/_Project/Scenes/TraficAcident_Hikone_Meta.unity";
 
         [Test]
         public void VehiclePersonImpulseRespectsMassAndMomentum()
@@ -47,9 +48,9 @@ namespace VRLearn.Tests.EditMode
                     enabledScenes.Add(scene.path);
 
             CollectionAssert.AreEqual(
-                new[] { TitleScene, GameplayScene },
+                new[] { TitleScene, GameplayScene, HikoneGameplayScene },
                 enabledScenes,
-                "Only the Meta title and gameplay scenes should be enabled, in that order.");
+                "Only the Meta title and the two gameplay environments should be enabled, in that order.");
         }
 
         [Test]

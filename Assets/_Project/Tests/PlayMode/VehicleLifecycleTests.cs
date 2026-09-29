@@ -17,9 +17,15 @@ namespace VRLearn.Tests.PlayMode
     /// -&gt; Release (explicit PrepareForPoolReuse) -&gt; Pool.
     /// New and reused instances must observe identical spawn configuration.
     /// </summary>
+    [TestFixture("Assets/_Project/Scenes/TraficAcident_Hikone_Meta.unity")]
     public sealed class VehicleLifecycleTests
     {
-        const string GameplayScene = "Assets/_Project/Scenes/TraficAcident_Meta.unity";
+        readonly string GameplayScene;
+
+        public VehicleLifecycleTests(string gameplayScene)
+        {
+            GameplayScene = gameplayScene;
+        }
         const string GameAssembly = "Assembly-CSharp";
 
         static Type GameType(string name) => Type.GetType(name + ", " + GameAssembly);

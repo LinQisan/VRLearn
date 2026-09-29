@@ -19,7 +19,7 @@ namespace VRLearn.Tests.PlayMode
         [UnityTest]
         public IEnumerator RecordedReplayCompletesAndRetryRetainsParticipantSettings()
         {
-            yield return SceneManager.LoadSceneAsync("Assets/_Project/Scenes/TraficAcident_Meta.unity");
+            yield return SceneManager.LoadSceneAsync("Assets/_Project/Scenes/TraficAcident_Hikone_Meta.unity");
             yield return new WaitForSeconds(0.6f);
             var director = Find("GameDirector");
             var hybrid = Find("HybridAccidentPresentation");
@@ -37,27 +37,23 @@ namespace VRLearn.Tests.PlayMode
             yield return new WaitForSeconds(1f);
             Assert.That((bool)Call(flow, "TryTriggerAccident"), Is.True);
             Assert.That((bool)Call(hybrid, "BeginImpact", player, player.transform.position, vehicle.transform.forward, 8f, vehicle.transform), Is.True);
-            var replay = Find("AccidentTrajectoryReplay");
-            Assert.That((bool)replay.GetType().GetProperty("HasRecording").GetValue(replay), Is.True);
+            var replay = hybrid.GetType().GetProperty("Replay").GetValue(hybrid);
+            deadline = Time.realtimeSinceStartup + 5f;
+            while (!(bool)replay.GetType().GetProperty("IsVisible").GetValue(replay) && Time.realtimeSinceStartup < deadline)
+                yield return null;
+            var recording = replay.GetType().GetProperty("Recording").GetValue(replay);
+            Assert.That(recording, Is.Not.Null);
+            Assert.That((bool)recording.GetType().GetProperty("IsValid").GetValue(recording), Is.True);
+            Assert.That(recording.GetType().GetProperty("ImpactVehicle").GetValue(recording), Is.Not.Null,
+                "The vehicle that hit the participant must be in the recording.");
             var damage = vehicle.GetComponent(RuntimeType("AccidentVehicleDamage"));
             Assert.That(damage, Is.Not.Null);
-            // This synthetic presentation uses an arbitrary traffic car; the separate
-            // deformation test supplies a real surface contact and verifies isolation.
-            Debug.Log("Recorded duration: " + replay.GetType().GetProperty("Duration").GetValue(replay));
-            var overhead = Find("AccidentOverheadView");
-            Camera viewCamera = null;
-            deadline = Time.realtimeSinceStartup + 12f;
-            while (Time.realtimeSinceStartup < deadline)
-            {
-                viewCamera = (Camera)overhead.GetType().GetProperty("ViewCamera").GetValue(overhead);
-                if (viewCamera != null && viewCamera.orthographic) break;
-                yield return null;
-            }
-            Assert.That(viewCamera, Is.Not.Null);
-            Assert.That(viewCamera.orthographic, Is.True, "Recorded replay uses a stable overview of the entire recorded route.");
+            Debug.Log("Recorded duration: " + recording.GetType().GetProperty("Duration").GetValue(recording));
+            var driverCamera = (Camera)replay.GetType().GetProperty("DriverCamera").GetValue(replay);
+            Assert.That(driverCamera.enabled, Is.True, "A real vehicle hit the participant: the driver's view is shown.");
             if (SystemInfo.graphicsDeviceType != UnityEngine.Rendering.GraphicsDeviceType.Null)
             {
-                viewCamera.Render();
+                yield return new WaitForSecondsRealtime(0.5f);
                 SaveCamera(Camera.main, "recorded-replay.png");
             }
             deadline = Time.realtimeSinceStartup + 18f;
@@ -69,12 +65,20 @@ namespace VRLearn.Tests.PlayMode
                 "Ragdoll geometry must not occlude the result buttons.");
             var metrics = Field(results, "runtimeMetrics");
             Assert.That((string)metrics.GetType().GetProperty("text").GetValue(metrics), Does.Contain("28.8"));
+            var verdict = Field(results, "runtimeVerdict");
+            Assert.That((string)verdict.GetType().GetProperty("text").GetValue(verdict), Is.Not.Empty);
             if (SystemInfo.graphicsDeviceType != UnityEngine.Rendering.GraphicsDeviceType.Null)
                 SaveCamera(Camera.main, "accident-results.png");
             director.GetType().GetField("EventNumber").SetValue(director, 9);
             director.GetType().GetField("Height").SetValue(director, 173);
             director.GetType().GetField("Weather").SetValue(director, 1);
+            var csv = director.GetComponent(RuntimeType("CSVPrinter"));
             Call(results, "RetryScenario");
+            // the retry saved this trial; keep test output out of the experiment data folder
+            var written = (string[])csv.GetType().GetProperty("LastWrittenFiles").GetValue(csv);
+            Assert.That(written.Length, Is.EqualTo(3), "Try again must save the finished trial.");
+            foreach (var file in written)
+                System.IO.File.Delete(file);
             yield return null;
             yield return new WaitForSecondsRealtime(0.6f);
             director = Find("GameDirector");
@@ -87,7 +91,7 @@ namespace VRLearn.Tests.PlayMode
         [UnityTest]
         public IEnumerator CollisionUsesActualSpeedBeforeTrafficFreeze()
         {
-            yield return SceneManager.LoadSceneAsync("Assets/_Project/Scenes/TraficAcident_Meta.unity");
+            yield return SceneManager.LoadSceneAsync("Assets/_Project/Scenes/TraficAcident_Hikone_Meta.unity");
             var deadline = Time.realtimeSinceStartup + 8f;
             Component vehicle = null;
             while (vehicle == null && Time.realtimeSinceStartup < deadline)

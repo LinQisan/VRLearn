@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using System;
 using System.IO;
+using System.Globalization;
 
 public class CSVPrinter : MonoBehaviour
 {
@@ -40,6 +41,17 @@ public class CSVPrinter : MonoBehaviour
 
     //ゲーム開始からの経過時間
     public float NowTime;
+
+    bool saved;
+
+    /// <summary>Folder that receives the CSV files (Application.persistentDataPath).</summary>
+    public static string OutputFolder => Application.persistentDataPath;
+
+    /// <summary>Paths written by the last save (for tests and tooling).</summary>
+    public string[] LastWrittenFiles { get; private set; } = new string[0];
+
+    // Numbers are written culture-invariant ("1.5", never "1,5") so the CSV parses the same everywhere.
+    static string F(float value) => value.ToString(CultureInfo.InvariantCulture);
 
     //テスト用変数
     public int[] logData; // Logデータの宣言
@@ -125,6 +137,10 @@ public class CSVPrinter : MonoBehaviour
     //全てのデータをCSVに書き出し
     public void CSVPrint()
     {
+        // several legacy and current paths end a trial; write each trial once
+        if (saved)
+            return;
+        saved = true;
         //事故フラグとゴールフラグを更新
         OnAcident = ovrcamera.GetComponent<CenterEyeCamera>().Acident;
         OnGoal = gamedirector.GoalFlag;
@@ -172,6 +188,8 @@ public class CSVPrinter : MonoBehaviour
     // Opens the three CSV writers of one save round. All share one fileTag so
     // Car/Human/InExperiment files stay correlatable. Retries with a fresh tag
     // on the astronomically unlikely GUID collision; never appends to another round.
+    static string[] lastPaths = new string[0];
+
     static (StreamWriter car, StreamWriter human, StreamWriter inExperiment) CreateCsvWriters()
     {
         for (int attempt = 0; ; attempt++)
@@ -188,6 +206,7 @@ public class CSVPrinter : MonoBehaviour
                 car = CreateNewCsvWriter(carPath);
                 human = CreateNewCsvWriter(humanPath);
                 inExperiment = CreateNewCsvWriter(inExperimentPath);
+                lastPaths = new[] { carPath, humanPath, inExperimentPath };
                 return (car, human, inExperiment);
             }
             catch (IOException)
@@ -207,6 +226,7 @@ public class CSVPrinter : MonoBehaviour
         //テキストの書き込み準備（毎回新規作成し、他輪データへの追記はしない）
         //using宣言により、書き込み中の例外時にも確実にFlush/Disposeされる
         var writers = CreateCsvWriters();
+        LastWrittenFiles = lastPaths;
         using StreamWriter streamwriter_CarData = writers.car;
         using StreamWriter streamwriter_HumanData = writers.human;
         using StreamWriter streamwriter_HumanData_InExperiment = writers.inExperiment;
@@ -226,7 +246,9 @@ public class CSVPrinter : MonoBehaviour
         "SmartPhone",
         "Incident",
         "Weather",
-        "SkyTime"};
+        "SkyTime",
+        "Scene",
+        "CustomScenario"};
         streamwriter_HumanData.WriteLine(string.Join(",", humandata_head));
         //2行目部分
         string[] humandata_string = {EventNumber.ToString(),
@@ -238,11 +260,15 @@ public class CSVPrinter : MonoBehaviour
             License.ToString(),
             OnAcident.ToString(),
             OnGoal.ToString(),
-            Hz.ToString(),
+            F(Hz),
             SmartPhone.ToString(),
             Incident.ToString(),
             Weather.ToString(),
-            SkyTime.ToString()};
+            SkyTime.ToString(),
+            UnityEngine.SceneManagement.SceneManager.GetActiveScene().name,
+            // id of the JSON scenario when EventNumber is CustomScenarioSession.EventNumber (100)
+            CustomScenarioSession.IsCustom(EventNumber) && CustomScenarioSession.Current != null
+                ? CustomScenarioSession.Current.id : string.Empty};
         //人のデータを","で連結して書き込む
         streamwriter_HumanData.WriteLine(string.Join("," , humandata_string));
 
@@ -263,13 +289,13 @@ public class CSVPrinter : MonoBehaviour
         string[] humandata_InExperiment_string = new string[9];
         foreach (HumanData human in HumanDataList)
         {
-            humandata_InExperiment_string[0] = human.HumanTime.ToString();
-            humandata_InExperiment_string[1] = human.HumanPosition.x.ToString();
-            humandata_InExperiment_string[2] = human.HumanPosition.y.ToString();
-            humandata_InExperiment_string[3] = human.HumanPosition.z.ToString();
-            humandata_InExperiment_string[4] = human.HumanRotation.x.ToString();
-            humandata_InExperiment_string[5] = human.HumanRotation.y.ToString();
-            humandata_InExperiment_string[6] = human.HumanRotation.z.ToString();
+            humandata_InExperiment_string[0] = F(human.HumanTime);
+            humandata_InExperiment_string[1] = F(human.HumanPosition.x);
+            humandata_InExperiment_string[2] = F(human.HumanPosition.y);
+            humandata_InExperiment_string[3] = F(human.HumanPosition.z);
+            humandata_InExperiment_string[4] = F(human.HumanRotation.x);
+            humandata_InExperiment_string[5] = F(human.HumanRotation.y);
+            humandata_InExperiment_string[6] = F(human.HumanRotation.z);
             humandata_InExperiment_string[7] = human.AfterAcident.ToString();
             humandata_InExperiment_string[8] = human.AcidentProgress.ToString();
 
@@ -291,11 +317,11 @@ public class CSVPrinter : MonoBehaviour
         string[] cardata_string = new string[6];
         foreach (CarData car in CarDataList)
         {
-            cardata_string[0] = car.CarTime.ToString();
+            cardata_string[0] = F(car.CarTime);
             cardata_string[1] = car.CarID.ToString();
-            cardata_string[2] = car.CarPosition.x.ToString();
-            cardata_string[3] = car.CarPosition.y.ToString();
-            cardata_string[4] = car.CarPosition.z.ToString();
+            cardata_string[2] = F(car.CarPosition.x);
+            cardata_string[3] = F(car.CarPosition.y);
+            cardata_string[4] = F(car.CarPosition.z);
             cardata_string[5] = car.AcidentCar.ToString();
 
             //車のデータを","で連結して書き込む

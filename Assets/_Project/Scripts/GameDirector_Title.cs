@@ -39,6 +39,10 @@ public class GameDirector_Title : MonoBehaviour
     public int SkyTime;
     public float Sound;
 
+    // Gameplay environment (SceneRoute.StandardEnvironment / HikoneEnvironment). Session-level
+    // experimenter setting: kept across returns to the title and not reset with participant data.
+    public int Environment;
+
     int displayedEventNumber = int.MinValue;
     int displayedHeight = int.MinValue;
     int displayedWeight = int.MinValue;
@@ -51,6 +55,7 @@ public class GameDirector_Title : MonoBehaviour
 
     void Awake()
     {
+        Environment = SceneRoute.SelectedEnvironment;
         RebuildControlCaches();
     }
 
@@ -177,6 +182,12 @@ public class GameDirector_Title : MonoBehaviour
             case TitleOptionKind.SmartPhone: SmartPhone = intValue; break;
             case TitleOptionKind.Weather: Weather = intValue; break;
             case TitleOptionKind.SkyTime: SkyTime = intValue; break;
+            case TitleOptionKind.Environment: Environment = SceneRoute.ClampEnvironment(intValue); break;
+            case TitleOptionKind.EventNumber:
+                CustomScenarioSession.Clear();
+                EventNumber = SceneRoute.ClampScenarioSelection(intValue);
+                displayedEventNumber = int.MinValue;
+                break;
             case TitleOptionKind.Hz:
                 Hz = floatValue;
                 Sound = Hz;
@@ -189,8 +200,44 @@ public class GameDirector_Title : MonoBehaviour
         RefreshChangedUI(false);
     }
 
+    /// <summary>Custom scenarios found on this device (Scenarios/ folders), refreshed by TitleCustomScenarios.</summary>
+    public System.Collections.Generic.IReadOnlyList<CustomScenario> CustomScenarios => customScenarios;
+    readonly System.Collections.Generic.List<CustomScenario> customScenarios = new System.Collections.Generic.List<CustomScenario>();
+
+    public void SetCustomScenarios(System.Collections.Generic.IEnumerable<CustomScenario> scenarios)
+    {
+        customScenarios.Clear();
+        customScenarios.AddRange(scenarios);
+        // a selected file that disappeared falls back to RANDOM
+        if (CustomScenarioSession.IsCustom(EventNumber))
+        {
+            var current = CustomScenarioSession.Current;
+            var match = current != null ? customScenarios.Find(s => s.id == current.id) : null;
+            if (match != null)
+                CustomScenarioSession.Select(match);
+            else
+            {
+                CustomScenarioSession.Clear();
+                EventNumber = SceneRoute.RandomScenarioId;
+            }
+        }
+        RefreshChangedUI(true);
+    }
+
+    public void SelectCustomScenario(string id)
+    {
+        var scenario = customScenarios.Find(s => s.id == id);
+        if (scenario == null)
+            return;
+        CustomScenarioSession.Select(scenario);
+        EventNumber = CustomScenarioSession.EventNumber;
+        displayedEventNumber = int.MinValue;
+        RefreshChangedUI(false);
+    }
+
     public void ResetDefaults()
     {
+        CustomScenarioSession.Clear();
         EventNumber = SceneRoute.RandomScenarioId;
         Height = 170;
         Weight = 70;
@@ -215,6 +262,7 @@ public class GameDirector_Title : MonoBehaviour
 
         SceneManager.sceneLoaded += TransferValuesToGameplay;
         EventNumber = selectedEvent;
+        SceneRoute.SelectedEnvironment = SceneRoute.ClampEnvironment(Environment);
         SceneManager.LoadScene(SceneRoute.GameplayForCurrentScene);
     }
 
@@ -255,7 +303,8 @@ public class GameDirector_Title : MonoBehaviour
         {
             valueChanged = true;
             displayedEventNumber = EventNumber;
-            eventNumberText.SetText(EventNumber == SceneRoute.RandomScenarioId ? "RANDOM" : EventNumber.ToString());
+            eventNumberText.SetText(EventNumber == SceneRoute.RandomScenarioId || CustomScenarioSession.IsCustom(EventNumber)
+                ? string.Empty : (EventNumber + 1).ToString("00"));
         }
 
         if (force || displayedHeight != Height)
@@ -312,6 +361,9 @@ public class GameDirector_Title : MonoBehaviour
             hash = hash * 31 + Weather;
             hash = hash * 31 + SkyTime;
             hash = hash * 31 + Hz.GetHashCode();
+            hash = hash * 31 + Environment;
+            hash = hash * 31 + EventNumber;
+            hash = hash * 31 + (CustomScenarioSession.Current?.id?.GetHashCode() ?? 0);
             return hash;
         }
     }

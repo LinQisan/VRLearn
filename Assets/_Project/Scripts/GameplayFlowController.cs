@@ -139,6 +139,13 @@ public sealed class GameplayFlowController : MonoBehaviour
             SetPhase(GameplayPhase.Results);
     }
 
+    /// <summary>A safe arrival goes straight to the feedback page (no replay).</summary>
+    public void MarkGoalResults()
+    {
+        if (phase == GameplayPhase.GoalReached)
+            SetPhase(GameplayPhase.Results);
+    }
+
     public void Finish()
     {
         SetPhase(GameplayPhase.Finished);

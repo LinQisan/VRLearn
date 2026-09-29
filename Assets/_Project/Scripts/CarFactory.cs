@@ -22,9 +22,6 @@ public class CarFactory : MonoBehaviour
     //イベントナンバーを管理する変数
     int EventNumber;
 
-    //イベントナンバー2用の遅延車の順番
-    int AcidentCarNumber;
-
     //waypointを格納する変数
     Transform pointsParent;
 
@@ -36,183 +33,27 @@ public class CarFactory : MonoBehaviour
         //車の生産を中止
         AccidentCarSpawn = 1;
     }
-    //コルーチンを実行するメソッド(AccidentCarFactoryから受け取る)
-    public void CoroutineStart()
+    /// <summary>
+    /// Spawns one accident car from this factory on its route. Called by
+    /// AccidentCarFactory following the scenario's accident schedule.
+    /// </summary>
+    public void SpawnAccidentCar(AccidentLaunch launch)
     {
-        if (TrafficAccidentState.IsFrozen)
+        if (TrafficAccidentState.IsFrozen || !enabled || pointsParent == null)
             return;
-        StartCoroutine("AcidentCar");
-    }
-    //事故車生産(上のメソッドで起動)
-    public IEnumerator AcidentCar()
-    {
-        if (TrafficAccidentState.IsFrozen)
-            yield break;
-        //Debug.Log("生産");
-        //イベントナンバー0
-        if (EventNumber == 0)
-        {
-            //少し遅れて事故車を出す
-            yield return new WaitForSeconds(6f);
-            Car = VehiclePool.Instance.Get(CarPrefab, transform.position, Quaternion.identity);
-            //車にゲームディレクターから受け取ったIDを登録
-            Car.GetComponent<CarController>().CarID = gamedirector.GetComponent<GameDirector>().CarID;
-            //ゲームディレクターの車IDを更新
-            gamedirector.GetComponent<GameDirector>().CarID += 1;
-            //waypoint設定
-            Car.GetComponent<CarController>().pointsParent = pointsParent;
-            //事故車フラグをオン
-            Car.GetComponent<CarController>().AcidentCar = true;
-            Car.GetComponent<CarController>().InitializeForSpawn();
-        }
-        //イベントナンバー1
-        if (EventNumber == 1)
-        {
-            yield return new WaitForSeconds(0.5f);
-            Car = VehiclePool.Instance.Get(CarPrefab, transform.position, Quaternion.identity);
+        Car = VehiclePool.Instance.Get(CarPrefab, transform.position, Quaternion.identity);
+        if (launch.overrideYaw)
+            Car.transform.eulerAngles = new Vector3(0f, launch.yaw, 0f);
+        Car.transform.position += launch.offset;
 
-            //車にゲームディレクターから受け取ったIDを登録
-            Car.GetComponent<CarController>().CarID = gamedirector.GetComponent<GameDirector>().CarID;
-            //ゲームディレクターの車IDを更新
-            gamedirector.GetComponent<GameDirector>().CarID += 1;
-            //waypoint設定
-            Car.GetComponent<CarController>().pointsParent = pointsParent;
-            //事故車フラグをオン
-            Car.GetComponent<CarController>().AcidentCar = true;
-            Car.GetComponent<CarController>().InitializeForSpawn();
-        }
-        //イベントナンバー2
-        if (EventNumber == 2)
-        {
-            yield return new WaitForSeconds(0.5f);
-            Car = VehiclePool.Instance.Get(CarPrefab, transform.position, Quaternion.identity);
-            //向き調整
-            Car.transform.eulerAngles = new Vector3(0, 90, 0);
-
-            //2台目以降なら位置調整
-            if(AcidentCarNumber >= 1)
-            {
-                Car.transform.position += new Vector3(-30f, 0, 0);
-            }
-
-            //車にゲームディレクターから受け取ったIDを登録
-            Car.GetComponent<CarController>().CarID = gamedirector.GetComponent<GameDirector>().CarID;
-            //ゲームディレクターの車IDを更新
-            gamedirector.GetComponent<GameDirector>().CarID += 1;
-            //waypoint設定
-            Car.GetComponent<CarController>().pointsParent = pointsParent;
-            //事故車フラグをオン
-            Car.GetComponent<CarController>().AcidentCar = true;
-
-            //2台目以降との区別をつける
-            AcidentCarNumber += 1;
-            Car.GetComponent<CarController>().InitializeForSpawn();
-        }
-        //イベントナンバー3と5
-        if (EventNumber == 3 || EventNumber == 5)
-        {
-            yield return new WaitForSeconds(0.5f);
-            Car = VehiclePool.Instance.Get(CarPrefab, transform.position, Quaternion.identity);
-            //向き調整
-            Car.transform.eulerAngles = new Vector3(0, -90, 0);
-
-            //車にゲームディレクターから受け取ったIDを登録
-            Car.GetComponent<CarController>().CarID = gamedirector.GetComponent<GameDirector>().CarID;
-
-            //ゲームディレクターの車IDを更新
-            gamedirector.GetComponent<GameDirector>().CarID += 1;
-            //waypoint設定
-            Car.GetComponent<CarController>().pointsParent = pointsParent;
-            //事故車フラグをオン
-            Car.GetComponent<CarController>().AcidentCar = true;
-            Car.GetComponent<CarController>().InitializeForSpawn();
-        }
-        //イベントナンバー4
-        if (EventNumber == 4)
-        {
-            yield return null;
-            Car = VehiclePool.Instance.Get(CarPrefab, transform.position, Quaternion.identity);
-            //向き調整
-            Car.transform.eulerAngles = new Vector3(0, 180, 0);
-            //車にゲームディレクターから受け取ったIDを登録
-            Car.GetComponent<CarController>().CarID = gamedirector.GetComponent<GameDirector>().CarID;
-            //ゲームディレクターの車IDを更新
-            gamedirector.GetComponent<GameDirector>().CarID += 1;
-            //waypoint設定
-            Car.GetComponent<CarController>().pointsParent = pointsParent;
-            //事故車フラグをオン
-            Car.GetComponent<CarController>().AcidentCar = true;
-            Car.GetComponent<CarController>().InitializeForSpawn();
-        }
-        //イベントナンバー6と7
-        if (EventNumber == 6 || EventNumber == 7)
-        {
-            yield return new WaitForSeconds(0.5f);
-            Car = VehiclePool.Instance.Get(CarPrefab, transform.position, Quaternion.identity);
-
-            //車にゲームディレクターから受け取ったIDを登録
-            Car.GetComponent<CarController>().CarID = gamedirector.GetComponent<GameDirector>().CarID;
-            //ゲームディレクターの車IDを更新
-            gamedirector.GetComponent<GameDirector>().CarID += 1;
-            //waypoint設定
-            Car.GetComponent<CarController>().pointsParent = pointsParent;
-            //事故車フラグをオン
-            Car.GetComponent<CarController>().AcidentCar = true;
-            Car.GetComponent<CarController>().InitializeForSpawn();
-        }
-        //イベントナンバー8
-        if(EventNumber == 8)
-        {
-            if(this.gameObject.name == "CarFactory_Acident_Right")
-            {
-                yield return new WaitForSeconds(0.5f);
-                Car = VehiclePool.Instance.Get(CarPrefab, transform.position, Quaternion.identity);
-                //向き調整
-                Car.transform.eulerAngles = new Vector3(0, -90, 0);
-
-                //車にゲームディレクターから受け取ったIDを登録
-                Car.GetComponent<CarController>().CarID = gamedirector.GetComponent<GameDirector>().CarID;
-
-                //ゲームディレクターの車IDを更新
-                gamedirector.GetComponent<GameDirector>().CarID += 1;
-                //waypoint設定
-                Car.GetComponent<CarController>().pointsParent = pointsParent;
-                //事故車フラグをオン
-                Car.GetComponent<CarController>().AcidentCar = true;
-
-                //2台目以降との区別をつける
-                AcidentCarNumber += 1;
-                Car.GetComponent<CarController>().InitializeForSpawn();
-            }
-            if (this.gameObject.name == "CarFactory_Acident_Left")
-            {
-                //左から来る車はかなり遅らせる
-                yield return new WaitForSeconds(6.5f);
-                Car = VehiclePool.Instance.Get(CarPrefab, transform.position, Quaternion.identity);
-                //向き調整
-                Car.transform.eulerAngles = new Vector3(0, 90, 0);
-
-                /*//2台目以降なら位置調整
-                if (AcidentCarNumber >= 1)
-                {
-                    Car.transform.position += new Vector3(-30f, 0, 0);
-                }*/
-
-                //車にゲームディレクターから受け取ったIDを登録
-                Car.GetComponent<CarController>().CarID = gamedirector.GetComponent<GameDirector>().CarID;
-                //ゲームディレクターの車IDを更新
-                gamedirector.GetComponent<GameDirector>().CarID += 1;
-                //waypoint設定
-                Car.GetComponent<CarController>().pointsParent = pointsParent;
-                //事故車フラグをオン
-                Car.GetComponent<CarController>().AcidentCar = true;
-
-                //2台目以降との区別をつける
-                AcidentCarNumber += 1;
-                Car.GetComponent<CarController>().InitializeForSpawn();
-            }
-        }
-        Debug.Log("生産");
+        var controller = Car.GetComponent<CarController>();
+        //車にゲームディレクターから受け取ったIDを登録し、IDを更新
+        controller.CarID = gamedirector.GetComponent<GameDirector>().CarID;
+        gamedirector.GetComponent<GameDirector>().CarID += 1;
+        controller.pointsParent = pointsParent;
+        //事故車フラグをオン
+        controller.AcidentCar = true;
+        controller.InitializeForSpawn();
     }
 
     // Start is called before the first frame update
@@ -238,169 +79,10 @@ public class CarFactory : MonoBehaviour
         TimeProgress = 0;
         TimeSpan = Random.Range(4.0f, 6.0f);
 
-        //横方向に車生産
-        if (EventNumber == 0)
-        {
-            //waypointの親オブジェクトを格納
-            if (this.gameObject.tag == "LeftFactory")
-            {
-                pointsParent = WaypointRouteRegistry.Resolve(WaypointRouteId.Left);
-            }
-            if (this.gameObject.tag == "RightFactory")
-            {
-                pointsParent = WaypointRouteRegistry.Resolve(WaypointRouteId.Right);
-            }
-        }
-        //縦方向に車生産
-        if (EventNumber == 1)
-        {
-            //waypointの親オブジェクトを格納
-            if (this.gameObject.tag == "LeftFactory")
-            {
-                pointsParent = WaypointRouteRegistry.Resolve(WaypointRouteId.Left2);
-            }
-            if (this.gameObject.tag == "RightFactory")
-            {
-                pointsParent = WaypointRouteRegistry.Resolve(WaypointRouteId.Right2);
-            }
-            if (this.gameObject.tag == "AcidentFactory")
-            {
-                pointsParent = WaypointRouteRegistry.Resolve(WaypointRouteId.Accident1);
-            }
-        }
-        if (EventNumber == 4)
-        {
-            //waypointの親オブジェクトを格納
-            if (this.gameObject.tag == "LeftFactory")
-            {
-                pointsParent = WaypointRouteRegistry.Resolve(WaypointRouteId.Left2);
-            }
-            if (this.gameObject.tag == "RightFactory")
-            {
-                pointsParent = WaypointRouteRegistry.Resolve(WaypointRouteId.Right2);
-            }
-            if (this.gameObject.tag == "AcidentFactory")
-            {
-                pointsParent = WaypointRouteRegistry.Resolve(WaypointRouteId.Accident4);
-            }
-        }
-        //通常車生産なし
-        if (EventNumber == 2)
-        {
-            /*//waypointの親オブジェクトを格納
-            if (this.gameObject.tag == "LeftFactory")
-            {
-                pointsParent = WaypointRouteRegistry.Resolve(WaypointRouteId.Left);
-            }*/
-            if (this.gameObject.tag == "AcidentFactory")
-            {
-                pointsParent = WaypointRouteRegistry.Resolve(WaypointRouteId.Accident2);
-            }
-        }
-        //通常車生産なし
-        if (EventNumber == 3)
-        {
-            /*//waypointの親オブジェクトを格納
-            if (this.gameObject.tag == "LeftFactory")
-            {
-                pointsParent = WaypointRouteRegistry.Resolve(WaypointRouteId.Left);
-            }*/
-            if (this.gameObject.tag == "AcidentFactory")
-            {
-                pointsParent = WaypointRouteRegistry.Resolve(WaypointRouteId.Accident3);
-            }
-        }
-        if (EventNumber == 5)
-        {
-            /*//waypointの親オブジェクトを格納
-            if (this.gameObject.tag == "LeftFactory")
-            {
-                pointsParent = WaypointRouteRegistry.Resolve(WaypointRouteId.Left);
-            }*/
-            if (this.gameObject.tag == "AcidentFactory")
-            {
-                pointsParent = WaypointRouteRegistry.Resolve(WaypointRouteId.Accident5);
-            }
-        }
-        if (EventNumber == 6)
-        {
-            //即車生産
+        // cycling scenarios start with a car almost due
+        if (EventNumber == 6 || EventNumber == 7 || EventNumber == 9)
             TimeProgress = 4f;
-
-            //waypointの親オブジェクトを格納
-            if (this.gameObject.tag == "LeftFactory")
-            {
-                pointsParent = WaypointRouteRegistry.Resolve(WaypointRouteId.AccidentLeft);
-            }
-            if (this.gameObject.tag == "RightFactory")
-            {
-                pointsParent = WaypointRouteRegistry.Resolve(WaypointRouteId.AccidentRight);
-            }
-            if (this.gameObject.tag == "AcidentFactory")
-            {
-                pointsParent = WaypointRouteRegistry.Resolve(WaypointRouteId.Accident6);
-            }
-        }
-        if (EventNumber == 7)
-        {
-            //即車生産
-            TimeProgress = 4f;
-
-            //waypointの親オブジェクトを格納
-            if (this.gameObject.tag == "LeftFactory")
-            {
-                pointsParent = WaypointRouteRegistry.Resolve(WaypointRouteId.AccidentLeft);
-            }
-            if (this.gameObject.tag == "RightFactory")
-            {
-                pointsParent = WaypointRouteRegistry.Resolve(WaypointRouteId.AccidentRight);
-            }
-            if (this.gameObject.tag == "AcidentFactory")
-            {
-                pointsParent = WaypointRouteRegistry.Resolve(WaypointRouteId.Accident7);
-            }
-        }
-        if (EventNumber == 8)
-        {
-            if (this.gameObject.tag == "AcidentFactory")
-            {
-                if(this.gameObject.name == "CarFactory_Acident_Left")
-                {
-                    //左から来る車用
-                    pointsParent = WaypointRouteRegistry.Resolve(WaypointRouteId.Accident8Left);
-                }
-                else if (this.gameObject.name == "CarFactory_Acident_Right")
-                {
-                    //右から来る車用
-                    pointsParent = WaypointRouteRegistry.Resolve(WaypointRouteId.Accident8Right);
-                }
-            }
-        }
-        if (EventNumber == 9)
-        {
-            //即車生産
-            TimeProgress = 4f;
-
-            //waypointの親オブジェクトを格納
-            if (this.gameObject.tag == "LeftFactory")
-            {
-                pointsParent = WaypointRouteRegistry.Resolve(WaypointRouteId.AccidentLeft);
-            }
-            if (this.gameObject.tag == "RightFactory")
-            {
-                pointsParent = WaypointRouteRegistry.Resolve(WaypointRouteId.AccidentRight);
-            }
-            if (this.gameObject.tag == "AcidentFactory")
-            {
-                pointsParent = WaypointRouteRegistry.Resolve(WaypointRouteId.Accident6);
-            }
-        }
-
-        // Prefer a route authored under the active scenario. The shared registry
-        // historically pointed scenarios 6, 7 and 9 at each other's inactive roots.
-        var localScenarioPath = ResolveLocalScenarioPath();
-        if (localScenarioPath != null)
-            pointsParent = localScenarioPath;
+        pointsParent = ResolveRoute(transform, EventNumber);
         if (pointsParent == null)
         {
             Debug.LogError($"{name} has no waypoint route for scenario {EventNumber}.", this);
@@ -411,23 +93,74 @@ public class CarFactory : MonoBehaviour
         AccidentCarSpawn = 0;
     }
 
-    Transform ResolveLocalScenarioPath()
+    /// <summary>
+    /// The route a factory drives for a built-in scenario: chosen by the factory's tag, name and the
+    /// scenario id; a route authored under the active scenario's accident area wins.
+    /// </summary>
+    public static Transform ResolveRoute(Transform factory, int eventNumber)
     {
-        Transform scenarioArea = transform.parent;
+        var local = ResolveLocalScenarioPath(factory);
+        if (local != null)
+            return local;
+        var left = factory.CompareTag("LeftFactory");
+        var right = factory.CompareTag("RightFactory");
+        var accident = factory.CompareTag("AcidentFactory");
+        WaypointRouteId? id = eventNumber switch
+        {
+            0 when left => WaypointRouteId.Left,
+            0 when right => WaypointRouteId.Right,
+            1 when left => WaypointRouteId.Left2,
+            1 when right => WaypointRouteId.Right2,
+            1 when accident => WaypointRouteId.Accident1,
+            4 when left => WaypointRouteId.Left2,
+            4 when right => WaypointRouteId.Right2,
+            4 when accident => WaypointRouteId.Accident4,
+            2 when accident => WaypointRouteId.Accident2,
+            3 when accident => WaypointRouteId.Accident3,
+            5 when accident => WaypointRouteId.Accident5,
+            6 when left => WaypointRouteId.AccidentLeft,
+            6 when right => WaypointRouteId.AccidentRight,
+            6 when accident => WaypointRouteId.Accident6,
+            7 when left => WaypointRouteId.AccidentLeft,
+            7 when right => WaypointRouteId.AccidentRight,
+            7 when accident => WaypointRouteId.Accident7,
+            8 when accident && factory.name == "CarFactory_Acident_Left" => WaypointRouteId.Accident8Left,
+            8 when accident && factory.name == "CarFactory_Acident_Right" => WaypointRouteId.Accident8Right,
+            9 when left => WaypointRouteId.AccidentLeft,
+            9 when right => WaypointRouteId.AccidentRight,
+            9 when accident => WaypointRouteId.Accident6,
+            _ => null
+        };
+        return id.HasValue ? WaypointRouteRegistry.Resolve(id.Value) : null;
+    }
+
+    /// <summary>Heading of regular traffic from a side factory (vertical and cycling scenarios).</summary>
+    public static float? RegularTrafficYaw(Transform factory, int eventNumber)
+    {
+        if (eventNumber != 1 && eventNumber != 4 && eventNumber != 6 && eventNumber != 7 && eventNumber != 9)
+            return null;
+        if (factory.CompareTag("LeftFactory")) return 90f;
+        if (factory.CompareTag("RightFactory")) return -90f;
+        return null;
+    }
+
+    static Transform ResolveLocalScenarioPath(Transform factory)
+    {
+        Transform scenarioArea = factory.parent;
         if (scenarioArea == null || !scenarioArea.name.StartsWith("AcidentAreas"))
             return null;
 
-        if (CompareTag("AcidentFactory"))
+        if (factory.CompareTag("AcidentFactory"))
         {
-            if (name.EndsWith("_Left"))
+            if (factory.name.EndsWith("_Left"))
                 return scenarioArea.Find("WayPointContainer_Acident_Left");
-            if (name.EndsWith("_Right"))
+            if (factory.name.EndsWith("_Right"))
                 return scenarioArea.Find("WayPointContainer_Acident_Right");
             return scenarioArea.Find("WayPointContainer_Acident");
         }
-        if (CompareTag("LeftFactory"))
+        if (factory.CompareTag("LeftFactory"))
             return scenarioArea.Find("WayPointContainer_Acident_Left/Left");
-        if (CompareTag("RightFactory"))
+        if (factory.CompareTag("RightFactory"))
             return scenarioArea.Find("WayPointContainer_Acident_Right/Right");
         return null;
     }
@@ -460,14 +193,9 @@ public class CarFactory : MonoBehaviour
                     gamedirector.GetComponent<GameDirector>().CarID += 1;
 
                     //向きを調整
-                    if (((EventNumber == 1 || EventNumber == 6 || EventNumber == 7 || EventNumber == 9) && this.gameObject.tag == "LeftFactory") || (EventNumber == 4 && this.gameObject.tag == "LeftFactory"))
-                    {
-                        Car.transform.eulerAngles = new Vector3(0, 90, 0);
-                    }
-                    if (((EventNumber == 1 || EventNumber == 6 || EventNumber == 7 || EventNumber == 9) && this.gameObject.tag == "RightFactory")|| (EventNumber == 4 && this.gameObject.tag == "RightFactory"))
-                    {
-                        Car.transform.eulerAngles = new Vector3(0, -90, 0);
-                    }
+                    var yaw = RegularTrafficYaw(transform, EventNumber);
+                    if (yaw.HasValue)
+                        Car.transform.eulerAngles = new Vector3(0, yaw.Value, 0);
 
                     //waypoint設定
                     Car.GetComponent<CarController>().pointsParent = pointsParent;

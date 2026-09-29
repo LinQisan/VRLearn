@@ -10,19 +10,37 @@ public enum TitleOptionKind
     SmartPhone,
     Weather,
     SkyTime,
-    Hz
+    Hz,
+    Environment,
+    EventNumber,
+    CustomScenario      // runtime-filled tile for a JSON scenario (stringValue = its id)
 }
 
 [DisallowMultipleComponent]
 [RequireComponent(typeof(Toggle))]
 public sealed class TitleOptionToggle : MonoBehaviour
 {
-    static readonly Color SelectedOutlineColor = new Color32(24, 168, 102, 255);
+    static readonly Color SelectedOutlineColor = new Color32(255, 255, 255, 255);
+    public static readonly Color SelectedColor = new Color32(14, 165, 233, 255);
+    public static readonly Color SelectedHoverColor = new Color32(56, 189, 248, 255);
 
     [SerializeField] GameDirector_Title director;
     [SerializeField] TitleOptionKind kind;
     [SerializeField] int intValue;
     [SerializeField] float floatValue;
+    [SerializeField] string stringValue;
+
+    public TitleOptionKind Kind => kind;
+    public string StringValue => stringValue;
+
+    /// <summary>Binds a runtime custom-scenario tile (TitleCustomScenarios fills a fixed set of slots).</summary>
+    public void ConfigureCustom(GameDirector_Title configuredDirector, string scenarioId)
+    {
+        director = configuredDirector;
+        kind = TitleOptionKind.CustomScenario;
+        stringValue = scenarioId;
+        RefreshFromModel();
+    }
 
     Toggle toggle;
     Outline selectedOutline;
@@ -43,6 +61,13 @@ public sealed class TitleOptionToggle : MonoBehaviour
         toggle.SetIsOnWithoutNotify(selected);
         if (selectedOutline != null)
             selectedOutline.enabled = selected;
+        // Selected choices are filled with the accent colour so the current value of every
+        // tiled option is readable at a glance from the headset.
+        var colors = toggle.colors;
+        colors.normalColor = selected ? SelectedColor : TitleButtonFeedback.NormalColor;
+        colors.highlightedColor = selected ? SelectedHoverColor : TitleButtonFeedback.HoverColor;
+        colors.selectedColor = colors.normalColor;
+        toggle.colors = colors;
     }
 
     public bool IsSelected
@@ -62,6 +87,12 @@ public sealed class TitleOptionToggle : MonoBehaviour
                 case TitleOptionKind.Weather: return director.Weather == intValue;
                 case TitleOptionKind.SkyTime: return director.SkyTime == intValue;
                 case TitleOptionKind.Hz: return Mathf.Approximately(director.Hz, floatValue);
+                case TitleOptionKind.Environment: return director.Environment == intValue;
+                case TitleOptionKind.EventNumber: return director.EventNumber == intValue;
+                case TitleOptionKind.CustomScenario:
+                    return CustomScenarioSession.IsCustom(director.EventNumber)
+                        && CustomScenarioSession.Current != null
+                        && CustomScenarioSession.Current.id == stringValue;
                 default: return false;
             }
         }
@@ -69,7 +100,11 @@ public sealed class TitleOptionToggle : MonoBehaviour
 
     void OnValueChanged(bool isOn)
     {
-        if (isOn && director != null)
+        if (!isOn || director == null)
+            return;
+        if (kind == TitleOptionKind.CustomScenario)
+            director.SelectCustomScenario(stringValue);
+        else
             director.ApplyOption(kind, intValue, floatValue);
     }
 

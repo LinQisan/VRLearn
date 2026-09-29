@@ -65,6 +65,14 @@ public class CarController : MonoBehaviour
     // InitializeForSpawn (which runs before the deferred Start on new
     // instances) already restores the correct value.
     float initialSpawnSpeed = 10f;
+    bool cruiseSpeedOverridden;
+
+    /// <summary>Route speed for this life only (custom scenarios); call after InitializeForSpawn.</summary>
+    public void SetCruiseSpeed(float metersPerSecond)
+    {
+        Speed = Mathf.Max(0.5f, metersPerSecond);
+        cruiseSpeedOverridden = true;
+    }
     float initialCarSoundDb;
     Tweener activeSpeedTween;
     Coroutine agentStopBootRoutine;
@@ -120,9 +128,6 @@ public class CarController : MonoBehaviour
     /// </summary>
     public void InitializeForSpawn()
     {
-        var history = GetComponent<AccidentMotionHistory>();
-        if (history == null) history = gameObject.AddComponent<AccidentMotionHistory>();
-        history.ResetHistory();
         var wheelVisuals = GetComponent<VehicleWheelVisuals>();
         if (wheelVisuals == null) wheelVisuals = gameObject.AddComponent<VehicleWheelVisuals>();
         wheelVisuals.ResetVisuals();
@@ -135,6 +140,7 @@ public class CarController : MonoBehaviour
         waypointSpeed = 0f;
         CarSpace = 1f;
         Speed = initialSpawnSpeed;
+        cruiseSpeedOverridden = false;
         AcidentCarNumber = AcidentCar ? 1 : 0;
         Car1Move = 0;
         CarAutoMove = 0;
@@ -1160,13 +1166,18 @@ public class CarController : MonoBehaviour
         // future runtime waypoint edits.
 
         // Keep the established 10 m/s starting speed used by the vehicle prefabs.
-        if (Speed <= 0f)
+        // A custom scenario may already have set this life's speed; that must not
+        // become the baseline of later (built-in) lives of this pooled instance.
+        if (!cruiseSpeedOverridden)
         {
-            Speed = 10f;
+            if (Speed <= 0f)
+            {
+                Speed = 10f;
+            }
+            // Prefab-authored spawn speed captured once; tweens may rewrite Speed
+            // at runtime, but reuse must start from this value again.
+            initialSpawnSpeed = Speed;
         }
-        // Prefab-authored spawn speed captured once; tweens may rewrite Speed
-        // at runtime, but reuse must start from this value again.
-        initialSpawnSpeed = Speed;
         if (mixer != null)
             mixer.GetFloat("CarSound", out initialCarSoundDb);
         waypointSpeed = 0f;

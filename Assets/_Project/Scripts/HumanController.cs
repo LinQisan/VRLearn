@@ -195,11 +195,12 @@ public class HumanController : MonoBehaviour
 
         //最高速に対する現在速度の割合
         SpeedMagnitudeRatio = SpeedMagnitude/MaxSpeedMagnitude;
-        if (EventNumber == 6 || EventNumber == 7)
+        var ridesWithoutWalkCycle = ScenarioMode.RidesWithoutWalkCycle(EventNumber);
+        if (ridesWithoutWalkCycle)
         {
             audioSource.pitch = 0;
         }
-        if (EventNumber != 6 && EventNumber != 7)
+        if (!ridesWithoutWalkCycle)
         {
             //速度割合をアニメーションのパラメータに代入
             anim.SetFloat("SpeedRatio", SpeedMagnitudeRatio);
@@ -264,7 +265,7 @@ public class HumanController : MonoBehaviour
             // Bicycle events are anchored by the seat and pedal IK targets. Keep
             // the avatar root at the seat in all three axes instead of applying
             // the walking-only horizontal head-follow correction.
-            if (EventNumber == 6 || EventNumber == 7 || EventNumber == 9)
+            if (ScenarioMode.IsBicycle(EventNumber))
             {
                 var pelvisTarget = _vrik.solver.spine.pelvisTarget;
                 if (pelvisTarget != null && _vrik.references.pelvis != null)

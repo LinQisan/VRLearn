@@ -13,7 +13,18 @@ MonoBehaviour:
   m_Name: Scenario_00
   m_EditorClassIdentifier: Assembly-CSharp::ScenarioDefinitionAsset
   id: 0
-  displayName: 信号のない横断歩道（横方向交通）
-  eventSummary: "事故の状況：横方向の交通を歩いて横断中、接近車両と衝突しました。\n安全確認のポイント：横断前に左右を確認し、十分な車間ができるまで待ちましょう。"
+  displayName: "\u6A2A\u65AD\u6B69\u9053\uFF1A\u624B\u524D\u306E\u8ECA\u7DDA\u3092\u53F3\u304B\u3089\u6765\u308B\u8ECA"
+  eventSummary: "\u4E8B\u6545\u306E\u72B6\u6CC1\uFF1A\u6A2A\u65AD\u6B69\u9053\u3092\u6E21\u308A\u59CB\u3081\u305F\u3068\u3053\u308D\u3067\u3001\u53F3\u304B\u3089\u6765\u305F\u8ECA\u3068\u3076\u3064\u304B\u308A\u307E\u3057\u305F\u3002\n\u5B89\u5168\u78BA\u8A8D\u306E\u30DD\u30A4\u30F3\u30C8\uFF1A\u6E21\u308B\u524D\u306B\u53F3\u30FB\u5DE6\u30FB\u53F3\u3092\u898B\u3066\u3001\u8ECA\u304C\u6765\u306A\u3044\u3053\u3068\u3092\u78BA\u304B\u3081\u3066\u304B\u3089\u6E21\u308A\u307E\u3057\u3087\u3046\u3002"
   playerMode: 0
   trafficFlow: 1
+  shortTitle: "\u53F3\u304B\u3089\u6765\u308B\u8ECA"
+  shortTitleEn: Car from the right
+  setting: 0
+  learningGoal: "\u8ECA\u306E\u6D41\u308C\u304C\u5207\u308C\u3066\u3082\u3001\u624B\u524D\u306E\u8ECA\u7DDA\u3092\u53F3\u304B\u3089\u6765\u308B\u8ECA\u3092\u78BA\u304B\u3081\u3066\u304B\u3089\u6E21\u308B\u3002"
+  stopTraffic: 01000000
+  accidentLaunches:
+  - factory: 1
+    delaySeconds: 6
+    overrideYaw: 0
+    yaw: 0
+    offset: {x: 0, y: 0, z: 0}

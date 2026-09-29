@@ -1,5 +1,7 @@
 using System;
 using System.Collections;
+using System.Collections.Generic;
+using System.Linq;
 using System.Reflection;
 using NUnit.Framework;
 using UnityEngine;
@@ -10,9 +12,15 @@ using UnityEngine.UI;
 
 namespace VRLearn.Tests.PlayMode
 {
+    [TestFixture("Assets/_Project/Scenes/TraficAcident_Hikone_Meta.unity")]
     public sealed class MetaGameplaySmokeTests
     {
-        const string GameplayScene = "Assets/_Project/Scenes/TraficAcident_Meta.unity";
+        readonly string GameplayScene;
+
+        public MetaGameplaySmokeTests(string gameplayScene)
+        {
+            GameplayScene = gameplayScene;
+        }
         const string TitleScene = "Assets/_Project/Scenes/TraficAcidentTitle_Meta.unity";
         static readonly int[] ScenarioIds = { 0, 1, 2, 3, 4, 5, 6, 7, 8, 9 };
 
@@ -69,14 +77,43 @@ namespace VRLearn.Tests.PlayMode
                 "The title menu should be readable at the intended two-metre VR distance.");
 
             var director = FindSceneComponent("GameDirector_Title", scene);
-            var eventDown = FindCommandButton(scene, "EventDown");
             Assert.That(director, Is.Not.Null);
-            Assert.That(eventDown, Is.Not.Null);
-            Assert.That(eventDown.targetGraphic.raycastPadding.x, Is.LessThan(0f));
             Assert.That(director.GetType().GetField("EventNumber")?.GetValue(director), Is.EqualTo(-1));
-            eventDown.onClick.Invoke();
+
+            // Every scenario and every unpleasant tone is a tile: one trigger pull, no stepping.
+            var eventTiles = FindOptionTiles(scene, "EventNumber");
+            var toneTiles = FindOptionTiles(scene, "Hz");
+            Assert.That(eventTiles.Count, Is.EqualTo(11), "RANDOM + scenarios 0-9 must all be tiled.");
+            Assert.That(toneTiles.Count, Is.EqualTo(16), "None + 3000-17000 Hz must all be tiled.");
+            foreach (var tile in eventTiles.Concat(toneTiles))
+            {
+                Assert.That(tile.gameObject.activeInHierarchy && tile.interactable, Is.True, tile.name);
+                var size = ((RectTransform)tile.transform).rect.size;
+                Assert.That(Mathf.Min(size.x, size.y), Is.GreaterThanOrEqualTo(4.5f),
+                    $"{tile.name} is too small to hit with a Touch ray at two metres.");
+            }
+            var nine = eventTiles.First(t => (int)GetField(t.GetComponent("TitleOptionToggle"), "intValue") == 9);
+            nine.isOn = true;
             Assert.That(director.GetType().GetField("EventNumber")?.GetValue(director), Is.EqualTo(9),
-                "Minus from RANDOM must wrap to scenario 9 instead of doing nothing.");
+                "Selecting the scenario 9 tile must select scenario 9 directly.");
+            var tone = toneTiles.First(t => Mathf.Approximately((float)GetField(t.GetComponent("TitleOptionToggle"), "floatValue"), 12000f));
+            tone.isOn = true;
+            Assert.That(director.GetType().GetField("Hz")?.GetValue(director), Is.EqualTo(12000f));
+            Assert.That(FindCommandButton(scene, "EventDown"), Is.Null, "The scenario stepper was replaced by tiles.");
+        }
+
+        static List<Toggle> FindOptionTiles(Scene scene, string kind)
+        {
+            var result = new List<Toggle>();
+            foreach (var root in scene.GetRootGameObjects())
+            foreach (var component in root.GetComponentsInChildren<Component>(true))
+            {
+                if (component == null || component.GetType().Name != "TitleOptionToggle")
+                    continue;
+                if (GetField(component, "kind")?.ToString() == kind)
+                    result.Add(component.GetComponent<Toggle>());
+            }
+            return result;
         }
 
         [UnityTest]
@@ -171,7 +208,7 @@ namespace VRLearn.Tests.PlayMode
         }
 
         [UnityTest]
-        public IEnumerator AccidentReplayUsesIndependentOverheadCamera()
+        public IEnumerator AccidentReplayShowsThreeViewsThenFeedback()
         {
             var load = SceneManager.LoadSceneAsync(GameplayScene, LoadSceneMode.Single);
             while (!load.isDone)
@@ -210,29 +247,69 @@ namespace VRLearn.Tests.PlayMode
                 Vector3.Distance(originPositionBeforeImpact, playerTransform.position) > 0.04f
                 || Quaternion.Angle(originRotationBeforeImpact, playerTransform.rotation) > 3f,
                 Is.True,
-                "The tracked rig must visibly recoil, drop or tilt before the overhead replay.");
+                "The tracked rig must visibly recoil, drop or tilt before the replay.");
 
-            yield return new WaitForSecondsRealtime(1.3f);
+            // after the body-bound impact view, the three-view replay takes over
+            var replay = hybrid.GetType().GetProperty("Replay")?.GetValue(hybrid);
+            Assert.That(replay, Is.Not.Null);
+            var deadline = Time.realtimeSinceStartup + 5f;
+            while (!(bool)replay.GetType().GetProperty("IsVisible").GetValue(replay) && Time.realtimeSinceStartup < deadline)
+                yield return null;
+            Assert.That(replay.GetType().GetProperty("IsVisible").GetValue(replay), Is.True);
+            Assert.That(flow.GetType().GetProperty("Phase")?.GetValue(flow)?.ToString(), Is.EqualTo("Replay"));
 
-            var overhead = FindSceneComponent("AccidentOverheadView", scene, true);
-            Assert.That(overhead, Is.Not.Null);
-            Assert.That(overhead.GetType().GetProperty("IsVisible")?.GetValue(overhead), Is.True);
-            var viewCamera = overhead.GetType().GetProperty("ViewCamera")?.GetValue(overhead) as Camera;
-            var overlayCanvas = overhead.GetType().GetProperty("OverlayCanvas")?.GetValue(overhead) as Canvas;
-            Assert.That(viewCamera, Is.Not.Null);
-            Assert.That(viewCamera.enabled, Is.True);
-            Assert.That(viewCamera.targetTexture, Is.Not.Null);
-            Assert.That(viewCamera, Is.Not.EqualTo(Camera.main));
-            Assert.That(viewCamera.stereoTargetEye, Is.EqualTo(StereoTargetEyeMask.None));
-            Assert.That(overlayCanvas, Is.Not.Null);
-            Assert.That(overlayCanvas.gameObject.activeSelf, Is.True);
-            Assert.That(overlayCanvas.renderMode, Is.EqualTo(RenderMode.ScreenSpaceCamera));
-            Assert.That(overlayCanvas.worldCamera, Is.EqualTo(Camera.main));
+            var overview = replay.GetType().GetProperty("OverviewCamera").GetValue(replay) as Camera;
+            var participant = replay.GetType().GetProperty("ParticipantCamera").GetValue(replay) as Camera;
+            var driver = replay.GetType().GetProperty("DriverCamera").GetValue(replay) as Camera;
+            foreach (var view in new[] { overview, participant, driver })
+            {
+                Assert.That(view, Is.Not.Null);
+                Assert.That(view.targetTexture, Is.Not.Null);
+                Assert.That(view, Is.Not.EqualTo(Camera.main));
+                Assert.That(view.stereoTargetEye, Is.EqualTo(StereoTargetEyeMask.None));
+            }
+            Assert.That(overview.enabled && participant.enabled, Is.True);
+            Assert.That(driver.enabled, Is.False, "No vehicle hit the participant in this synthetic impact.");
 
-            Invoke(hybrid, "ForceResults");
-            yield return null;
-            Assert.That(viewCamera.enabled, Is.False);
-            Assert.That(overlayCanvas.gameObject.activeSelf, Is.False);
+            var canvas = replay.GetType().GetProperty("Canvas").GetValue(replay) as Canvas;
+            Assert.That(canvas.gameObject.activeSelf, Is.True);
+            Assert.That(canvas.renderMode, Is.EqualTo(RenderMode.ScreenSpaceCamera));
+            Assert.That(canvas.worldCamera, Is.EqualTo(Camera.main));
+            Assert.That(Camera.main.cullingMask, Is.EqualTo(1 << LayerMask.NameToLayer("UI")),
+                "Ragdoll and live cars must not be drawn over the replay.");
+            // overview is the largest view (left); the two side views together are half its area
+            float Area(string name)
+            {
+                var rect = (RectTransform)canvas.transform.Find("ReplayPanel/" + name + "/Image");
+                return rect.rect.width * rect.rect.height;
+            }
+            var big = Area("View_Overview");
+            var side = Area("View_Participant") + Area("View_Driver");
+            Assert.That(side / big, Is.InRange(0.45f, 0.55f));
+            Assert.That(canvas.transform.Find("ReplayPanel/View_Overview").localPosition.x,
+                Is.LessThan(canvas.transform.Find("ReplayPanel/View_Participant").localPosition.x));
+            Assert.That(canvas.transform.Find("ReplayPanel/Button_Replay"), Is.Not.Null);
+            Assert.That(canvas.transform.Find("ReplayPanel/Button_Skip"), Is.Not.Null);
+
+            // the participant is shown as a figure of the menu height, on a layer their own view skips
+            var figure = replay.GetType().GetProperty("Participant").GetValue(replay) as Component;
+            Assert.That(figure, Is.Not.Null);
+            var menuHeight = (int)FindSceneComponent("GameDirector", scene).GetType().GetField("Height")
+                .GetValue(FindSceneComponent("GameDirector", scene));
+            if (menuHeight > 0)
+                Assert.That((float)figure.GetType().GetProperty("HeightMeters").GetValue(figure),
+                    Is.EqualTo(Mathf.Clamp(menuHeight / 100f, 0.9f, 2.1f)).Within(0.001f));
+            Assert.That(participant.cullingMask & (1 << figure.gameObject.layer), Is.Zero);
+            Assert.That(figure.GetComponentsInChildren<Renderer>().Length, Is.GreaterThan(10));
+
+            // skip -> feedback
+            Invoke(replay, "Skip");
+            deadline = Time.realtimeSinceStartup + 3f;
+            while (flow.GetType().GetProperty("Phase")?.GetValue(flow)?.ToString() != "Results" && Time.realtimeSinceStartup < deadline)
+                yield return null;
+            Assert.That(flow.GetType().GetProperty("Phase")?.GetValue(flow)?.ToString(), Is.EqualTo("Results"));
+            Assert.That(overview.enabled || participant.enabled || driver.enabled, Is.False);
+            Assert.That(canvas.gameObject.activeSelf, Is.False);
         }
 
         [UnityTest]
@@ -353,6 +430,153 @@ namespace VRLearn.Tests.PlayMode
             Assert.That(avatar, Is.Not.Null, "Active avatar must exist after scenario start.");
             Assert.That(GetField(avatar, "EventNumber"), Is.EqualTo(scenarioId),
                 "Avatar must observe the transferred scenario, not the scene-authored default.");
+        }
+
+        [UnityTest]
+        public IEnumerator GoalShowsSuccessFeedback()
+        {
+            var load = SceneManager.LoadSceneAsync(GameplayScene, LoadSceneMode.Single);
+            while (!load.isDone)
+                yield return null;
+            yield return new WaitForSecondsRealtime(1f);    // a little recorded movement
+
+            var scene = SceneManager.GetActiveScene();
+            var flow = FindSceneComponent("GameplayFlowController", scene);
+            var player = FindSceneComponent("PlayerActor", scene);
+            var goal = FindSceneComponent("GoalController", scene);
+            Assert.That(goal, Is.Not.Null, "The active scenario has a goal.");
+            // the real goal trigger path: chime, flow change, success page (no smoke particles)
+            Invoke(goal, "OnTriggerEnter", player.GetComponent<Collider>());
+            Assert.That(flow.GetType().GetProperty("Phase").GetValue(flow).ToString(), Is.EqualTo("GoalReached"));
+            var particles = goal.GetComponentsInChildren<ParticleSystem>(true);
+            Assert.That(particles.Any(p => p.isPlaying), Is.False, "The goal no longer plays the smoke effect.");
+
+            var deadline = Time.realtimeSinceStartup + 6f;
+            while (flow.GetType().GetProperty("Phase").GetValue(flow).ToString() != "Results" && Time.realtimeSinceStartup < deadline)
+                yield return null;
+            Assert.That(flow.GetType().GetProperty("Phase").GetValue(flow).ToString(), Is.EqualTo("Results"));
+            var results = FindSceneComponent("AccidentResultPresenter", scene, true);
+            Assert.That(results.GetType().GetProperty("IsSuccess").GetValue(results), Is.True);
+            Assert.That(GetText((Component)GetField(results, "runtimeHeading")), Does.Contain("ゴール"));
+            Assert.That(GetText((Component)GetField(results, "runtimeMetrics")), Does.Contain("左の確認").And.Contain("右の確認"));
+            Assert.That(GetText((Component)GetField(results, "runtimeVerdict")), Is.Not.Empty);
+            Assert.That(Camera.main.cullingMask, Is.EqualTo(1 << LayerMask.NameToLayer("UI")));
+            Assert.That(((Behaviour)FindSceneComponent("OpenXRPlayerController", scene)).enabled, Is.False,
+                "Movement stays frozen on the success page.");
+        }
+
+        [UnityTest]
+        public IEnumerator TrialWritesThreeParsableCsvFiles()
+        {
+            var load = SceneManager.LoadSceneAsync(GameplayScene, LoadSceneMode.Single);
+            while (!load.isDone)
+                yield return null;
+            yield return new WaitForSecondsRealtime(2f);    // some sampled rows
+
+            var scene = SceneManager.GetActiveScene();
+            var director = FindSceneComponent("GameDirector", scene);
+            var csv = director.GetComponent("CSVPrinter");
+            var flow = FindSceneComponent("GameplayFlowController", scene);
+            var hybrid = FindSceneComponent("HybridAccidentPresentation", scene, true);
+            Assert.That(InvokeBool(flow, "TryReachGoal"), Is.True);
+            director.GetType().GetField("GoalFlag").SetValue(director, 1);
+            Assert.That(InvokeBool(hybrid, "PresentGoal"), Is.True);
+            var deadline = Time.realtimeSinceStartup + 6f;
+            while (flow.GetType().GetProperty("Phase").GetValue(flow).ToString() != "Results" && Time.realtimeSinceStartup < deadline)
+                yield return null;
+
+            Invoke(csv, "CSVPrint");
+            Invoke(csv, "CSVPrint");    // a second call in the same trial must not write again
+            var files = (string[])csv.GetType().GetProperty("LastWrittenFiles").GetValue(csv);
+            try
+            {
+                Assert.That(files.Length, Is.EqualTo(3));
+                var car = System.IO.File.ReadAllLines(files[0]);
+                var human = System.IO.File.ReadAllLines(files[1]);
+                var track = System.IO.File.ReadAllLines(files[2]);
+
+                Assert.That(human.Length, Is.EqualTo(2));
+                var head = human[0].Split(',');
+                var row = human[1].Split(',');
+                Assert.That(head, Is.EqualTo(new[] { "EventNumber", "Height", "Weight", "DieFlash", "Gender", "Age",
+                    "License", "OnAcident", "OnGoal", "Hz", "SmartPhone", "Incident", "Weather", "SkyTime", "Scene", "CustomScenario" }),
+                    "Existing analysis scripts read these columns in this order; only append.");
+                Assert.That(row.Length, Is.EqualTo(head.Length));
+                Assert.That(row.Last(), Is.Empty, "Built-in scenarios leave CustomScenario empty.");
+                Assert.That(row[0], Is.EqualTo(director.GetType().GetField("EventNumber").GetValue(director).ToString()));
+                Assert.That(row[Array.IndexOf(head, "OnGoal")], Is.EqualTo("1"));
+                Assert.That(row[Array.IndexOf(head, "OnAcident")], Is.EqualTo("0"));
+                Assert.That(row[Array.IndexOf(head, "Scene")], Is.EqualTo(scene.name));
+
+                Assert.That(track[0], Is.EqualTo("Time,PlayerPositionX,PlayerPositionY,PlayerPositionZ,PlayerRotationX,PlayerRotationY,PlayerRotationZ,AfterAcident,AcidentProgress"));
+                Assert.That(track.Length, Is.GreaterThan(5), "Head samples are recorded during the trial.");
+                Assert.That(car[0], Is.EqualTo("Time,CarID,CarPositionX,CarPositionY,CarPositionZ,AcidentCar"));
+                var previous = -1f;
+                foreach (var line in track.Skip(1))
+                {
+                    var cells = line.Split(',');
+                    Assert.That(cells.Length, Is.EqualTo(9), line);
+                    foreach (var cell in cells.Take(7))
+                        Assert.That(float.TryParse(cell, System.Globalization.NumberStyles.Float,
+                            System.Globalization.CultureInfo.InvariantCulture, out _), Is.True, line);
+                    var time = float.Parse(cells[0], System.Globalization.CultureInfo.InvariantCulture);
+                    Assert.That(time, Is.GreaterThanOrEqualTo(previous), "Time must not go backwards.");
+                    previous = time;
+                }
+                foreach (var line in car.Skip(1))
+                    Assert.That(line.Split(',').Length, Is.EqualTo(6), line);
+            }
+            finally
+            {
+                // never leave test trials among real experiment data
+                foreach (var file in files)
+                    if (System.IO.File.Exists(file))
+                        System.IO.File.Delete(file);
+            }
+        }
+
+        static readonly int[] ScheduledScenarioIds = { 0, 1, 2, 3, 4, 5, 6, 7, 8 };
+
+        [UnityTest]
+        public IEnumerator AccidentAreaLaunchesTheScheduledCar(
+            [ValueSource(nameof(ScheduledScenarioIds))] int scenarioId)
+        {
+            void ConfigureBeforeStart(Scene loaded, LoadSceneMode mode)
+            {
+                if (loaded.path != GameplayScene)
+                    return;
+                var director = FindSceneComponent("GameDirector", loaded);
+                director.GetType().GetField("EventNumber").SetValue(director, scenarioId);
+            }
+
+            SceneManager.sceneLoaded += ConfigureBeforeStart;
+            var load = SceneManager.LoadSceneAsync(GameplayScene, LoadSceneMode.Single);
+            while (!load.isDone)
+                yield return null;
+            SceneManager.sceneLoaded -= ConfigureBeforeStart;
+            yield return null;
+            yield return null;
+
+            var scene = SceneManager.GetActiveScene();
+            var area = FindSceneComponent("AccidentCarFactory", scene);
+            Assert.That(area, Is.Not.Null, "The active scenario has an accident area.");
+            var definition = area.GetType().GetProperty("Definition").GetValue(area);
+            Assert.That(definition, Is.Not.Null);
+            Assert.That((int)GetField(definition, "id"), Is.EqualTo(scenarioId));
+            var launches = (Array)GetField(definition, "accidentLaunches");
+            var firstDelay = launches.Cast<object>().Min(l => (float)GetField(l, "delaySeconds"));
+
+            bool AccidentCarActive() => UnityEngine.Object.FindObjectsByType<MonoBehaviour>(FindObjectsSortMode.None)
+                .Any(c => c.GetType().Name == "CarController" && (bool)GetField(c, "AcidentCar"));
+            Assert.That(AccidentCarActive(), Is.False);
+
+            var player = FindSceneComponent("PlayerActor", scene);
+            Invoke(area, "OnTriggerEnter", player.GetComponent<Collider>());
+            var deadline = Time.realtimeSinceStartup + firstDelay + 1.5f;
+            while (!AccidentCarActive() && Time.realtimeSinceStartup < deadline)
+                yield return null;
+            Assert.That(AccidentCarActive(), Is.True,
+                $"Scenario {scenarioId}: the first accident car must appear {firstDelay:0.0} s after the trigger.");
         }
 
         static Component FindSceneComponent(string typeName, Scene scene, bool includeInactive = false)

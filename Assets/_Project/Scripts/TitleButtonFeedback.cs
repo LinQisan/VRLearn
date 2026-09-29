@@ -8,8 +8,10 @@ using UnityEngine.UI;
 [DisallowMultipleComponent]
 public sealed class TitleButtonFeedback : MonoBehaviour, IPointerClickHandler
 {
-    public static readonly Color HoverColor = new Color32(186, 232, 255, 255);
-    public static readonly Color PressedColor = new Color32(55, 137, 191, 255);
+    // Dark tiles on a dark panel; hover brightens, press flashes the accent colour.
+    public static readonly Color NormalColor = new Color32(36, 51, 82, 255);
+    public static readonly Color HoverColor = new Color32(52, 82, 130, 255);
+    public static readonly Color PressedColor = new Color32(14, 165, 233, 255);
 
     static AudioSource sharedAudioSource;
     static AudioClip sharedClickClip;
@@ -37,12 +39,13 @@ public sealed class TitleButtonFeedback : MonoBehaviour, IPointerClickHandler
     public static void ConfigureSelectable(Selectable target)
     {
         var colors = target.colors;
-        colors.normalColor = Color.white;
-        colors.highlightedColor = HoverColor;
-        colors.pressedColor = PressedColor;
+        var style = target.GetComponent<TitleButtonStyle>();
+        colors.normalColor = style != null ? style.normal : NormalColor;
+        colors.highlightedColor = style != null ? style.hover : HoverColor;
+        colors.pressedColor = style != null ? style.pressed : PressedColor;
         // Do not give persistent EventSystem focus the same visual weight as
         // the transient XR pointer hover.
-        colors.selectedColor = Color.white;
+        colors.selectedColor = colors.normalColor;
         colors.disabledColor = new Color32(115, 115, 115, 128);
         colors.colorMultiplier = 1f;
         colors.fadeDuration = 0.07f;

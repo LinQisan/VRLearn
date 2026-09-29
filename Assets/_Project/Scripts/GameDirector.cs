@@ -430,6 +430,11 @@ public class GameDirector : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
+#if UNITY_EDITOR
+        // Tools/VRLearn/Custom Scenarios/Play Scenario File… runs one JSON file without editing the scene
+        if (CustomScenarioSession.ConsumeEditorPlayRequest())
+            EventNumber = CustomScenarioSession.EventNumber;
+#endif
         //Rigidbodyを取得
         this.rigid = this.GetComponent<Rigidbody>();
 
@@ -503,7 +508,23 @@ public class GameDirector : MonoBehaviour
         }
         ovrcamera.GetComponent<CenterEyeCamera>().DieFlash = this.DieFlash;
 
-        if (scenarios == null || !scenarios.Activate(EventNumber))
+        CustomScenarioRunner customRunner = null;
+        if (CustomScenarioSession.IsCustom(EventNumber))
+        {
+            // a scenario built at runtime from a JSON file (Scenarios/, or synced to the headset)
+            var errors = new System.Collections.Generic.List<string>();
+            var custom = CustomScenarioSession.Resolve(errors);
+            customRunner = custom != null && scenarios != null
+                ? CustomScenarioRunner.Setup(this, scenarios, custom, errors)
+                : null;
+            if (customRunner == null)
+            {
+                Debug.LogError("Custom scenario could not be built: " + string.Join(" / ", errors), this);
+                enabled = false;
+                return;
+            }
+        }
+        else if (scenarios == null || !scenarios.Activate(EventNumber))
         {
             Debug.LogError($"Scenario {EventNumber} is not configured.", this);
             enabled = false;
@@ -513,6 +534,8 @@ public class GameDirector : MonoBehaviour
             flow = GetComponent<GameplayFlowController>();
         if (flow != null)
             flow.BeginScenario(EventNumber);
+        if (customRunner != null)
+            customRunner.Begin();
 
         //centereyeに音をセットする
         ovrcamera.GetComponent<CenterEyeCamera>().DieSoundSet(Hz);
@@ -796,7 +819,15 @@ public class GameDirector : MonoBehaviour
             Debug.Log("リセット");
             // 事故演出のスローモーション中にリロードしても次シーンに引き継がない
             Time.timeScale = 1f;
-            ScenarioRetry.Reload(this);
+            // on the feedback page R is "try again" (saves the trial); mid-run it is an operator abort
+            var flow = GetComponent<GameplayFlowController>();
+            var results = flow != null && flow.Phase == GameplayPhase.Results
+                ? FindFirstObjectByType<AccidentResultPresenter>(FindObjectsInactive.Include)
+                : null;
+            if (results != null)
+                results.RetryScenario();
+            else
+                ScenarioRetry.Reload(this);
         }
 
         // 左手Y / 右手B ボタン押下

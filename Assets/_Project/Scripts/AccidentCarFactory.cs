@@ -1,220 +1,90 @@
 using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
+/// <summary>
+/// Trigger at the scenario's accident area. When the participant enters it, runs the active
+/// scenario's accident schedule (<see cref="ScenarioDefinitionAsset.accidentLaunches"/>):
+/// stops the listed regular traffic, then launches each accident car after its delay.
+/// </summary>
 public class AccidentCarFactory : MonoBehaviour
 {
-    //ゲームオブジェクトを格納する変数
     [SerializeField] GameObject carfactory_Left;
     [SerializeField] GameObject carfactory_Right;
     [SerializeField] GameObject carfactory_Left2;
     [SerializeField] GameObject carfactory_Right2;
     [SerializeField] GameObject gamedirector;
 
-    //イベントナンバーを格納する変数
-    int EventNumber;
-
-    //事故車生産フラグ
+    // true once the schedule has started (one run per scenario)
     [SerializeField] bool AcidentPrediction;
+
+    ScenarioDefinitionAsset definition;
+
+    public ScenarioDefinitionAsset Definition => definition;
 
     void OnTriggerEnter(Collider collider)
     {
-        if (TrafficAccidentState.IsFrozen)
+        if (TrafficAccidentState.IsFrozen || AcidentPrediction)
             return;
 
-        //人が入った
         var isTrackedPlayer = PlayerActor.TryResolve(collider, out _);
         var isLegacyHuman = collider.CompareTag("Human") && collider.name == "Human";
-        if ((isTrackedPlayer || isLegacyHuman) && !AcidentPrediction)
-        {
-            //Debug.Log("生産");
-            //イベントナンバー0
-            if (EventNumber == 0)
+        if (!isTrackedPlayer && !isLegacyHuman)
+            return;
+        if (definition == null || definition.accidentLaunches == null || definition.accidentLaunches.Length == 0)
+            return;
+
+        AcidentPrediction = true;
+        if (definition.stopTraffic != null)
+            foreach (var key in definition.stopTraffic)
             {
-                AcidentPrediction = true;
-
-                //車の生産を停止
-                carfactory_Right.GetComponent<CarFactory>().AcidentCarChange();
-                //carfactory_Left.GetComponent<CarFactory>().AcidentCarChange();
-
-                //車を生産
-                carfactory_Right.GetComponent<CarFactory>().CoroutineStart();
+                var factory = Resolve(key);
+                if (factory != null)
+                    factory.AcidentCarChange();
             }
-            if(EventNumber == 1)
-            {
-                AcidentPrediction = true;
-
-                //車の生産を停止
-                //carfactory_Right2.GetComponent<CarFactory>().AcidentCarChange();
-                carfactory_Left2.GetComponent<CarFactory>().AcidentCarChange();
-
-                //アクシデントエリアの親オブジェクトを取得
-                GameObject AcidentAreas = this.gameObject.transform.parent.gameObject;
-
-                //車を生産
-                AcidentAreas.transform.Find("CarFactory_Acident").gameObject.
-                    GetComponent<CarFactory>().CoroutineStart();
-
-                //2台目を生産
-                StartCoroutine("AcidentCarSecond");
-            }
-            if (EventNumber == 2)
-            {
-                AcidentPrediction = true;
-
-                //車の生産を停止
-                //carfactory_Right.GetComponent<CarFactory>().AcidentCarChange();
-
-                //アクシデントエリアの親オブジェクトを取得
-                GameObject AcidentAreas = this.gameObject.transform.parent.gameObject;
-
-                //車を生産
-                AcidentAreas.transform.Find("CarFactory_Acident").gameObject.
-                    GetComponent<CarFactory>().CoroutineStart();
-
-                //2台目を生産
-                StartCoroutine("AcidentCarSecond");
-            }
-            if (EventNumber == 3 || EventNumber == 5)
-            {
-                AcidentPrediction = true;
-
-                //車の生産を停止
-                //carfactory_Right.GetComponent<CarFactory>().AcidentCarChange();
-
-                //アクシデントエリアの親オブジェクトを取得
-                GameObject AcidentAreas = this.gameObject.transform.parent.gameObject;
-
-                //車を生産
-                AcidentAreas.transform.Find("CarFactory_Acident").gameObject.
-                    GetComponent<CarFactory>().CoroutineStart();
-
-                //2台目を生産
-                StartCoroutine("AcidentCarSecond");
-            }
-            if (EventNumber == 6 || EventNumber == 7)
-            {
-                AcidentPrediction = true;
-                
-                //アクシデントエリアの親オブジェクトを取得
-                GameObject AcidentAreas = this.gameObject.transform.parent.gameObject;
-                   
-                //工場を再設定
-                carfactory_Left = AcidentAreas.transform.Find("CarFactory_Acident_Left").gameObject;
-                carfactory_Right = AcidentAreas.transform.Find("CarFactory_Acident_Right").gameObject;
-
-                //車の生産を停止
-                carfactory_Right.GetComponent<CarFactory>().AcidentCarChange();
-                //carfactory_Left.GetComponent<CarFactory>().AcidentCarChange();
-
-                //車を生産
-                AcidentAreas.transform.Find("CarFactory_Acident").gameObject.
-                    GetComponent<CarFactory>().CoroutineStart();
-            }
-            if (EventNumber == 4)
-            {
-                AcidentPrediction = true;
-
-                //車の生産を停止
-                carfactory_Right2.GetComponent<CarFactory>().AcidentCarChange();
-                //carfactory_Left2.GetComponent<CarFactory>().AcidentCarChange();
-
-                //アクシデントエリアの親オブジェクトを取得
-                GameObject AcidentAreas = this.gameObject.transform.parent.gameObject;
-
-                //車を生産
-                AcidentAreas.transform.Find("CarFactory_Acident").gameObject.
-                    GetComponent<CarFactory>().CoroutineStart();
-
-                //2台目を生産
-                StartCoroutine("AcidentCarSecond");
-
-            }
-            if (EventNumber == 8)
-            {
-                AcidentPrediction = true;
-
-                //車の生産を停止
-                //carfactory_Right.GetComponent<CarFactory>().AcidentCarChange();
-
-                //アクシデントエリアの親オブジェクトを取得
-                GameObject AcidentAreas = this.gameObject.transform.parent.gameObject;
-
-                //車を生産
-                AcidentAreas.transform.Find("CarFactory_Acident_Right").gameObject.
-                    GetComponent<CarFactory>().CoroutineStart();
-                AcidentAreas.transform.Find("CarFactory_Acident_Left").gameObject.
-                    GetComponent<CarFactory>().CoroutineStart();
-
-                //2台目を生産
-                StartCoroutine("AcidentCarSecond");
-            }
-        }
+        foreach (var launch in definition.accidentLaunches)
+            StartCoroutine(Launch(launch));
     }
 
-    //シナリオ2,3,5用の遅延事故車
-    IEnumerator AcidentCarSecond()
+    IEnumerator Launch(AccidentLaunch launch)
     {
+        if (launch.delaySeconds > 0f)
+            yield return new WaitForSeconds(launch.delaySeconds);
         if (TrafficAccidentState.IsFrozen)
             yield break;
-
-        //アクシデントエリアの親オブジェクトを取得
-        GameObject AcidentAreas = this.gameObject.transform.parent.gameObject;
-
-        if (EventNumber == 2)
-        {
-            //遅延させて発射
-            yield return null;
-            //車を生産
-            AcidentAreas.transform.Find("CarFactory_Acident").gameObject.
-                GetComponent<CarFactory>().CoroutineStart();
-        }
-        else if (EventNumber == 1 ||EventNumber == 3 || EventNumber == 4 || EventNumber == 5) 
-        {
-            //遅延させて発射
-            yield return new WaitForSeconds(3.5f);
-            //車を生産
-            AcidentAreas.transform.Find("CarFactory_Acident").gameObject.
-                GetComponent<CarFactory>().CoroutineStart();
-        }
-        else if (EventNumber == 8)
-        {
-
-            //右から遅延させて発射
-            yield return new WaitForSeconds(12f);
-            //車を生産
-            AcidentAreas.transform.Find("CarFactory_Acident_Right").gameObject.
-                GetComponent<CarFactory>().CoroutineStart();
-        }
-
-
-        
-
-        //遅延させて3台目を発射
-        if (EventNumber == 2)
-        {
-            //遅延させて発射
-            yield return new WaitForSeconds(3.5f);
-            //もう一つ車を生産
-            AcidentAreas.transform.Find("CarFactory_Acident").gameObject.
-                GetComponent<CarFactory>().CoroutineStart();
-        }
-        else if(EventNumber == 3 || EventNumber == 5)
-        {
-            //遅延させて発射
-            yield return new WaitForSeconds(7f);
-            //もう一つ車を生産
-            AcidentAreas.transform.Find("CarFactory_Acident").gameObject.
-                GetComponent<CarFactory>().CoroutineStart();
-        }
-
-        
+        var factory = Resolve(launch.factory);
+        if (factory != null)
+            factory.SpawnAccidentCar(launch);
+        else
+            Debug.LogError($"{name}: accident factory {launch.factory} not found for scenario {definition.id}.", this);
     }
 
-    // Start is called before the first frame update
+    public CarFactory Resolve(ScenarioFactory key)
+    {
+        GameObject target = null;
+        switch (key)
+        {
+            case ScenarioFactory.Left: target = carfactory_Left; break;
+            case ScenarioFactory.Right: target = carfactory_Right; break;
+            case ScenarioFactory.Left2: target = carfactory_Left2; break;
+            case ScenarioFactory.Right2: target = carfactory_Right2; break;
+            default:
+                var area = transform.parent;
+                var child = area != null ? area.Find(AreaFactoryName(key)) : null;
+                target = child != null ? child.gameObject : null;
+                break;
+        }
+        return target != null ? target.GetComponent<CarFactory>() : null;
+    }
+
+    static string AreaFactoryName(ScenarioFactory key) => key switch
+    {
+        ScenarioFactory.AreaAccidentLeft => "CarFactory_Acident_Left",
+        ScenarioFactory.AreaAccidentRight => "CarFactory_Acident_Right",
+        _ => "CarFactory_Acident"
+    };
+
     void Start()
     {
-        //ゲームオブジェクトを格納
         var context = GameplaySceneContext.Instance;
         if (context != null)
         {
@@ -226,24 +96,18 @@ public class AccidentCarFactory : MonoBehaviour
         }
         if (gamedirector == null)
             gamedirector = FindFirstObjectByType<GameDirector>()?.gameObject;
-
-        
-
-        //イベントナンバーを格納
         if (gamedirector == null)
         {
             Debug.LogError("AccidentCarFactory requires a GameDirector.", this);
             enabled = false;
             return;
         }
-        EventNumber = gamedirector.GetComponent<GameDirector>().EventNumber;
 
+        var eventNumber = gamedirector.GetComponent<GameDirector>().EventNumber;
+        var runtime = gamedirector.GetComponent<ScenarioRuntime>();
+        if (runtime == null)
+            runtime = FindFirstObjectByType<ScenarioRuntime>();
+        definition = runtime != null ? runtime.GetById(eventNumber)?.asset : null;
         AcidentPrediction = false;
-    }
-
-    // Update is called once per frame
-    void Update()
-    {
-        
     }
 }

@@ -15,6 +15,22 @@ public enum ScenarioPlayerMode
     Bicycle
 }
 
+/// <summary>Player-mode questions that legacy code used to answer from the scenario number.</summary>
+public static class ScenarioMode
+{
+    public static bool IsBicycle(int eventNumber)
+    {
+        var active = ScenarioRuntime.Current != null ? ScenarioRuntime.Current.Active : null;
+        if (active != null)
+            return active.PlayerMode == ScenarioPlayerMode.Bicycle;
+        return eventNumber == 6 || eventNumber == 7 || eventNumber == 9;
+    }
+
+    /// <summary>Riding without the walking animation/footsteps (built-in 6, 7 and every custom ride).</summary>
+    public static bool RidesWithoutWalkCycle(int eventNumber) =>
+        eventNumber == 6 || eventNumber == 7 || (CustomScenarioSession.IsCustom(eventNumber) && IsBicycle(eventNumber));
+}
+
 [Serializable]
 public sealed class ScenarioDefinition
 {
@@ -27,10 +43,23 @@ public sealed class ScenarioDefinition
     public GameObject goal;
     public GameObject accidentArea;
     public ScenarioTrafficFlow trafficFlow;
+    /// <summary>Set for a scenario built at runtime from a JSON file (not serialized).</summary>
+    [NonSerialized] public CustomScenario custom;
 
     public int Id => asset != null ? asset.id : id;
-    public ScenarioPlayerMode PlayerMode => asset != null ? asset.playerMode : playerMode;
+    public ScenarioPlayerMode PlayerMode => asset != null ? asset.playerMode : custom != null ? custom.PlayerMode : playerMode;
     public ScenarioTrafficFlow TrafficFlow => asset != null ? asset.trafficFlow : trafficFlow;
+    public bool IsCustom => custom != null;
+
+    // ---- description shared by the title, replay and feedback pages
+    public string DisplayName => asset != null ? asset.displayName : custom != null ? custom.name : displayName;
+    public string ShortTitle => asset != null ? asset.shortTitle : custom != null ? custom.name : displayName;
+    public string ShortTitleEn => asset != null ? asset.shortTitleEn : custom != null ? custom.nameEn : string.Empty;
+    public string LearningGoal => asset != null ? asset.learningGoal : custom != null ? custom.learningGoal : string.Empty;
+    public string EventSummary => asset != null ? asset.eventSummary : custom != null ? custom.EventSummary : string.Empty;
+    public ScenarioSetting Setting => asset != null ? asset.setting : custom != null ? custom.Setting : ScenarioSetting.Crossing;
+    /// <summary>"01".."10" for built-ins, "カスタム" for custom scenarios.</summary>
+    public string NumberLabel => IsCustom ? "カスタム" : (Id + 1).ToString("00");
 
     public void SetActive(bool active)
     {
@@ -62,12 +91,14 @@ public sealed class ScenarioRuntime : MonoBehaviour
     [SerializeField] GameObject verticalTraffic;
     [SerializeField] TrafficManager trafficManager;
 
+    public static ScenarioRuntime Current { get; private set; }
     public ScenarioDefinition Active { get; private set; }
     public bool IsConfigurationValid { get; private set; }
     public int EntryCount => entries != null ? entries.Length : 0;
 
     private void Awake()
     {
+        Current = this;
         IsConfigurationValid = ValidateConfiguration(true);
         Active = null;
         if (entries != null)
@@ -183,6 +214,26 @@ public sealed class ScenarioRuntime : MonoBehaviour
                 verticalTraffic.SetActive(Active.TrafficFlow == ScenarioTrafficFlow.Vertical);
         }
         return true;
+    }
+
+    /// <summary>A goal object to clone for runtime-built scenarios (visuals, GoalController, audio).</summary>
+    public GameObject GoalTemplate => GetById(0)?.goal;
+
+    /// <summary>Activates a scenario built at runtime: every built-in entry and all regular traffic stay off.</summary>
+    public void ActivateCustom(ScenarioDefinition custom)
+    {
+        if (entries != null)
+            foreach (var entry in entries)
+                entry?.SetActive(false);
+        Active = custom;
+        custom.SetActive(true);
+        if (trafficManager != null)
+            trafficManager.Apply(ScenarioTrafficFlow.None);
+        else
+        {
+            if (besideTraffic != null) besideTraffic.SetActive(false);
+            if (verticalTraffic != null) verticalTraffic.SetActive(false);
+        }
     }
 
 #if UNITY_EDITOR

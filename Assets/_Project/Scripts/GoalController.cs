@@ -47,10 +47,9 @@ public class GoalController : MonoBehaviour
                     activeBicycle.Acident = 2;
             }
 
-            //�p�[�e�B�N���Đ�
-            gameObject.transform.Find("GoalParticle").gameObject.GetComponent<ParticleSystem>().Play();
-            //���Đ�
-            audioSource.PlayOneShot(GoalSound);
+            // Chime only: the success page replaces the old smoke particles.
+            if (audioSource != null && GoalSound != null)
+                audioSource.PlayOneShot(GoalSound);
             //�S�[���t���O���I��
             GoalFlag = true;
             
@@ -70,7 +69,8 @@ public class GoalController : MonoBehaviour
             if (metaPresentation != null)
             {
                 OpenXRScene.SetControllersVisible(true);
-                StartCoroutine(ReturnFromMetaGoal());
+                if (!metaPresentation.PresentGoal())
+                    StartCoroutine(ReturnFromMetaGoal());
                 return;
             }
 

@@ -7,8 +7,9 @@ using UnityEngine.UI;
 
 /// <summary>
 /// Meta-only accident presentation:
-/// tracked first-person impact, an opaque transition, then a stable overhead
-/// accident view. Head tracking remains active throughout.
+/// tracked first-person impact, an opaque transition, then the three-view replay
+/// (<see cref="AccidentReplayPresenter"/>) and finally the feedback page.
+/// Head tracking remains active throughout.
 /// </summary>
 [DisallowMultipleComponent]
 public sealed class HybridAccidentPresentation : MonoBehaviour
@@ -18,7 +19,6 @@ public sealed class HybridAccidentPresentation : MonoBehaviour
     [SerializeField, Min(0.4f)] float bodyViewDuration = 1.15f;
     [SerializeField, Min(0.05f)] float fadeToBlackDuration = 0.28f;
     [SerializeField, Min(0.05f)] float fadeFromBlackDuration = 0.4f;
-    [SerializeField, Min(0.5f)] float observationDuration = 4f;
 
     [Header("Body-bound View")]
     [SerializeField, Min(0f)] float bodyViewForwardOffset = 0.12f;
@@ -32,15 +32,17 @@ public sealed class HybridAccidentPresentation : MonoBehaviour
 
     [Header("VR comfort")]
     [SerializeField] bool followBodyRotation = false;
-    AccidentMotionHistory motionHistory;
-    AccidentTrajectoryReplay trajectoryReplay;
+    AccidentReplayRecorder recorder;
+    AccidentReplayPresenter replay;
+    AccidentReplayRecording lastRecording;
+    Transform impactVehicleRoot;
+    float impactTime;
     Camera trackedCamera;
     AvatarPresenter avatar;
     GameDirector director;
     GameplayFlowController flow;
     AccidentResultPresenter results;
     CenterEyeCamera legacyPresentation;
-    AccidentOverheadView overheadView;
     Image transitionImage;
     bool configured;
     bool presenting;
@@ -59,6 +61,8 @@ public sealed class HybridAccidentPresentation : MonoBehaviour
     float visionEffectStartedAt;
 
     public bool IsPresenting => presenting;
+    public AccidentReplayPresenter Replay => replay;
+    public AccidentReplayRecorder Recorder => recorder;
     public bool IsBodyViewActive => bodyViewActive;
     public AccidentImpactPhysics LastImpactPhysics { get; private set; }
 
@@ -91,13 +95,29 @@ public sealed class HybridAccidentPresentation : MonoBehaviour
         }
 
         // A presentation error must never strand the user without a way back.
-        // This deadline uses real time and is independent of Time.timeScale.
+        // This deadline uses real time and is independent of Time.timeScale; a replay that
+        // is still playing (the participant may watch it again) keeps it alive.
+        if (presenting && replay != null && replay.IsPlaying)
+            resultsDeadline = Time.realtimeSinceStartup + 5f;
         if (presenting
             && !resultsVisible
             && resultsDeadline > 0f
             && Time.realtimeSinceStartup >= resultsDeadline)
         {
-            CompleteResults();
+            if (flow.Phase == GameplayPhase.GoalReached)
+            {
+                StopAllCoroutines();
+                OpenXRInput.StopControllerVibration();
+                if (transitionImage != null)
+                    transitionImage.color = Color.clear;
+                flow.MarkGoalResults();
+                results.ShowSuccess(Mathf.Clamp(director != null ? director.EventNumber : 0, 0, 9), default);
+                resultsVisible = true;
+                presenting = false;
+                resultsDeadline = 0f;
+            }
+            else
+                CompleteResults();
         }
     }
 
@@ -120,10 +140,6 @@ public sealed class HybridAccidentPresentation : MonoBehaviour
         flow = configuredFlow;
         results = configuredResults;
         legacyPresentation = configuredLegacyPresentation;
-        overheadView = GetComponent<AccidentOverheadView>();
-        if (overheadView == null)
-            overheadView = gameObject.AddComponent<AccidentOverheadView>();
-        overheadView.Configure(trackedCamera);
         configured = trackedCamera != null
             && avatar != null
             && director != null
@@ -138,10 +154,17 @@ public sealed class HybridAccidentPresentation : MonoBehaviour
             return;
         }
 
-        motionHistory = GetComponent<AccidentMotionHistory>();
-        if (motionHistory == null) motionHistory = gameObject.AddComponent<AccidentMotionHistory>();
-        trajectoryReplay = GetComponent<AccidentTrajectoryReplay>();
-        if (trajectoryReplay == null) trajectoryReplay = gameObject.AddComponent<AccidentTrajectoryReplay>();
+        recorder = GetComponent<AccidentReplayRecorder>();
+        if (recorder == null) recorder = gameObject.AddComponent<AccidentReplayRecorder>();
+        var player = FindFirstObjectByType<PlayerActor>();
+        var context = GameplaySceneContext.Instance;
+        recorder.Configure(
+            trackedCamera.transform,
+            player != null ? player.transform : transform,
+            context != null && context.Bicycle != null ? context.Bicycle.transform : null);
+        replay = GetComponent<AccidentReplayPresenter>();
+        if (replay == null) replay = gameObject.AddComponent<AccidentReplayPresenter>();
+        replay.Configure(trackedCamera, results.RuntimeFont);
         CreateTransitionOverlay();
     }
 
@@ -155,16 +178,16 @@ public sealed class HybridAccidentPresentation : MonoBehaviour
         if (!configured || presenting || flow.Phase != GameplayPhase.AccidentTriggered)
             return false;
 
-        trajectoryReplay.Capture(motionHistory, impactVehicle);
         presenting = true;
         resultsVisible = false;
+        lastRecording = null;
         resultsDeadline = Time.realtimeSinceStartup
             + impactFlashDuration
             + bodyViewDuration
             + fadeToBlackDuration
             + fadeFromBlackDuration
-            + observationDuration
-            + trajectoryReplay.Duration + 15f;
+            + AccidentReplayPresenter.SecondsBeforeImpact
+            + AccidentReplayPresenter.SecondsAfterImpact + 15f;
         vehicleDirection = Vector3.ProjectOnPlane(vehicleDirection, Vector3.up);
         if (vehicleDirection.sqrMagnitude < 0.001f)
             vehicleDirection = trackedCamera.transform.forward;
@@ -179,6 +202,18 @@ public sealed class HybridAccidentPresentation : MonoBehaviour
         var impactController = impactVehicle != null
             ? impactVehicle.GetComponentInParent<CarController>()
             : null;
+        // Remember what hit the participant, and copy the intact models before any damage.
+        impactTime = Time.time;
+        impactVehicleRoot = impactController != null ? impactController.transform : impactVehicle;
+        try
+        {
+            var context = GameplaySceneContext.Instance;
+            replay.PrepareCopies(context != null && context.Bicycle != null ? context.Bicycle.transform : null);
+        }
+        catch (Exception exception)
+        {
+            Debug.LogException(exception, this);
+        }
         float vehicleMass = impactController != null
             ? impactController.ImpactVehicleMassKg
             : AccidentImpactPhysics.DefaultVehicleMassKg;
@@ -196,7 +231,7 @@ public sealed class HybridAccidentPresentation : MonoBehaviour
             if (damage == null) damage = impactController.gameObject.AddComponent<AccidentVehicleDamage>();
             damage.Apply(impactPoint, vehicleDirection, vehicleSpeed);
         }
-        results.SetImpactReport(LastImpactPhysics, trajectoryReplay.Duration);
+        results.SetImpactReport(LastImpactPhysics);
         var bicycle = FindFirstObjectByType<BicycleController>();
         if (bicycle != null && bicycle.gameObject.activeInHierarchy)
             bicycle.BeginMetaCrash(vehicleDirection, vehicleSpeed);
@@ -264,34 +299,80 @@ public sealed class HybridAccidentPresentation : MonoBehaviour
             fadeToBlackDuration);
         bodyViewActive = false;
         bodyViewAnchor = null;
+        // The impact blur belongs to the first-person hit moment, not to the replay.
+        DisableVisionImpairment();
 
-        // The replay is rendered by a separate overhead camera so nearby body
-        // and vehicle geometry can never trap or occlude the tracked XR view.
-        try
-        {
-            bodyViewActive = false;
-            bodyViewAnchor = null;
-            // Keep the replay image clean: impact blur/vignette belongs to the
-            // first-person hit moment and must not affect the observation view.
-            DisableVisionImpairment();
-            overheadView.Show(
-                impactPoint,
-                vehicleDirection,
-                impactVehicle,
-                avatar);
-        }
-        catch (Exception exception)
-        {
-            Debug.LogException(exception, this);
-        }
+        // Freeze the recording: ~8 s before contact plus the first moments after it.
+        lastRecording = BuildRecording();
         legacyPresentation.AcidentProgress = 4;
         flow.MarkReplay();
 
-        yield return FadeOverlay(Color.black, Color.clear, fadeFromBlackDuration);
-        yield return trajectoryReplay.Play(overheadView, avatar, results.RuntimeFont);
-        yield return new WaitForSecondsRealtime(observationDuration);
+        StartCoroutine(FadeOverlay(Color.black, Color.clear, fadeFromBlackDuration));
+        var height = director != null && director.Height > 0 ? director.Height / 100f : 1.4f;
+        var weight = director != null && director.Weight > 0 ? director.Weight : 0f;
+        var runtime = director != null ? director.GetComponent<ScenarioRuntime>() : null;
+        var definition = runtime != null ? runtime.Active : null;
+        replay.SetScenarioLabel(definition == null ? string.Empty
+            : definition.IsCustom ? $"カスタム　{definition.DisplayName}"
+            : $"シナリオ {definition.NumberLabel}　{definition.DisplayName}");
+        yield return replay.Run(lastRecording, avatar, height, weight);
 
         CompleteResults();
+    }
+
+    /// <summary>
+    /// Safe arrival: a soft green pulse and a short haptic, then the success feedback page built
+    /// from the last seconds of recorded head movement. Replaces the old goal smoke particles.
+    /// </summary>
+    public bool PresentGoal()
+    {
+        if (!configured || presenting || resultsVisible || flow.Phase != GameplayPhase.GoalReached)
+            return false;
+        presenting = true;
+        resultsDeadline = Time.realtimeSinceStartup + 6f;
+        OpenXRScene.SetPlayerLocomotionEnabled(false);
+        var phone = FindFirstObjectByType<SmartPhoneDistractionPresenter>(FindObjectsInactive.Include);
+        if (phone != null)
+            phone.Hide();
+        StartCoroutine(PresentGoalRoutine());
+        return true;
+    }
+
+    IEnumerator PresentGoalRoutine()
+    {
+        var recording = recorder != null
+            ? recorder.Build(null, Time.time, AccidentReplayRecorder.BufferSeconds, 0f)
+            : null;
+        if (recorder != null)
+            recorder.StopRecording();
+        var analysis = CrossingAnalysis.From(recording);
+
+        OpenXRInput.SetControllerVibration(0.2f);
+        transitionImage.color = new Color(UiKit.Mint.r, UiKit.Mint.g, UiKit.Mint.b, 0f);
+        yield return FadeOverlay(transitionImage.color, new Color(UiKit.Mint.r, UiKit.Mint.g, UiKit.Mint.b, 0.35f), 0.18f);
+        OpenXRInput.StopControllerVibration();
+        yield return FadeOverlay(transitionImage.color, new Color(0.02f, 0.05f, 0.04f, 0f), 0.5f);
+        yield return new WaitForSecondsRealtime(0.5f);
+        yield return FadeOverlay(transitionImage.color, Color.black, 0.3f);
+
+        flow.MarkGoalResults();
+        results.ShowSuccess(Mathf.Clamp(director != null ? director.EventNumber : 0, 0, 9), analysis);
+        transitionImage.color = Color.clear;
+        resultsVisible = true;
+        presenting = false;
+        resultsDeadline = 0f;
+    }
+
+    AccidentReplayRecording BuildRecording()
+    {
+        if (recorder == null)
+            return null;
+        recorder.StopRecording();
+        return recorder.Build(
+            impactVehicleRoot,
+            impactTime,
+            AccidentReplayPresenter.SecondsBeforeImpact,
+            AccidentReplayPresenter.SecondsAfterImpact);
     }
 
     public void ForceResults()
@@ -315,11 +396,10 @@ public sealed class HybridAccidentPresentation : MonoBehaviour
 
         StopAllCoroutines();
         OpenXRInput.StopControllerVibration();
-        if (trajectoryReplay != null) trajectoryReplay.StopReplay();
+        if (replay != null)
+            replay.Hide();
         bodyViewActive = false;
         bodyViewAnchor = null;
-        if (overheadView != null)
-            overheadView.Hide();
         DisableVisionImpairment();
         if (transitionImage != null)
             transitionImage.color = Color.clear;
@@ -341,6 +421,9 @@ public sealed class HybridAccidentPresentation : MonoBehaviour
                 results = FindFirstObjectByType<AccidentResultPresenter>(FindObjectsInactive.Include);
             if (results == null)
                 throw new InvalidOperationException("AccidentResultPresenter was not found.");
+            if (lastRecording == null && recorder != null && impactTime > 0f)
+                lastRecording = BuildRecording();
+            results.SetEvaluation(AccidentReplayAnalysis.From(lastRecording));
             results.Show(Mathf.Clamp(director != null ? director.EventNumber : 0, 0, 9));
             resultsVisible = true;
             presenting = false;

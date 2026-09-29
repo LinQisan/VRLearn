@@ -11,6 +11,9 @@ EditorBuildSettings:
   - enabled: 1
     path: Assets/_Project/Scenes/TraficAcident_Meta.unity
     guid: c4d31785f27df4a739b06cc8aa6eadd8
+  - enabled: 1
+    path: Assets/_Project/Scenes/TraficAcident_Hikone_Meta.unity
+    guid: 4175ac94973e5439bbfc2256e28a9931
   m_configObjects:
     com.unity.input.settings.actions: {fileID: -944628639613478452, guid: 052faaac586de48259a63d0c4782560b, type: 3}
     com.unity.xr.management.loader_settings: {fileID: 11400000, guid: 3012ae843dd5242a79f17eb6168e4f1c, type: 2}

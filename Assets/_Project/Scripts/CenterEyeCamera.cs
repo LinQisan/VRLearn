@@ -535,10 +535,14 @@ public class CenterEyeCamera : MonoBehaviour
                                //値が変わった時の処理
                 onVirtualUpdate: (tweenValue) =>
                 {
-                    blackout.GetComponent<Renderer>().material.color = tweenValue;
+                    if (blackout != null)
+                        blackout.GetComponent<Renderer>().material.color = tweenValue;
                 }
                 //tweenが終わった時
-            ).OnComplete(BlackOutSetNonActive);
+            )
+            // シーンが0.5秒以内に破棄されてもTweenが残らないようにする
+            .SetLink(gameObject)
+            .OnComplete(BlackOutSetNonActive);
 
         audioSource = GetComponent<AudioSource>();
     }

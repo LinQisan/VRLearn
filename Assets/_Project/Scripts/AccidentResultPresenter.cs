@@ -4,7 +4,9 @@ using UnityEngine.UI;
 using TMPro;
 
 /// <summary>
-/// Presents the selected accident explanation and owns the single return-to-title path.
+/// Feedback page after the accident replay: what happened in this scenario, the safety point
+/// to remember, and how the participant actually behaved (from the recorded replay).
+/// Owns the single return-to-title path and the same-conditions retry.
 /// </summary>
 [DefaultExecutionOrder(-900)]
 [DisallowMultipleComponent]
@@ -29,12 +31,37 @@ public sealed class AccidentResultPresenter : MonoBehaviour
     Button readableReturnButton;
 
     public TMP_FontAsset RuntimeFont => runtimeFont;
-    string impactReport;
     TMP_Text runtimeMetrics;
+    TMP_Text runtimeSituation;
+    TMP_Text runtimeAdvice;
+    TMP_Text runtimeVerdict;
+    TMP_Text runtimeHeading;
+    TMP_Text runtimeChip;
+    TMP_Text storyHeading;
+    TMP_Text adviceHeading;
+    Image accentStrip;
+    Image chipFill;
+    Image verdictFill;
+    float impactSpeedKmh = -1f;
+    AccidentReplayAnalysis evaluation;
+    bool hasEvaluation;
+    CrossingAnalysis crossing;
+    bool success;
+    float shownAt;
 
-    public void SetImpactReport(AccidentImpactPhysics impact, float recordedSeconds)
+    /// <summary>True when the page shows a safe arrival instead of an accident.</summary>
+    public bool IsSuccess => success;
+
+    /// <summary>Contact speed measured before the traffic freeze (the reliable number).</summary>
+    public void SetImpactReport(AccidentImpactPhysics impact)
     {
-        impactReport = $"接触時の車速 {impact.ImpactSpeedMetersPerSecond * 3.6f:0.0} km/h   •   記録 {recordedSeconds:0.0} 秒\n軌跡と接触位置を振り返り、同じ条件でもう一度体験できます。";
+        impactSpeedKmh = impact.ImpactSpeedMetersPerSecond * 3.6f;
+    }
+
+    public void SetEvaluation(AccidentReplayAnalysis analysis)
+    {
+        evaluation = analysis;
+        hasEvaluation = true;
     }
 
     public void RetryScenario()
@@ -42,6 +69,10 @@ public sealed class AccidentResultPresenter : MonoBehaviour
         if (returning || director == null) return;
         returning = true;
         visible = false;
+        // a retry is a new trial: save this one first
+        var csv = director.GetComponent<CSVPrinter>();
+        if (csv != null)
+            csv.CSVPrint();
         ScenarioRetry.Reload(director);
     }
 
@@ -75,7 +106,8 @@ public sealed class AccidentResultPresenter : MonoBehaviour
 
     private void Update()
     {
-        if (visible && OpenXRInput.PrimaryButtonDown)
+        // ignore the press that skipped the replay on the previous page
+        if (visible && Time.unscaledTime - shownAt > 0.6f && OpenXRInput.PrimaryButtonDown)
             ReturnToMenu();
     }
 
@@ -88,13 +120,29 @@ public sealed class AccidentResultPresenter : MonoBehaviour
         }
     }
 
+    /// <summary>Feedback after an accident (replay has already been shown).</summary>
     public void Show(int scenarioId)
+    {
+        success = false;
+        Present(scenarioId);
+    }
+
+    /// <summary>Feedback after reaching the goal safely: what the participant checked on the way.</summary>
+    public void ShowSuccess(int scenarioId, CrossingAnalysis analysis)
+    {
+        success = true;
+        crossing = analysis;
+        Present(scenarioId);
+    }
+
+    void Present(int scenarioId)
     {
         if (returning)
             return;
 
         Time.timeScale = 1f;
         visible = true;
+        shownAt = Time.unscaledTime;
         MetaEditorSimulationController.ShowCursor();
         for (var index = 0; scenarioPanels != null && index < scenarioPanels.Length; index++)
             if (scenarioPanels[index] != null)
@@ -125,17 +173,51 @@ public sealed class AccidentResultPresenter : MonoBehaviour
         if (blackoutCanvas != null)
             blackoutCanvas.gameObject.SetActive(true);
         readableCanvas.gameObject.SetActive(true);
-        var definition = scenarios != null ? scenarios.Active?.asset : null;
-        if (runtimeTitle != null)
-            runtimeTitle.text = definition != null
-                ? $"事故シナリオ {definition.id + 1}：{definition.displayName}"
-                : $"事故シナリオ {scenarioId + 1}";
-        if (runtimeSummary != null)
-            runtimeSummary.text = definition != null && !string.IsNullOrWhiteSpace(definition.eventSummary)
-                ? definition.eventSummary
-                : "車両との接触が発生しました。周囲確認と安全な横断判断を振り返ってください。";
-        if (runtimeMetrics != null)
-            runtimeMetrics.text = impactReport ?? "接触速度の記録はありません。周囲の確認と進入のタイミングを振り返りましょう。";
+
+        var definition = scenarios != null ? scenarios.Active : null;
+        var numberLabel = definition != null ? definition.NumberLabel : (scenarioId + 1).ToString("00");
+        var bicycle = definition != null && definition.PlayerMode == ScenarioPlayerMode.Bicycle;
+        var accent = success ? UiKit.Mint : UiKit.Coral;
+        accentStrip.color = accent;
+        chipFill.color = accent;
+        verdictFill.color = new Color(accent.r, accent.g, accent.b, 0.14f);
+        runtimeVerdict.color = Color.Lerp(accent, Color.white, 0.35f);
+        runtimeChip.text = definition != null && definition.IsCustom ? "カスタム" : $"シナリオ {numberLabel}";
+        runtimeHeading.text = success
+            ? (bicycle ? "ゴール！ 安全に走れました" : "ゴール！ 安全に渡れました")
+            : "事故が起きました / What happened";
+        runtimeHeading.color = accent;
+        runtimeTitle.text = definition == null
+            ? $"シナリオ {numberLabel}"
+            : definition.IsCustom
+                ? definition.DisplayName
+                : $"<color={UiKit.Hex(UiKit.Muted)}>{numberLabel}</color>  {definition.DisplayName}";
+
+        var summary = definition != null && !string.IsNullOrWhiteSpace(definition.EventSummary)
+            ? definition.EventSummary
+            : "事故の状況：車両との接触が発生しました。\n安全確認のポイント：周囲をよく確認してから渡りましょう。";
+        SplitSummary(summary, out var situation, out var advice);
+        runtimeSummary.text = summary;
+        if (success)
+        {
+            storyHeading.text = "このシナリオで学ぶこと";
+            runtimeSituation.text = definition != null && !string.IsNullOrWhiteSpace(definition.LearningGoal)
+                ? definition.LearningGoal
+                : advice;
+            adviceHeading.text = "安全確認のポイント";
+            runtimeAdvice.text = advice;
+            runtimeMetrics.text = BuildSuccessMetrics();
+            runtimeVerdict.text = BuildSuccessVerdict(bicycle);
+        }
+        else
+        {
+            storyHeading.text = "何が起きたか";
+            runtimeSituation.text = situation;
+            adviceHeading.text = "安全確認のポイント";
+            runtimeAdvice.text = advice;
+            runtimeMetrics.text = BuildMetrics();
+            runtimeVerdict.text = BuildVerdict();
+        }
         if (readableReturnButton != null)
             readableReturnButton.Select();
 
@@ -146,6 +228,95 @@ public sealed class AccidentResultPresenter : MonoBehaviour
             listener.enabled = true;
         OpenXRScene.SetControllersVisible(true);
         OpenXRScene.SetControllerVisualsVisible(false);
+    }
+
+    /// <summary>Scenario summaries are written as "事故の状況：…\n安全確認のポイント：…".</summary>
+    static void SplitSummary(string summary, out string situation, out string advice)
+    {
+        situation = summary;
+        advice = string.Empty;
+        foreach (var raw in summary.Split('\n'))
+        {
+            var line = raw.Trim();
+            if (line.StartsWith("事故の状況："))
+                situation = line.Substring("事故の状況：".Length);
+            else if (line.StartsWith("安全確認のポイント："))
+                advice = line.Substring("安全確認のポイント：".Length);
+        }
+    }
+
+    static string Row(string label, string value, Color status) =>
+        $"<color={UiKit.Hex(status)}>●</color>  {label}<pos=64%>{value}\n";
+
+    string BuildMetrics()
+    {
+        var carSpeed = impactSpeedKmh >= 0f ? impactSpeedKmh : hasEvaluation ? evaluation.VehicleSpeedKmh : -1f;
+        var lines = new System.Text.StringBuilder();
+        lines.Append(Row("車の速度（接触時）", carSpeed >= 0f ? $"<b>{carSpeed:0.0} km/h</b>" : "記録なし", UiKit.Coral));
+        if (hasEvaluation && evaluation.HasVehicle)
+        {
+            lines.Append(Row("あなたの速度", $"<b>{evaluation.ParticipantSpeedKmh:0.0} km/h</b>", UiKit.Sky));
+            var looked = evaluation.SecondsLookingAtVehicle >= 0.3f;
+            lines.Append(Row("車の方を見ていた時間", $"<b>{evaluation.SecondsLookingAtVehicle:0.0} 秒</b>",
+                looked ? UiKit.Mint : UiKit.Amber));
+            lines.Append(Row("最後に車を見たのは", evaluation.LookedAtVehicle
+                ? $"<b>接触の {evaluation.LastLookBeforeImpact:0.0} 秒前</b>"
+                : $"<b><color={UiKit.Hex(UiKit.Coral)}>見ていません</color></b>",
+                evaluation.LookedAtVehicle ? UiKit.Mint : UiKit.Coral));
+        }
+        else
+        {
+            lines.Append($"<color={UiKit.Hex(UiKit.Muted)}>視線の記録がないため、行動の振り返りは表示できません。</color>");
+        }
+        return lines.ToString().TrimEnd('\n');
+    }
+
+    string BuildVerdict()
+    {
+        if (!hasEvaluation || !evaluation.HasVehicle)
+            return "リプレイを思い出して、どこで止まって確認すればよかったか考えてみましょう。";
+        if (!evaluation.LookedAtVehicle)
+            return "ぶつかった車を見ていませんでした。渡る前に、左右をしっかり確認しましょう。";
+        if (evaluation.LastLookBeforeImpact > 1.5f)
+            return "車は見ていましたが、確認のあとも車は近づいていました。渡る直前にもう一度確認しましょう。";
+        return "車に気づいていました。気づいたときに止まれる距離と速さかを考えましょう。";
+    }
+
+    string BuildSuccessMetrics()
+    {
+        var lines = new System.Text.StringBuilder();
+        if (!crossing.HasData)
+            return $"<color={UiKit.Hex(UiKit.Muted)}>視線の記録がないため、行動の振り返りは表示できません。</color>";
+        lines.Append(Row("左の確認", crossing.CheckedLeft
+                ? $"<b>{crossing.SecondsLookingLeft:0.0} 秒</b>"
+                : $"<b><color={UiKit.Hex(UiKit.Amber)}>少なめ</color></b>",
+            crossing.CheckedLeft ? UiKit.Mint : UiKit.Amber));
+        lines.Append(Row("右の確認", crossing.CheckedRight
+                ? $"<b>{crossing.SecondsLookingRight:0.0} 秒</b>"
+                : $"<b><color={UiKit.Hex(UiKit.Amber)}>少なめ</color></b>",
+            crossing.CheckedRight ? UiKit.Mint : UiKit.Amber));
+        var near = crossing.ClosestVehicleMeters;
+        lines.Append(Row("いちばん近づいた車", near >= 0f && near < 40f ? $"<b>{near:0.0} m</b>" : "<b>近くに車なし</b>",
+            near >= 0f && near < 3f ? UiKit.Amber : UiKit.Sky));
+        lines.Append($"<size=80%><color={UiKit.Hex(UiKit.Muted)}>ゴール前 {crossing.DurationSeconds:0} 秒間の記録</color></size>");
+        return lines.ToString();
+    }
+
+    string BuildSuccessVerdict(bool bicycle)
+    {
+        var goal = bicycle ? "安全に走れました" : "安全に渡れました";
+        string text;
+        if (!crossing.HasData)
+            text = $"{goal}。いつも左右を確認するくせをつけましょう。";
+        else if (crossing.CheckedLeft && crossing.CheckedRight)
+            text = $"左右をよく確認して、{goal}。この確認をいつも続けましょう。";
+        else if (crossing.CheckedLeft || crossing.CheckedRight)
+            text = $"{goal}が、{(crossing.CheckedLeft ? "右" : "左")}の確認が少なめでした。両側を見るくせをつけましょう。";
+        else
+            text = "今回は無事でしたが、左右をほとんど見ていませんでした。次は首を回して確かめましょう。";
+        if (crossing.HasData && crossing.ClosestVehicleMeters >= 0f && crossing.ClosestVehicleMeters < 3f)
+            text += $"（車が {crossing.ClosestVehicleMeters:0.0} m まで近づきました）";
+        return text;
     }
 
     void EnsureRuntimeExplanation()
@@ -192,58 +363,68 @@ public sealed class AccidentResultPresenter : MonoBehaviour
         // The full-screen canvas is rendered immediately in front of the XR
         // near plane. Only this centered panel is visible, while scene geometry
         // can no longer be drawn over it.
-        var panelRect = CreateImage(canvasRect, "ResultPanel", new Color32(16, 34, 50, 250));
+        var font = runtimeFont;
+        var panelRect = UiKit.Box(canvasRect, "ResultPanel", UiKit.Panel, Vector2.zero, new Vector2(1400f, 820f), 1.4f);
         readablePanel = panelRect;
-        panelRect.GetComponent<Image>().raycastTarget = false;
-        panelRect.anchorMin = panelRect.anchorMax = new Vector2(0.5f, 0.5f);
-        panelRect.sizeDelta = new Vector2(1040f, 660f);
-        panelRect.anchoredPosition = Vector2.zero;
         panelRect.localScale = Vector3.one * ResultPanelScale;
+        accentStrip = UiKit.Box(panelRect, "AccentStrip", UiKit.Coral, new Vector2(-610f, 372f), new Vector2(120f, 10f), 0.3f)
+            .GetComponent<Image>();
 
-        var heading = CreateRuntimeText(
-            panelRect, "Heading", new Vector2(0f, 278f), new Vector2(820f, 58f), 34f, FontStyles.Bold);
-        heading.text = "事故の説明";
-        heading.color = new Color32(119, 216, 181, 255);
-        runtimeTitle = CreateRuntimeText(
-            panelRect, "Title", new Vector2(0f, 203f), new Vector2(820f, 76f), 40f, FontStyles.Bold);
+        // header: scenario chip, page heading, scenario title
+        var chip = UiKit.Box(panelRect, "Chip", UiKit.Coral, new Vector2(-575f, 320f), new Vector2(190f, 50f), 2f);
+        chipFill = chip.GetComponent<Image>();
+        runtimeChip = UiKit.Label(chip, "Text", font, "シナリオ 01", 26f, Vector2.zero, new Vector2(180f, 46f),
+            UiKit.Ink, FontStyles.Bold, TextAlignmentOptions.Center);
+        runtimeHeading = UiKit.Label(panelRect, "Heading", font, "", 30f, new Vector2(110f, 320f),
+            new Vector2(1120f, 50f), UiKit.Coral, FontStyles.Bold);
+        runtimeTitle = UiKit.Label(panelRect, "Title", font, "", 44f, new Vector2(0f, 250f),
+            new Vector2(1300f, 70f), UiKit.Text, FontStyles.Bold);
         runtimeTitle.enableAutoSizing = true;
         runtimeTitle.fontSizeMin = 28f;
-        runtimeTitle.fontSizeMax = 40f;
-        runtimeSummary = CreateRuntimeText(
-            panelRect, "Summary", new Vector2(0f, 48f), new Vector2(900f, 210f), 30f, FontStyles.Normal);
-        runtimeSummary.alignment = TextAlignmentOptions.TopLeft;
-        runtimeSummary.lineSpacing = 8f;
+        runtimeTitle.fontSizeMax = 44f;
+        // full text kept for tooling/tests; the two cards below show it split
+        runtimeSummary = UiKit.Label(panelRect, "Summary", font, "", 1f, Vector2.zero, new Vector2(10f, 10f), UiKit.Text);
+        runtimeSummary.gameObject.SetActive(false);
 
-        runtimeMetrics = CreateRuntimeText(panelRect, "Metrics", new Vector2(0f, -106f), new Vector2(900f, 85f), 24f, FontStyles.Normal);
-        runtimeMetrics.color = new Color32(119, 216, 181, 255);
+        // left card: the story and the point to remember
+        var story = UiKit.Box(panelRect, "Card_Story", UiKit.Card, new Vector2(-335f, -5f), new Vector2(630f, 400f));
+        CardNumber(story, "1", font);
+        storyHeading = UiKit.Label(story, "Head_Situation", font, "何が起きたか", 27f, new Vector2(35f, 160f),
+            new Vector2(510f, 40f), UiKit.Sky, FontStyles.Bold);
+        runtimeSituation = UiKit.Label(story, "Situation", font, "", 27f, new Vector2(0f, 70f), new Vector2(570f, 130f), UiKit.Text);
+        runtimeSituation.alignment = TextAlignmentOptions.TopLeft;
+        UiKit.Box(story, "Divider", UiKit.Hairline, new Vector2(0f, -8f), new Vector2(570f, 2f), 0f);
+        adviceHeading = UiKit.Label(story, "Head_Advice", font, "安全確認のポイント", 27f, new Vector2(0f, -40f),
+            new Vector2(570f, 40f), UiKit.Amber, FontStyles.Bold);
+        runtimeAdvice = UiKit.Label(story, "Advice", font, "", 27f, new Vector2(0f, -125f), new Vector2(570f, 130f), UiKit.Text);
+        runtimeAdvice.alignment = TextAlignmentOptions.TopLeft;
 
-        var footer = CreateRuntimeText(
-            panelRect, "Footer", new Vector2(0f, -284f), new Vector2(860f, 40f), 22f, FontStyles.Normal);
-        footer.text = "A / X・Enter：メニューへ　　R：同じ条件で再体験";
-        footer.color = new Color32(190, 208, 220, 255);
+        // right card: how the participant behaved
+        var check = UiKit.Box(panelRect, "Card_Check", UiKit.Card, new Vector2(335f, -5f), new Vector2(630f, 400f));
+        CardNumber(check, "2", font);
+        UiKit.Label(check, "Head_Check", font, "あなたの行動 / Your check", 27f, new Vector2(35f, 160f),
+            new Vector2(510f, 40f), UiKit.Sky, FontStyles.Bold);
+        runtimeMetrics = UiKit.Label(check, "Metrics", font, "", 26f, new Vector2(0f, 22f), new Vector2(570f, 200f), UiKit.Text);
+        runtimeMetrics.alignment = TextAlignmentOptions.TopLeft;
+        runtimeMetrics.lineSpacing = 18f;
+        var verdictBox = UiKit.Box(check, "VerdictBox", new Color(1f, 1f, 1f, 0.1f), new Vector2(0f, -135f), new Vector2(590f, 110f), 0.7f);
+        verdictFill = verdictBox.GetComponent<Image>();
+        runtimeVerdict = UiKit.Label(verdictBox, "Verdict", font, "", 25f, Vector2.zero, new Vector2(550f, 96f),
+            UiKit.Amber, FontStyles.Bold);
+        runtimeVerdict.alignment = TextAlignmentOptions.MidlineLeft;
 
-        var buttonRect = CreateImage(panelRect, "Button_ReturnToMenu", new Color32(220, 184, 92, 255));
-        buttonRect.anchorMin = buttonRect.anchorMax = new Vector2(0.5f, 0.5f);
-        buttonRect.sizeDelta = new Vector2(300f, 70f);
-        buttonRect.anchoredPosition = new Vector2(180f, -213f);
-        readableReturnButton = buttonRect.gameObject.AddComponent<Button>();
-        readableReturnButton.targetGraphic = buttonRect.GetComponent<Image>();
-        readableReturnButton.onClick.AddListener(ReturnToMenu);
-        var buttonLabel = CreateRuntimeText(
-            buttonRect, "Label", Vector2.zero, new Vector2(286f, 64f), 29f, FontStyles.Bold);
-        buttonLabel.text = "メニューに戻る";
-        buttonLabel.color = new Color32(18, 32, 44, 255);
-
-        var retryRect = CreateImage(panelRect, "Button_RetryScenario", new Color32(119, 216, 181, 255));
-        retryRect.anchorMin = retryRect.anchorMax = new Vector2(0.5f, 0.5f);
-        retryRect.sizeDelta = new Vector2(300f, 70f);
-        retryRect.anchoredPosition = new Vector2(-180f, -213f);
-        var retry = retryRect.gameObject.AddComponent<Button>();
-        retry.targetGraphic = retryRect.GetComponent<Image>();
+        var retry = UiKit.PillButton(panelRect, "Button_RetryScenario", font, "もう一度体験 / Try again",
+            UiKit.CardRaised, UiKit.Text, new Vector2(-300f, -290f), new Vector2(560f, 92f));
+        retry.onClick.AddListener(TitleButtonFeedback.PlayClickFeedback);
         retry.onClick.AddListener(RetryScenario);
-        var retryLabel = CreateRuntimeText(retryRect, "Label", Vector2.zero, new Vector2(286f, 64f), 29f, FontStyles.Bold);
-        retryLabel.text = "同じ条件で再体験";
-        retryLabel.color = new Color32(18, 32, 44, 255);
+        readableReturnButton = UiKit.PillButton(panelRect, "Button_ReturnToMenu", font, "タイトルへ / Title",
+            UiKit.Amber, UiKit.Ink, new Vector2(300f, -290f), new Vector2(560f, 92f));
+        readableReturnButton.onClick.AddListener(TitleButtonFeedback.PlayClickFeedback);
+        readableReturnButton.onClick.AddListener(ReturnToMenu);
+
+        UiKit.Label(panelRect, "Footer", font, "A / X・Enter：タイトルへ　　R：もう一度体験", 22f,
+            new Vector2(0f, -372f), new Vector2(1300f, 36f), UiKit.Muted, FontStyles.Normal, TextAlignmentOptions.Center);
+
         var returnNavigation = readableReturnButton.navigation;
         returnNavigation.mode = Navigation.Mode.Explicit;
         returnNavigation.selectOnLeft = retry;
@@ -253,6 +434,13 @@ public sealed class AccidentResultPresenter : MonoBehaviour
         retryNavigation.selectOnRight = readableReturnButton;
         retry.navigation = retryNavigation;
         readableCanvas.gameObject.SetActive(false);
+    }
+
+    static void CardNumber(RectTransform card, string number, TMP_FontAsset font)
+    {
+        var dot = UiKit.Dot(card, "Number", UiKit.CardRaised, new Vector2(-265f, 160f), 44f);
+        UiKit.Label(dot, "Text", font, number, 24f, Vector2.zero, new Vector2(44f, 44f), UiKit.Sky,
+            FontStyles.Bold, TextAlignmentOptions.Center);
     }
 
     void EnsureBlackoutCanvas()
@@ -297,16 +485,6 @@ public sealed class AccidentResultPresenter : MonoBehaviour
         blackoutCanvas.gameObject.SetActive(false);
     }
 
-    RectTransform CreateImage(RectTransform parent, string name, Color color)
-    {
-        var imageObject = new GameObject(name, typeof(RectTransform), typeof(CanvasRenderer), typeof(Image));
-        imageObject.layer = parent.gameObject.layer;
-        imageObject.transform.SetParent(parent, false);
-        var rect = imageObject.GetComponent<RectTransform>();
-        imageObject.GetComponent<Image>().color = color;
-        return rect;
-    }
-
     void AnchorReadableCanvas()
     {
         var camera = OpenXRScene.MainCamera;
@@ -331,35 +509,6 @@ public sealed class AccidentResultPresenter : MonoBehaviour
             ResultViewingDistance,
             camera.nearClipPlane + 0.05f,
             camera.farClipPlane - 0.1f);
-    }
-
-    TMP_Text CreateRuntimeText(
-        RectTransform parent,
-        string name,
-        Vector2 position,
-        Vector2 size,
-        float fontSize,
-        FontStyles style)
-    {
-        var textObject = new GameObject(name, typeof(RectTransform), typeof(CanvasRenderer), typeof(TextMeshProUGUI));
-        textObject.layer = parent.gameObject.layer;
-        textObject.transform.SetParent(parent, false);
-        var rect = textObject.GetComponent<RectTransform>();
-        rect.anchorMin = rect.anchorMax = new Vector2(0.5f, 0.5f);
-        rect.anchoredPosition = position;
-        rect.sizeDelta = size;
-        var text = textObject.GetComponent<TextMeshProUGUI>();
-        if (runtimeFont != null)
-            text.font = runtimeFont;
-        text.fontSize = fontSize;
-        text.fontStyle = style;
-        text.alignment = TextAlignmentOptions.Center;
-        text.color = Color.white;
-        text.textWrappingMode = TextWrappingModes.Normal;
-        text.overflowMode = TextOverflowModes.Overflow;
-        text.extraPadding = true;
-        text.raycastTarget = false;
-        return text;
     }
 
     public void Hide()

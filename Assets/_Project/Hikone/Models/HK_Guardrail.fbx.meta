@@ -1,0 +1,276 @@
+fileFormatVersion: 2
+guid: ee289bc5b55d64fdcad4bb29d81bb1b7
+ModelImporter:
+  serializedVersion: 24300
+  internalIDToNameTable: []
+  externalObjects:
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: HK_Asphalt
+    second: {fileID: 2100000, guid: 458c4366a2a87491dbb8ccb7b2f0855e, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: HK_Bark
+    second: {fileID: 2100000, guid: ec8236cb7796645099f28761d5a72f90, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: HK_Curb
+    second: {fileID: 2100000, guid: 77e94f7c20613435a983b858884222e3, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: HK_Glass
+    second: {fileID: 2100000, guid: effda571671ad46848611137eb4e2810, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: HK_Gold
+    second: {fileID: 2100000, guid: 1b74e31e64cdb49c7a4e61118a0845f1, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: HK_Grass
+    second: {fileID: 2100000, guid: 90a86ec6fd8d84c5ab00c94e9ff5a172, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: HK_Guard
+    second: {fileID: 2100000, guid: 45d5f0ba9b5d8446aa5168443be89e13, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: HK_Lamp
+    second: {fileID: 2100000, guid: 44dd171d0587d45f093fd5b55e91e5c5, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: HK_Leaf
+    second: {fileID: 2100000, guid: bc95b89d0f1d34cee9a6423bc0226117, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: HK_LeafDark
+    second: {fileID: 2100000, guid: ff18a543d692146679adf5f3fab22724, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: HK_Metal
+    second: {fileID: 2100000, guid: cfa6ebc112eae4964915cb26fd7e797b, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: HK_MetalLight
+    second: {fileID: 2100000, guid: 0475b278518e44eb1ac4976bf4ff88a8, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: HK_Namako
+    second: {fileID: 2100000, guid: 827043386f0914b2287ef98d31ff190a, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: HK_Noren
+    second: {fileID: 2100000, guid: a02a663d73d3e44e09b6071a81b859e1, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: HK_NorenRed
+    second: {fileID: 2100000, guid: fe58f0bfa19f74efb8c802f4b0c4e557, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: HK_Plaster
+    second: {fileID: 2100000, guid: cb36e832f54164465ba2e4664c273602, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: HK_PlasterWarm
+    second: {fileID: 2100000, guid: 003c3a65a38084b5aa387b0d1f8d58df, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: HK_RoofRidge
+    second: {fileID: 2100000, guid: 8a7e8fcc8cc62424b84f6c4f199f8d54, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: HK_RoofTile
+    second: {fileID: 2100000, guid: da0991b7927034cc1a541bc355c516a1, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: HK_Sakura
+    second: {fileID: 2100000, guid: c4807be62758d4907a1f2ea6f6e884f1, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: HK_Shoji
+    second: {fileID: 2100000, guid: 85f61705be0b44e7ca5cde1ddbcd835a, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: HK_Sidewalk
+    second: {fileID: 2100000, guid: 31f95fbde3b2c485c863b24868af218d, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: HK_SignBlue
+    second: {fileID: 2100000, guid: 43c122906cde9451eaef319bae9b0e02, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: HK_SignRed
+    second: {fileID: 2100000, guid: d4494233eaf994f93b0f53159ac637fa, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: HK_SignYellow
+    second: {fileID: 2100000, guid: 83986bd2d26934383816c76f5e7a9ba7, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: HK_Soil
+    second: {fileID: 2100000, guid: 1c6593e559ea949daa9ce653ccea2d30, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: HK_Stone
+    second: {fileID: 2100000, guid: e0bab7a31b65d4750969330a6855041c, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: HK_StoneDark
+    second: {fileID: 2100000, guid: 8040beb0551874ccd8644dec133fbe56, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: HK_Water
+    second: {fileID: 2100000, guid: a92d4c67635d14bc0ad522eac60be373, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: HK_WhitePaint
+    second: {fileID: 2100000, guid: 84361cf860ce54cef91ebcd6ec516571, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: HK_WoodDark
+    second: {fileID: 2100000, guid: 2e8fa5caa41844f909b73d7e790cb3f2, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: HK_WoodLight
+    second: {fileID: 2100000, guid: bff35440c19e44deb9ebe766b8fc5cfe, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: HK_WoodMid
+    second: {fileID: 2100000, guid: 0e918ecbb9ae442049af754b1134cd4e, type: 2}
+  materials:
+    materialImportMode: 1
+    materialName: 0
+    materialSearch: 1
+    materialLocation: 1
+    searchTexturesGlobally: 0
+  animations:
+    legacyGenerateAnimations: 4
+    bakeSimulation: 0
+    resampleCurves: 1
+    optimizeGameObjects: 0
+    removeConstantScaleCurves: 0
+    motionNodeName: 
+    animationImportErrors: 
+    animationImportWarnings: 
+    animationRetargetingWarnings: 
+    animationDoRetargetingWarnings: 0
+    importAnimatedCustomProperties: 0
+    importConstraints: 0
+    animationCompression: 1
+    animationRotationError: 0.5
+    animationPositionError: 0.5
+    animationScaleError: 0.5
+    animationWrapMode: 0
+    extraExposedTransformPaths: []
+    extraUserProperties: []
+    clipAnimations: []
+    isReadable: 0
+  meshes:
+    lODScreenPercentages: []
+    globalScale: 1
+    meshCompression: 0
+    addColliders: 0
+    useSRGBMaterialColor: 1
+    sortHierarchyByName: 1
+    importPhysicalCameras: 1
+    importVisibility: 1
+    importBlendShapes: 0
+    importCameras: 0
+    importLights: 0
+    nodeNameCollisionStrategy: 1
+    fileIdsGeneration: 2
+    swapUVChannels: 0
+    generateSecondaryUV: 0
+    useFileUnits: 1
+    keepQuads: 0
+    weldVertices: 1
+    bakeAxisConversion: 0
+    preserveHierarchy: 0
+    skinWeightsMode: 0
+    maxBonesPerVertex: 4
+    minBoneWeight: 0.001
+    optimizeBones: 1
+    generateMeshLods: 0
+    meshLodGenerationFlags: 0
+    maximumMeshLod: -1
+    meshOptimizationFlags: -1
+    indexFormat: 0
+    secondaryUVAngleDistortion: 8
+    secondaryUVAreaDistortion: 15.000001
+    secondaryUVHardAngle: 88
+    secondaryUVMarginMethod: 1
+    secondaryUVMinLightmapResolution: 40
+    secondaryUVMinObjectScale: 1
+    secondaryUVPackMargin: 4
+    useFileScale: 1
+    strictVertexDataChecks: 0
+  tangentSpace:
+    normalSmoothAngle: 60
+    normalImportMode: 0
+    tangentImportMode: 3
+    normalCalculationMode: 4
+    legacyComputeAllNormalsFromSmoothingGroupsWhenMeshHasBlendShapes: 0
+    blendShapeNormalImportMode: 1
+    normalSmoothingSource: 0
+  referencedClips: []
+  importAnimation: 0
+  humanDescription:
+    serializedVersion: 3
+    human: []
+    skeleton: []
+    armTwist: 0.5
+    foreArmTwist: 0.5
+    upperLegTwist: 0.5
+    legTwist: 0.5
+    armStretch: 0.05
+    legStretch: 0.05
+    feetSpacing: 0
+    globalScale: 1
+    rootMotionBoneName: 
+    hasTranslationDoF: 0
+    hasExtraRoot: 0
+    skeletonHasParents: 1
+  lastHumanDescriptionAvatarSource: {instanceID: 0}
+  autoGenerateAvatarMappingIfUnspecified: 1
+  animationType: 0
+  humanoidOversampling: 1
+  avatarSetup: 0
+  addHumanoidExtraRootOnlyWhenUsingAvatar: 1
+  importBlendShapeDeformPercent: 1
+  remapMaterialsIfMaterialImportModeIsNone: 0
+  additionalBone: 0
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 

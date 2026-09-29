@@ -15,7 +15,16 @@ public static class AccidentExperienceValidation
         if (font == null) throw new InvalidOperationException("Meta result font is missing.");
         // Bake new UI glyphs into the existing asset, preserving its GUID and all scene bindings.
         var text = File.ReadAllText("Assets/_Project/Scripts/AccidentResultPresenter.cs")
-            + File.ReadAllText("Assets/_Project/Scripts/AccidentTrajectoryReplay.cs");
+            + File.ReadAllText("Assets/_Project/Scripts/AccidentReplayPresenter.cs")
+            + File.ReadAllText("Assets/_Project/Scripts/HybridAccidentPresentation.cs")
+            + File.ReadAllText("Assets/_Project/Scripts/TitleScenarioDetail.cs");
+        // scenario names and explanations are shown on the title, replay and feedback pages
+        foreach (var guid in AssetDatabase.FindAssets("t:ScenarioDefinitionAsset", new[] { "Assets/_Project/ScenarioDefinitions" }))
+        {
+            var scenario = AssetDatabase.LoadAssetAtPath<ScenarioDefinitionAsset>(AssetDatabase.GUIDToAssetPath(guid));
+            if (scenario != null)
+                text += scenario.displayName + scenario.shortTitle + scenario.shortTitleEn + scenario.learningGoal + scenario.eventSummary;
+        }
         var characters = new string(text.Where(c => !char.IsControl(c) && !font.HasCharacter(c)).Distinct().ToArray());
         if (characters.Length > 0)
         {

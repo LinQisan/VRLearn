@@ -1,0 +1,11 @@
+{
+  "version": "0.0.1",
+  "configurations": [
+    {
+      "name": "scenario-editor",
+      "runtimeExecutable": "node",
+      "runtimeArgs": ["ScenarioEditor/server.mjs"],
+      "port": 8765
+    }
+  ]
+}

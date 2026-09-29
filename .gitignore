@@ -70,3 +70,11 @@ Desktop.ini
 *.key
 *.keystore
 *.jks
+
+# Scenario editor: deleted scenarios and the Unity play hand-off file
+Scenarios/.trash/
+Scenarios/.play-request.json
+
+# Blender backups and Python caches of the Hikone asset generators
+*.blend1
+__pycache__/

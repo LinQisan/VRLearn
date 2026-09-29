@@ -1,0 +1,64 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://github.com/LinQisan/VRLearn/Scenarios/scenario.schema.json",
+  "title": "VRLearn custom scenario",
+  "description": "A traffic-safety scenario built at runtime in the Hikone Kyobashi scene. Coordinates are Unity world metres on the ground plane (x, z); heights come from the scene. Runtime validation: CustomScenario.Validate (Assets/_Project/Scripts/CustomScenario.cs).",
+  "type": "object",
+  "required": ["format", "version", "id", "name", "map", "playerMode", "spawn", "goal"],
+  "properties": {
+    "format": { "const": "vrlearn-scenario" },
+    "version": { "const": 1 },
+    "id": { "type": "string", "pattern": "^[a-z0-9][a-z0-9_-]{0,39}$", "description": "File-safe id; written to the CSV column CustomScenario." },
+    "name": { "type": "string", "minLength": 1, "description": "Japanese name shown on the title, replay and feedback pages." },
+    "nameEn": { "type": "string" },
+    "setting": { "enum": ["crossing", "midblock", "bicycle"], "default": "crossing" },
+    "learningGoal": { "type": "string" },
+    "situation": { "type": "string", "description": "事故の状況 (feedback page)." },
+    "point": { "type": "string", "description": "安全確認のポイント (feedback page)." },
+    "map": { "const": "hikone-kyobashi" },
+    "playerMode": { "enum": ["walking", "bicycle"] },
+    "spawn": { "$ref": "#/$defs/point", "description": "Start position; the participant faces the goal." },
+    "goal": { "$ref": "#/$defs/area" },
+    "trigger": { "$ref": "#/$defs/area", "description": "Entering it starts vehicles with start = trigger. width 0 = no trigger." },
+    "vehicles": { "type": "array", "items": { "$ref": "#/$defs/vehicle" } }
+  },
+  "$defs": {
+    "point": {
+      "type": "object",
+      "required": ["x", "z"],
+      "properties": {
+        "x": { "type": "number", "minimum": -160, "maximum": 160 },
+        "z": { "type": "number", "minimum": -80, "maximum": 140 }
+      }
+    },
+    "area": {
+      "type": "object",
+      "required": ["x", "z", "width", "depth"],
+      "properties": {
+        "x": { "type": "number" },
+        "z": { "type": "number" },
+        "width": { "type": "number", "minimum": 0, "description": "Metres along the area's own x axis." },
+        "depth": { "type": "number", "minimum": 0, "description": "Metres along the area's own z axis." },
+        "yaw": { "type": "number", "default": 0, "description": "Degrees, clockwise seen from above (Unity yaw)." }
+      }
+    },
+    "vehicle": {
+      "type": "object",
+      "required": ["route"],
+      "properties": {
+        "name": { "type": "string" },
+        "model": { "enum": ["Car_Left", "Car_Right", "Car_SideHit", "Car_EndlessGo"], "default": "Car_Left" },
+        "route": { "type": "array", "minItems": 2, "items": { "$ref": "#/$defs/point" }, "description": "The car appears at route[0] and drives through the rest, then disappears." },
+        "speedKmh": { "type": "number", "minimum": 5, "maximum": 80, "default": 36 },
+        "start": { "enum": ["begin", "trigger"], "default": "begin" },
+        "delaySeconds": { "type": "number", "minimum": 0, "maximum": 120, "default": 0 },
+        "repeatMinSeconds": { "type": "number", "minimum": 0, "default": 0 },
+        "repeatMaxSeconds": { "type": "number", "minimum": 0, "default": 0, "description": "0 = one car; otherwise another car every min..max seconds (background traffic)." },
+        "stopOnTrigger": { "type": "boolean", "default": false },
+        "accident": { "type": "boolean", "default": false, "description": "Marks the accident car (CSV AcidentCar = 1)." },
+        "overrideYaw": { "type": "boolean", "default": false },
+        "yaw": { "type": "number", "default": 0, "description": "Initial heading when overrideYaw; otherwise the car faces its first segment." }
+      }
+    }
+  }
+}

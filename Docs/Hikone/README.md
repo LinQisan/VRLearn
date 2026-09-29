@@ -1,0 +1,70 @@
+# 彦根・京桥路口（夢京橋キャッスルロード）实验场景
+
+场景文件：`Assets/_Project/Scenes/TraficAcident_Hikone_Meta.unity`（已加入 Build Settings，原场景 `TraficAcident_Meta.unity` 未改动）。
+
+**标准场景已屏蔽**：标题画面不再提供环境选择，开始、重试和返回标题都固定进入彦根场景。标准场景仍保留在 Build Settings 中，并继续参与回归测试。如需恢复，把 `SceneRoute.StandardEnvironmentSelectable` 改为 `true`。
+
+## 标题菜单（VR 手柄操作）
+
+- 所有选项都以按钮平铺，指向后扣一次扳机即可选中，不再需要逐级 +/−：
+  - 场面番号：RANDOM 加 0–9，共 11 个按钮；
+  - 不快音：なし 加 3000–17000 Hz，共 16 个按钮，每个都标注频率，右上角有「試聴 / Play」按钮。
+- 已选项以蓝色填充显示。开始按钮为橙色的宽按钮，另有「リセット / Reset」按钮（恢复默认值）。
+- 身高、体重、年龄保留 ±5 步进按钮。
+- 按钮最小约 4.6 × 4.6 单位（在 2 m 距离约为 9 cm），满足 Touch 射线的点选要求（测试中有断言）。
+- 由 `Tools/VRLearn/Rebuild Title Menu (VR tiles)` 生成（`Assets/_Project/Editor/TitleMenuLayout.cs`，可重复执行）。现有控件和绑定都被复用。
+
+## 与真实地图的对应
+
+参照 Google 地图和街景：县道 25 号（中堀通り）沿中堀南岸延伸，夢京橋キャッスルロード从南侧接入，京桥从北侧跨过中堀，到达京桥口御门遗址（枡形石垣，道路在此转弯）。映射到原有道路网：
+
+| 真实 | 场景（Unity 世界坐标） |
+| --- | --- |
+| 县道 25 号（中堀通り） | 东西主路 z 16–36，北侧直接临护城河 |
+| 京桥口十字路口 | 主路口中心 (32, 26) |
+| 京桥 | 北口 x 25–39，z 39.6–52 |
+| 京桥口枡形 | 桥北的石垣围合区；正面是高石垣（z 76），道路在此右转，尽头有城墙 |
+| 夢京橋キャッスルロード | 南口向南延伸至 z −150。两侧是町家和榉树行道树，设蓝色方向指示牌，限速 30 |
+| 本町通（江户町家街） | 与 Castle Road 在 (32, −6) 形成 T 字路口，向西延伸 |
+| 路口西侧停车场「P」 | x −80…−60（场景 6/7 车辆由此驶出） |
+| 中堀 | 南岸为低石垣加石柱锁链栏；北岸为高石垣，上方是松、樱和阔叶林 |
+| 彦根城 | 本丸平台中心 (−40, 205)，高 50 m，位于京桥的西北方向，从路口可以看到 |
+
+## 实验逻辑保持不变
+
+- 玩家、相机、WayPoint、10 个 Scenario、危险事件、信号灯、InvisibleWall、数据记录与 UI 的对象和坐标均未修改。
+- 原道路瓦片只关闭了 Renderer；碰撞体继续用于车辆地面检测和玩家落地判定。路灯位置与原灯杆一致，桥上的路灯落在桥面人行道上。
+- **路面高度与碰撞体一致**：原碰撞体的车道在 y 0.01，人行道在 y 0.41（路缘高 40 cm，路口转角为坡道）。新的沥青和标线放在 y 0.01。人行道、路缘和转角坡道直接取自原道路网格（`Art/Hikone/road_tiles_geometry.json` → `HK_RoadRaised`），只替换为彦根的石材，因此车轮和脚下都与碰撞面完全重合。车辆模型本身无需修改：轮胎底部就是碰撞体底部。
+- **黑墙（BlackWallContainer）**：没有任何代码引用，也没有碰撞体。它们是遮挡车辆生成点和消失点的黑色面片。直接删除会让车辆凭空出现或消失，影响实验，因此改为嵌入建筑：
+  - `BlackWall`（x −103）原样保留，现在位于县道 25 号西端的櫓门之内，看起来是城门通道的暗处，车辆从门洞驶出。
+  - `BlackWall (1)` 缩小并移到南侧小街的長屋門通道内（位置 (10, 2.4, 6.63)，缩放 9.4×5）。
+  - `BlackWall (2)` 已停用，由本町通北侧的土塀和路口西南角的土蔵代替。
+- 核查结果：在所有场景中，车辆生成点和消失点的遮挡程度均不低于原场景（`HikoneSceneTests` 和下方的视线核查）。
+
+## 危险事件视线（各 Scenario 自身事故车路线，35 m 内可见率，原场景 → 新场景）
+
+S1 90→96%，S2 83→89%，S3 100→96%，S4 82→97%，S5 100→98%，S6/7 97→99%，S8 90→92%，S9 100→100%。
+S4 的事故车从桥上驶来。实际的京桥路口北侧就是开阔的护城河，所以这一项的可见率明显提高，这是按真实地形还原的结果。S2/S3/S5/S8 的卡车遮挡保持不变。
+
+## 数据记录
+
+`HumanData_*.csv` 末尾新增一列 `Scene`（当前固定为 `TraficAcident_Hikone_Meta`；如果恢复标准场景，则可能为 `TraficAcident_Meta`），用于区分环境。原有列的顺序不变。
+
+## 重新生成
+
+```bash
+python3 Art/Hikone/hk_layout.py      # 布局 + 冲突校验
+```
+
+在 Blender 中执行：`hk_textures.run(); hk_assets.build_all()`（BlenderMCP 或 headless 均可），然后在 Unity 菜单中依次执行：
+
+0. `Tools/VRLearn/Hikone/0. Export Constraints From Standard Scene`：仅在原场景的道路、路点或触发区有变化时执行。它会重新导出 `Art/Hikone/scene_constraints.json` 和 `road_tiles_geometry.json`，结果与现有文件逐字节一致即说明原场景没有变化。
+1. `Tools/VRLearn/Hikone/1. Import Models, Materials & Prefabs`
+2. `Tools/VRLearn/Hikone/2. Build Hikone Scene`（同时处理黑墙）
+3. `Tools/VRLearn/Rebuild Title Menu (VR tiles)`（标题菜单）
+
+设计意图与决策记录见根目录的 [DESIGN.md](../../DESIGN.md)。
+
+## 性能
+
+新环境约 19.2 万三角面，1272 个 Renderer（全部 Static），共享 34 个 URP/Lit 材质（已开启 GPU Instancing），贴图 512px。原场景环境约 5.3 万面、71 个材质。
