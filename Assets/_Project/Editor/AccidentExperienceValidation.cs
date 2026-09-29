@@ -59,7 +59,8 @@ public static class AccidentExperienceValidation
         Directory.CreateDirectory("Builds");
         var report = BuildPipeline.BuildPlayer(new BuildPlayerOptions {
             scenes = scenes,
-            locationPathName = "Builds/VRLearn-AccidentExperience.apk",
+            // e.g. Builds/VRLearn-0.2.0-2.apk (bundleVersion - Android versionCode)
+            locationPathName = $"Builds/VRLearn-{PlayerSettings.bundleVersion}-{PlayerSettings.Android.bundleVersionCode}.apk",
             target = BuildTarget.Android,
             options = BuildOptions.None
         });

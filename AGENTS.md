@@ -144,7 +144,7 @@ MCP for Unity's `execute_code` can fail silently in Roslyn mode; pass `compiler:
 
 ## Android build
 
-`AccidentExperienceValidation.BuildAndroid` prepares the font, then builds the enabled scenes to `Builds/VRLearn-AccidentExperience.apk`:
+`AccidentExperienceValidation.BuildAndroid` prepares the font, then builds the enabled scenes to `Builds/VRLearn-<bundleVersion>-<versionCode>.apk` (e.g. `VRLearn-0.2.0-2.apk`). Bump `bundleVersion` and the Android `bundleVersionCode` in Player Settings for every APK handed out:
 
 ```sh
 "$UNITY_EDITOR" -batchmode -quit -projectPath "$PWD" -buildTarget Android \
