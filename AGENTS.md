@@ -8,7 +8,7 @@ Design intent and trade-offs: [DESIGN.md](DESIGN.md) (Chinese). Hikone scene par
 
 ## At a glance
 
-- **What:** a child traffic-safety VR experience and experiment for Meta Quest 2. The participant walks or cycles through an intersection, experiences a hazard (an accident), then sees a replay, a review and results. Data is written to CSV.
+- **What:** a traffic-safety VR experience and experiment for Meta Quest 2 aimed at **pedestrians** (not specifically children). The participant walks (a few scenarios are ridden on a bicycle) through an intersection, experiences a hazard (an accident), then sees a replay, a review and results. Data is written to CSV.
 - **Unity** `6000.3.19f1` (see `ProjectSettings/ProjectVersion.txt`). Main packages: Meta XR Core `203.0.0`, OpenXR `1.17.1`, XR Interaction Toolkit `2.6.3`, Input System `1.19.0`, URP `17.3.0`. Do not upgrade packages as a side effect of feature work.
 - **Build Settings** (order is fixed and checked by an EditMode test):
   1. `Assets/_Project/Scenes/TraficAcidentTitle_Meta.unity` — title
