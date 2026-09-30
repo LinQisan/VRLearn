@@ -13,46 +13,30 @@ namespace VRLearn.Tests.PlayMode
     /// </summary>
     public sealed class HikoneSceneTests
     {
-        const string HikoneScene = "Assets/_Project/Scenes/TraficAcident_Hikone_Meta.unity";
+        const string HikoneScene = "Assets/_Project/Scenes/Gameplay_Hikone.unity";
         static readonly int[] TrafficScenarioIds = { 0, 1, 6 };
 
         static Type GameType(string name) => Type.GetType(name + ", Assembly-CSharp");
 
         [UnityTest]
-        public IEnumerator TitleStartsHikoneSceneAndStandardIsBlocked()
+        public IEnumerator TitleStartsTheHikoneScene()
         {
-            const string TitleScene = "Assets/_Project/Scenes/TraficAcidentTitle_Meta.unity";
-            var route = GameType("SceneRoute");
-            var selected = route.GetProperty("SelectedEnvironment");
-            try
-            {
-                var load = SceneManager.LoadSceneAsync(TitleScene, LoadSceneMode.Single);
-                while (!load.isDone)
-                    yield return null;
+            const string TitleScene = "Assets/_Project/Scenes/Title.unity";
+            var load = SceneManager.LoadSceneAsync(TitleScene, LoadSceneMode.Single);
+            while (!load.isDone)
                 yield return null;
+            yield return null;
 
-                var director = UnityEngine.Object.FindFirstObjectByType(GameType("GameDirector_Title"));
-                Assert.That(director, Is.Not.Null);
-                // The standard environment is blocked: the title defaults to Hikone and even an
-                // explicit request for environment 0 is clamped to Hikone.
-                Assert.That(director.GetType().GetField("Environment").GetValue(director), Is.EqualTo(1));
-                var kind = Enum.Parse(GameType("TitleOptionKind"), "Environment");
-                director.GetType().GetMethod("ApplyOption").Invoke(director, new object[] { kind, 0, 0f });
-                Assert.That(director.GetType().GetField("Environment").GetValue(director), Is.EqualTo(1));
-
-                director.GetType().GetField("EventNumber").SetValue(director, 0);
-                director.GetType().GetMethod("StartGame").Invoke(director, null);
-                var deadline = Time.realtimeSinceStartup + 20f;
-                while (SceneManager.GetActiveScene().path != HikoneScene && Time.realtimeSinceStartup < deadline)
-                    yield return null;
-                Assert.That(SceneManager.GetActiveScene().path, Is.EqualTo(HikoneScene));
-                Assert.That(route.GetProperty("GameplayForCurrentScene").GetValue(null), Is.EqualTo("TraficAcident_Hikone_Meta"),
-                    "retry / restart must stay in the chosen environment");
-            }
-            finally
-            {
-                selected.SetValue(null, 1);
-            }
+            var director = UnityEngine.Object.FindFirstObjectByType(GameType("GameDirector_Title"));
+            Assert.That(director, Is.Not.Null);
+            director.GetType().GetField("EventNumber").SetValue(director, 0);
+            director.GetType().GetMethod("StartGame").Invoke(director, null);
+            var deadline = Time.realtimeSinceStartup + 20f;
+            while (SceneManager.GetActiveScene().path != HikoneScene && Time.realtimeSinceStartup < deadline)
+                yield return null;
+            Assert.That(SceneManager.GetActiveScene().path, Is.EqualTo(HikoneScene));
+            Assert.That(GameType("SceneRoute").GetProperty("GameplayForCurrentScene").GetValue(null), Is.EqualTo("Gameplay_Hikone"),
+                "retry / restart stay in the Hikone scene");
         }
 
         [UnityTest]

@@ -11,9 +11,8 @@ Design intent and trade-offs: [DESIGN.md](DESIGN.md) (Chinese). Hikone scene par
 - **What:** a traffic-safety VR experience and experiment for Meta Quest 2 aimed at **pedestrians** (not specifically children). The participant walks (a few scenarios are ridden on a bicycle) through an intersection, experiences a hazard (an accident), then sees a replay, a review and results. Data is written to CSV.
 - **Unity** `6000.3.19f1` (see `ProjectSettings/ProjectVersion.txt`). Main packages: Meta XR Core `203.0.0`, OpenXR `1.17.1`, XR Interaction Toolkit `2.6.3`, Input System `1.19.0`, URP `17.3.0`. Do not upgrade packages as a side effect of feature work.
 - **Build Settings** (order is fixed and checked by an EditMode test):
-  1. `Assets/_Project/Scenes/TraficAcidentTitle_Meta.unity` — title
-  2. `Assets/_Project/Scenes/TraficAcident_Meta.unity` — standard environment (**blocked**; kept only as a regression baseline)
-  3. `Assets/_Project/Scenes/TraficAcident_Hikone_Meta.unity` — Hikone Kyobashi environment (**the only playable scene**)
+  1. `Assets/_Project/Scenes/Title.unity` — title
+  2. `Assets/_Project/Scenes/Gameplay_Hikone.unity` — Hikone Kyobashi environment (the only gameplay scene; the old standard scene was removed in September 2026)
 - **Scenarios:** 10 built-in (ids 0–9), -1 means random. Scenarios 6, 7 and 9 are cycling; the rest are walking. **Custom scenarios** are JSON files built at runtime (`EventNumber` 100, see below).
 - **Repository:** `https://github.com/LinQisan/VRLearn`, default branch `main`.
 - Accident replay and vehicle damage are educational presentation, never an accident-reconstruction-grade simulation.
@@ -25,7 +24,7 @@ Design intent and trade-offs: [DESIGN.md](DESIGN.md) (Chinese). Hikone scene par
 | `Assets/_Project/Scripts/` | Runtime code (single assembly, Assembly-CSharp), by area: `Core/` (GameDirector, flow, scene routing, retry, CSV), `Scenario/` (scenario data, custom scenarios, accident trigger, goal), `Traffic/` (cars, factories, pool, waypoints, signals), `Player/` (player, avatar, bicycle, phone), `XR/` (rig set-up, input, Editor simulation), `Accident/` (impact, replay, feedback), `Title/` (title menu), `UI/` (UiKit, VrPanel), `Recording/` |
 | `Assets/_Project/Editor/` | Editor tools: font preparation, Android build, title menu generator `TitleMenuLayout.cs` |
 | `Assets/_Project/Hikone/` | Hikone environment: `Models/` (FBX), `Materials/`, `Textures/`, `Prefabs/`, `Layout/hikone_layout.json`, `Editor/HikoneEnvironmentBuilder.cs` |
-| `Art/Hikone/` | **Source** of the Hikone assets: Blender/Python generators and constraint data exported from the standard scene |
+| `Art/Hikone/` | **Source** of the Hikone assets: Blender/Python generators and constraint data exported from the gameplay scene's roads, waypoints and triggers |
 | `Assets/_Project/ScenarioDefinitions/` | `Scenario_00`–`09` scenario assets |
 | `ScenarioEditor/` | Web scenario editor (Node, no dependencies): `server.mjs`, `web/` (UI; `web/scenario.js` is the shared model/validation), `test/` |
 | `Scenarios/` | Custom scenario files (JSON): `scenario.schema.json`, `templates/builtin-01…10.json` (exported built-ins), `maps/hikone-kyobashi/` (`map.png` + `map.json` for the web editor; generated) |
@@ -36,7 +35,7 @@ Design intent and trade-offs: [DESIGN.md](DESIGN.md) (Chinese). Hikone scene par
 
 ## Code map
 
-- **Title & routing:** `GameDirector_Title` holds every selection (body data, scenario, unpleasant tone, …). `TitleOptionToggle` drives the tiled options, `TitleCommandButton` the command buttons (±5, Start, Reset, Play). `TitleButtonFeedback` / `TitleButtonStyle` own colours and click feedback. Scenario tiles are grouped by `ScenarioDefinitionAsset.setting` (crossing / mid-block / bicycle) and `TitleScenarioDetail` shows the selected scenario's name and learning goal. Scenarios are shown **1-based** (01–10) everywhere in the UI; `EventNumber` and the CSV stay 0-based. `SceneRoute` owns scene names, scenario ids and environment selection; with `StandardEnvironmentSelectable = false` every route goes to Hikone.
+- **Title & routing:** `GameDirector_Title` holds every selection (body data, scenario, unpleasant tone, …). `TitleOptionToggle` drives the tiled options, `TitleCommandButton` the command buttons (±5, Start, Reset, Play). `TitleButtonFeedback` / `TitleButtonStyle` own colours and click feedback. Scenario tiles are grouped by `ScenarioDefinitionAsset.setting` (crossing / mid-block / bicycle) and `TitleScenarioDetail` shows the selected scenario's name and learning goal. Scenarios are shown **1-based** (01–10) everywhere in the UI; `EventNumber` and the CSV stay 0-based. `SceneRoute` owns scene names and scenario ids; every route (start, retry, back to title) goes to `SceneRoute.Gameplay`.
 - **Scenario setup:** `GameDirector` → `ScenarioRuntime` (exactly 10 entries) / `GameplaySceneContext` / `ScenarioDefinitionAsset`; `PlayerActor` holds player state.
 - **Scenario content is data:** each `ScenarioDefinitionAsset` holds the names (`displayName`, `shortTitle`, `shortTitleEn`), `setting`, `learningGoal`, `eventSummary` (`事故の状況：…\n安全確認のポイント：…`) and the **accident schedule** (`stopTraffic`, `accidentLaunches`: factory, delay, heading, offset). `AccidentCarFactory` only runs that schedule when the participant enters the accident area; `CarFactory.SpawnAccidentCar` launches one car. The canonical table lives in `Assets/_Project/Editor/ScenarioCatalog.cs` (`Tools/VRLearn/Scenarios/Write Scenario Catalog To Assets`); edit the table, not the assets. The schedules reproduce the old hard-coded timings exactly (DESIGN.md §3.1).
 - **Custom scenarios (JSON):** `CustomScenario` (format, validation, `ToJson`), `CustomScenarioSession` (the chosen file; `EventNumber` **100**), `CustomScenarioLibrary` (folders: `persistentDataPath/Scenarios` on the headset, plus the repo's `Scenarios/` in the Editor). `GameDirector.Start` calls `CustomScenarioRunner.Setup` instead of `ScenarioRuntime.Activate` when `EventNumber` is 100: it builds spawn, goal (cloned from built-in 01's goal), trigger area, one `WaypointPath` per vehicle and the vehicle schedule, then `ScenarioRuntime.ActivateCustom`. Everything after that (placement, impact, replay, feedback, CSV) is the shared pipeline. Only the Hikone map is supported. Code that used to test scenario numbers for cycling must use `ScenarioMode.IsBicycle` (it reads the active scenario). `ScenarioDefinition` exposes `DisplayName`, `EventSummary`, `LearningGoal`, `NumberLabel` for both kinds — use those, not `asset`, in UI.
@@ -90,7 +89,7 @@ Art/Hikone/hk_layout.py    layout + conflict validation  ->  Assets/_Project/Hik
 1. Edit the scripts, run `python3 Art/Hikone/hk_layout.py` and require `validation problems: 0`.
 2. In Blender run `hk_textures.run(); hk_assets.build_all()` (through BlenderMCP or `Blender -b --python`).
 3. In Unity run `Tools/VRLearn/Hikone/1. Import Models, Materials & Prefabs`, then `2. Build Hikone Scene`.
-4. If roads, waypoints or triggers in the standard scene changed, first run `Tools/VRLearn/Hikone/0. Export Constraints From Standard Scene` to refresh `Art/Hikone/scene_constraints.json` and `road_tiles_geometry.json`.
+4. If roads, waypoints or triggers in the scene changed (these are experiment objects, see hard rule 1), first run `Tools/VRLearn/Hikone/0. Export Constraints From Scene` to refresh `Art/Hikone/scene_constraints.json` and `road_tiles_geometry.json`.
 
 ### Change the title menu
 
@@ -117,14 +116,10 @@ Edit `Assets/_Project/Editor/TitleMenuLayout.cs`, then run `Tools/VRLearn/Rebuil
 - **PC → Quest:** the web editor's "⇪ Questに送る" runs adb (found via `$ADB`, PATH, the Android SDK or the adb bundled with Unity) and mirrors every error-free non-template scenario into `/sdcard/Android/data/<package>/files/Scenarios` (package read from `ProjectSettings.asset`), deleting headset files no longer on the PC. USB or wireless adb; the app must be installed. No networking code runs in the app. `ScenarioEditor/test/fake-adb.mjs` emulates a headset for the tests.
 - **Fonts:** user-written text contains characters the static TMP atlases were never baked with. `NotoSansJP Dynamic Fallback SDF` (dynamic, from `NotoSansJP-SemiBold.ttf`, cleared on build) is a fallback of every static Japanese font asset (`Tools/VRLearn/Setup Dynamic Font Fallback`). Its atlas fills up while the Editor renders text; run that menu again before committing so the asset stays empty (`FontFallbackTests` checks the fallback wiring).
 
-### Re-enable the standard environment
-
-Set `SceneRoute.StandardEnvironmentSelectable = true` and add an environment row back to the title menu.
-
 ## Verification
 
 - Docs-only change: check paths and content.
-- Logic or asset change: run both test assemblies. Current baseline: **EditMode 43/43, PlayMode 42/42, ScenarioEditor `npm test` 11/11** (about 2 minutes). While we iterate quickly, gameplay tests run on the **Hikone scene only**; the standard scene is blocked and untested. `MetaGameplaySmokeTests` covers title tiles, every scenario, the accident schedule of scenarios 01–09 (trigger → first accident car), replay → feedback, goal → success page, and one trial → three parsable CSV files; `ScenarioAndFeedbackTests` (EditMode) checks the scenario catalog, the success analysis and the replay figure's size; `HikoneSceneTests` checks vehicles on the road, a grounded player and title routing; `CustomScenarioFormatTests` (EditMode) and `CustomScenarioTests` (PlayMode) cover the JSON format, the templates, `ScenarioMapTests` (EditMode) checks the exported map against its image, the lanes and the templates, `ScenarioEditor/test` (node) covers the web model, validation parity, timing and the server, a template of 01 running like the built-in, the custom goal/feedback/CSV, a cycling file, and a file on the device listed on the title's custom tab and started from there.
+- Logic or asset change: run both test assemblies. Current baseline: **EditMode 43/43, PlayMode 42/42, ScenarioEditor `npm test` 11/11** (about 2 minutes). `MetaGameplaySmokeTests` covers title tiles, every scenario, the accident schedule of scenarios 01–09 (trigger → first accident car), replay → feedback, goal → success page, and one trial → three parsable CSV files; `ScenarioAndFeedbackTests` (EditMode) checks the scenario catalog, the success analysis and the replay figure's size; `HikoneSceneTests` checks vehicles on the road, a grounded player and title routing; `CustomScenarioFormatTests` (EditMode) and `CustomScenarioTests` (PlayMode) cover the JSON format, the templates, `ScenarioMapTests` (EditMode) checks the exported map against its image, the lanes and the templates, `ScenarioEditor/test` (node) covers the web model, validation parity, timing and the server, a template of 01 running like the built-in, the custom goal/feedback/CSV, a cycling file, and a file on the device listed on the title's custom tab and started from there.
 - Batch mode (close any Editor that has this project open first):
 
 ```sh
@@ -165,8 +160,6 @@ MCP for Unity's `execute_code` can fail silently in Roslyn mode; pass `compiler:
 "$UNITY_EDITOR" -batchmode -quit -projectPath "$PWD" -buildTarget Android \
   -executeMethod AccidentExperienceValidation.BuildAndroid -logFile "$PWD/Logs/android-build.log"
 ```
-
-The standard scene is still in the build and costs package size. If it is no longer needed, remove it from Build Settings and update `MetaSceneConfigurationTests` plus the scene fixtures of the two parameterised test classes.
 
 ## Git and delivery
 

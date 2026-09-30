@@ -21,8 +21,7 @@ public static class HikoneEnvironmentBuilder
     const string TextureDir = Root + "/Textures";
     const string PrefabDir = Root + "/Prefabs";
     const string LayoutPath = Root + "/Layout/hikone_layout.json";
-    const string SourceScene = "Assets/_Project/Scenes/TraficAcident_Meta.unity";
-    public const string TargetScene = "Assets/_Project/Scenes/TraficAcident_Hikone_Meta.unity";
+    public const string TargetScene = "Assets/_Project/Scenes/Gameplay_Hikone.unity";
     const string EnvironmentRootName = "HikoneEnvironment";
 
     static readonly HashSet<string> BuildingAssets = new HashSet<string>
@@ -89,15 +88,16 @@ public static class HikoneEnvironmentBuilder
     const string ArtDir = "Art/Hikone";
 
     /// <summary>
-    /// Exports the gameplay facts the layout must respect from the standard scene:
+    /// Exports the gameplay facts the layout must respect from the Hikone scene (its experiment
+    /// objects and road colliders are the originals; only the visuals were replaced):
     /// road tiles (bounds + kind), waypoints/spawns/goals/triggers/signals, invisible walls and
     /// lamp poles (scene_constraints.json), plus the original road mesh triangles in world space
     /// (road_tiles_geometry.json) from which the raised sidewalks/curbs/ramps are rebuilt.
     /// </summary>
-    [MenuItem("Tools/VRLearn/Hikone/0. Export Constraints From Standard Scene")]
+    [MenuItem("Tools/VRLearn/Hikone/0. Export Constraints From Scene")]
     public static void ExportConstraints()
     {
-        EditorSceneManager.OpenScene(SourceScene, OpenSceneMode.Single);
+        EditorSceneManager.OpenScene(TargetScene, OpenSceneMode.Single);
         var inv = System.Globalization.CultureInfo.InvariantCulture;
         string F(float v) => v.ToString("F2", inv);
         var roads = GameObject.Find("Environment/RoadContainerNeo").transform;
@@ -369,10 +369,7 @@ public static class HikoneEnvironmentBuilder
     public static void BuildScene()
     {
         if (!File.Exists(TargetScene))
-        {
-            if (!AssetDatabase.CopyAsset(SourceScene, TargetScene))
-                throw new InvalidOperationException("Could not copy " + SourceScene);
-        }
+            throw new InvalidOperationException("Missing " + TargetScene + " (the scene holds the experiment objects; restore it from git)");
         var scene = EditorSceneManager.OpenScene(TargetScene, OpenSceneMode.Single);
         var env = scene.GetRootGameObjects().FirstOrDefault(g => g.name == "Environment");
         if (env == null) throw new InvalidOperationException("Environment root missing");
@@ -424,13 +421,6 @@ public static class HikoneEnvironmentBuilder
             var t = env.Find(name);
             if (t == null) continue;
             foreach (var r in t.GetComponentsInChildren<Renderer>(true)) r.enabled = false;
-        }
-        var buildings = env.Find("Buildings");
-        if (buildings != null)
-        {
-            // keep the few colliders of the old blocks' visuals out of the way as well
-            foreach (var r in buildings.GetComponentsInChildren<Renderer>(true)) r.enabled = false;
-            foreach (var c in buildings.GetComponentsInChildren<Collider>(true)) c.enabled = false;
         }
     }
 

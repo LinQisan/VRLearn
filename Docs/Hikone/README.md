@@ -1,8 +1,8 @@
 # 彦根・京桥路口（夢京橋キャッスルロード）实验场景
 
-场景文件：`Assets/_Project/Scenes/TraficAcident_Hikone_Meta.unity`（已加入 Build Settings，原场景 `TraficAcident_Meta.unity` 未改动）。
+场景文件：`Assets/_Project/Scenes/Gameplay_Hikone.unity`（Build Settings 中唯一的体验场景）。
 
-**标准场景已屏蔽**：标题画面不再提供环境选择，开始、重试和返回标题都固定进入彦根场景。标准场景仍保留在 Build Settings 中，并继续参与回归测试。如需恢复，把 `SceneRoute.StandardEnvironmentSelectable` 改为 `true`。
+**标准场景已删除**（2026-09）：彦根场景最初复制自标准场景，实验对象（道路碰撞体、路点、触发区等）与之完全相同。标题画面没有环境选择，开始、重试和返回标题都进入彦根场景。
 
 ## 标题菜单（VR 手柄操作）
 
@@ -48,7 +48,7 @@ S4 的事故车从桥上驶来。实际的京桥路口北侧就是开阔的护�
 
 ## 数据记录
 
-`HumanData_*.csv` 末尾新增一列 `Scene`（当前固定为 `TraficAcident_Hikone_Meta`；如果恢复标准场景，则可能为 `TraficAcident_Meta`），用于区分环境。原有列的顺序不变。
+`HumanData_*.csv` 末尾新增一列 `Scene`（当前固定为 `Gameplay_Hikone`；旧数据中可能是 `TraficAcident_Hikone_Meta` 或 `TraficAcident_Meta`），用于区分环境。原有列的顺序不变。
 
 ## 重新生成
 
@@ -58,7 +58,7 @@ python3 Art/Hikone/hk_layout.py      # 布局 + 冲突校验
 
 在 Blender 中执行：`hk_textures.run(); hk_assets.build_all()`（BlenderMCP 或 headless 均可），然后在 Unity 菜单中依次执行：
 
-0. `Tools/VRLearn/Hikone/0. Export Constraints From Standard Scene`：仅在原场景的道路、路点或触发区有变化时执行。它会重新导出 `Art/Hikone/scene_constraints.json` 和 `road_tiles_geometry.json`，结果与现有文件逐字节一致即说明原场景没有变化。
+0. `Tools/VRLearn/Hikone/0. Export Constraints From Scene`：仅在场景的道路、路点或触发区有变化时执行。它从彦根场景重新导出 `Art/Hikone/scene_constraints.json` 和 `road_tiles_geometry.json`，结果与现有文件一致即说明这些实验对象没有变化。
 1. `Tools/VRLearn/Hikone/1. Import Models, Materials & Prefabs`
 2. `Tools/VRLearn/Hikone/2. Build Hikone Scene`（同时处理黑墙）
 3. `Tools/VRLearn/Rebuild Title Menu (VR tiles)`（标题菜单）

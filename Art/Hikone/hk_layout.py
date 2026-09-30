@@ -1,7 +1,7 @@
 """Generates the Hikone castle-town placement list consumed by HikoneEnvironmentBuilder.cs.
 
 Run with plain python3 (no Blender needed):  python3 Art/Hikone/hk_layout.py
-Inputs : Art/Hikone/scene_constraints.json (exported from TraficAcident_Meta: road tiles,
+Inputs : Art/Hikone/scene_constraints.json (exported from Gameplay_Hikone: road tiles,
          waypoints, spawns, goals, triggers, invisible walls, lamp poles)
 Output : Assets/_Project/Hikone/Layout/hikone_layout.json + a validation report on stdout.
 
