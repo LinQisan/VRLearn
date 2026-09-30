@@ -10,7 +10,7 @@ Meta Quest 2 向けの、子ども向け交通安全 VR 体験・実験用 Unity
 
 1. Unity Hub でこのフォルダを追加し、**Unity 6000.3.19f1** で開きます。
 2. パッケージの読み込みと素材のインポートが終わるまで待ちます。
-3. `Assets/_Project/Scenes/TraficAcidentTitle_Meta.unity` を開き、Play を押します。
+3. `Assets/_Project/Scenes/Title.unity` を開き、Play を押します。
 4. タイトル画面で条件を選び、「開始 / Start」を押すと彦根シーンが始まります。
 
 | 操作 | Editor | Quest |
@@ -35,9 +35,12 @@ Meta Quest 2 向けの、子ども向け交通安全 VR 体験・実験用 Unity
 | フォルダ | 内容 |
 | --- | --- |
 | `Assets/_Project/` | このプロジェクトのコードと素材（`Scripts/`、`Scenes/`、`ScenarioDefinitions/`、`Prefabs/`、`Editor/`、`Tests/` など） |
+| `Assets/_Project/Scripts/` | 機能別：`Core/`（全体の流れ・CSV）、`Scenario/`（場面）、`Traffic/`（車・信号）、`Player/`（体験者）、`XR/`（VR 入力）、`Accident/`（事故・リプレイ・振り返り）、`Title/`（タイトル）、`UI/`、`Recording/` |
+| `ScenarioEditor/` | カスタム場面を作るブラウザ用エディタ |
+| `Scenarios/` | カスタム場面（JSON）、組み込み場面のひな形、エディタ用の地図 |
 | `Assets/_Project/Hikone/` | 彦根シーンの生成済みモデル・マテリアル・プレハブ・配置データ |
 | `Art/Hikone/` | 彦根アセットの生成元（Blender 用 Python スクリプト） |
 | `Assets/ThirdParty/` | 外部から導入したモデルやプラグイン |
-| `Docs/` | 設計資料と検証記録 |
+| `Docs/` | `Hikone/`（彦根シーンの説明）、`History/`（過去の作業記録） |
 
 素材を移動するときは、参照を保つために `.meta` ファイルも一緒に移動してください。

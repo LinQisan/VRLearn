@@ -14,7 +14,7 @@ namespace VRLearn.Tests.PlayMode
     /// <summary>JSON scenarios built at runtime in the Hikone scene.</summary>
     public sealed class CustomScenarioTests
     {
-        const string HikoneScene = "Assets/_Project/Scenes/TraficAcident_Hikone_Meta.unity";
+        const string HikoneScene = "Assets/_Project/Scenes/Gameplay_Hikone.unity";
         const int CustomEventNumber = 100;
 
         static Type T(string name) => Type.GetType(name + ", Assembly-CSharp");
@@ -87,7 +87,7 @@ namespace VRLearn.Tests.PlayMode
             bool AccidentCar(out Component car)
             {
                 car = UnityEngine.Object.FindObjectsByType(T("CarController"), FindObjectsSortMode.None)
-                    .Cast<Component>().FirstOrDefault(c => (bool)Get(c, "AcidentCar"));
+                    .Cast<Component>().FirstOrDefault(c => (bool)Get(c, "AccidentCar"));
                 return car != null;
             }
             yield return new WaitForSeconds(5.5f);
@@ -149,7 +149,7 @@ namespace VRLearn.Tests.PlayMode
         [UnityTest]
         public IEnumerator TitleListsScenariosOnTheDeviceAndStartsTheChosenOne()
         {
-            const string TitleScene = "Assets/_Project/Scenes/TraficAcidentTitle_Meta.unity";
+            const string TitleScene = "Assets/_Project/Scenes/Title.unity";
             const string Id = "zz-title-test";
             const string Name = "テスト用の場面（タイトル）";
             var folder = Path.Combine(Application.persistentDataPath, "Scenarios");
@@ -167,6 +167,8 @@ namespace VRLearn.Tests.PlayMode
                 yield return null;
                 yield return null;
 
+                Call(Find("TitleMenuPages"), "ShowPage", 2);     // ③ 場面
+                yield return null;
                 var list = Find("TitleCustomScenarios");
                 Assert.That(list, Is.Not.Null);
                 Call(list, "Show", true);

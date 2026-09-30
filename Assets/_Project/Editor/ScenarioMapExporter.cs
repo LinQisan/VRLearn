@@ -17,7 +17,7 @@ using UnityEngine.Rendering.Universal;
 /// </summary>
 public static class ScenarioMapExporter
 {
-    const string HikoneScene = "Assets/_Project/Scenes/TraficAcident_Hikone_Meta.unity";
+    const string HikoneScene = "Assets/_Project/Scenes/Gameplay_Hikone.unity";
     const float Margin = 20f;
     const int MaxPixels = 4096;
 
@@ -77,7 +77,7 @@ public static class ScenarioMapExporter
         map.surfaces = CollectSurfaces();
         map.walls = CollectWalls();
         map.lanes = CollectLanes();
-        map.signals = UnityEngine.Object.FindObjectsByType<TrafficLightUP>(FindObjectsInactive.Include, FindObjectsSortMode.None)
+        map.signals = UnityEngine.Object.FindObjectsByType<TrafficSignalPreset>(FindObjectsInactive.Include, FindObjectsSortMode.None)
             .Select(s => new Marker
             {
                 name = s.name + (s.transform.parent != null ? " / " + s.transform.parent.name : ""),

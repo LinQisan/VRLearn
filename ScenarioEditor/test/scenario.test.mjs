@@ -28,7 +28,7 @@ test('structural errors use the same messages as Unity', () => {
   const m = errors(s).join('\n');
   for (const part of ['name（場面の名前）がありません。', 'id は英小文字', 'speedKmh は 5〜80 です。', 'route には 2 点以上が必要です。'])
     assert.ok(m.includes(part), part);
-  const csharp = fs.readFileSync(path.resolve(root, '..', 'Assets', '_Project', 'Scripts', 'CustomScenario.cs'), 'utf8');
+  const csharp = fs.readFileSync(path.resolve(root, '..', 'Assets', '_Project', 'Scripts', 'Scenario', 'CustomScenario.cs'), 'utf8');
   for (const part of ['name（場面の名前）がありません。', 'speedKmh は 5〜80 です。', 'route には 2 点以上が必要です。',
     'trigger を使うには trigger エリアが必要です。', 'spawn と goal は 3 m 以上離してください。'])
     assert.ok(csharp.includes(part), 'C# has the same text: ' + part);

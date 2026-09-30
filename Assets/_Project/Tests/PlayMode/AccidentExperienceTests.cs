@@ -19,7 +19,7 @@ namespace VRLearn.Tests.PlayMode
         [UnityTest]
         public IEnumerator RecordedReplayCompletesAndRetryRetainsParticipantSettings()
         {
-            yield return SceneManager.LoadSceneAsync("Assets/_Project/Scenes/TraficAcident_Hikone_Meta.unity");
+            yield return SceneManager.LoadSceneAsync("Assets/_Project/Scenes/Gameplay_Hikone.unity");
             yield return new WaitForSeconds(0.6f);
             var director = Find("GameDirector");
             var hybrid = Find("HybridAccidentPresentation");
@@ -91,7 +91,7 @@ namespace VRLearn.Tests.PlayMode
         [UnityTest]
         public IEnumerator CollisionUsesActualSpeedBeforeTrafficFreeze()
         {
-            yield return SceneManager.LoadSceneAsync("Assets/_Project/Scenes/TraficAcident_Hikone_Meta.unity");
+            yield return SceneManager.LoadSceneAsync("Assets/_Project/Scenes/Gameplay_Hikone.unity");
             var deadline = Time.realtimeSinceStartup + 8f;
             Component vehicle = null;
             while (vehicle == null && Time.realtimeSinceStartup < deadline)

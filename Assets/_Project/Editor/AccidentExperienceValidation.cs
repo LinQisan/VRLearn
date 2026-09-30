@@ -14,10 +14,8 @@ public static class AccidentExperienceValidation
         var font = AssetDatabase.LoadAssetAtPath<TMP_FontAsset>("Assets/_Project/UI/Fonts/NotoSansJP Meta Complete SDF.asset");
         if (font == null) throw new InvalidOperationException("Meta result font is missing.");
         // Bake new UI glyphs into the existing asset, preserving its GUID and all scene bindings.
-        var text = File.ReadAllText("Assets/_Project/Scripts/AccidentResultPresenter.cs")
-            + File.ReadAllText("Assets/_Project/Scripts/AccidentReplayPresenter.cs")
-            + File.ReadAllText("Assets/_Project/Scripts/HybridAccidentPresentation.cs")
-            + File.ReadAllText("Assets/_Project/Scripts/TitleScenarioDetail.cs");
+        var text = ReadScript("AccidentResultPresenter") + ReadScript("AccidentReplayPresenter")
+            + ReadScript("HybridAccidentPresentation") + ReadScript("TitleScenarioDetail");
         // scenario names and explanations are shown on the title, replay and feedback pages
         foreach (var guid in AssetDatabase.FindAssets("t:ScenarioDefinitionAsset", new[] { "Assets/_Project/ScenarioDefinitions" }))
         {
@@ -50,6 +48,14 @@ public static class AccidentExperienceValidation
         }
         AssetDatabase.SaveAssets();
         Debug.Log("Accident experience glyphs are ready.");
+    }
+
+    /// <summary>Source of a runtime script by class name, wherever it sits under Assets/_Project/Scripts.</summary>
+    public static string ReadScript(string className)
+    {
+        var path = Directory.GetFiles("Assets/_Project/Scripts", className + ".cs", SearchOption.AllDirectories).FirstOrDefault();
+        if (path == null) throw new FileNotFoundException("Script not found: " + className);
+        return File.ReadAllText(path);
     }
 
     public static void BuildAndroid()

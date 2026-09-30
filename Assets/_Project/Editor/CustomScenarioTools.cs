@@ -11,7 +11,7 @@ using UnityEngine;
 /// </summary>
 public static class CustomScenarioTools
 {
-    const string HikoneScene = "Assets/_Project/Scenes/TraficAcident_Hikone_Meta.unity";
+    const string HikoneScene = "Assets/_Project/Scenes/Gameplay_Hikone.unity";
     public static string TemplateFolder => Path.Combine(CustomScenarioLibrary.ProjectFolder, "templates");
 
     [MenuItem("Tools/VRLearn/Custom Scenarios/Play Scenario File…")]

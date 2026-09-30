@@ -17,7 +17,7 @@ namespace VRLearn.Tests.PlayMode
     /// -&gt; Release (explicit PrepareForPoolReuse) -&gt; Pool.
     /// New and reused instances must observe identical spawn configuration.
     /// </summary>
-    [TestFixture("Assets/_Project/Scenes/TraficAcident_Hikone_Meta.unity")]
+    [TestFixture("Assets/_Project/Scenes/Gameplay_Hikone.unity")]
     public sealed class VehicleLifecycleTests
     {
         readonly string GameplayScene;
@@ -125,7 +125,7 @@ namespace VRLearn.Tests.PlayMode
             var type = controller.GetType();
             type.GetField("CarID")?.SetValue(controller, carId);
             type.GetField("pointsParent")?.SetValue(controller, route.transform);
-            type.GetField("AcidentCar")?.SetValue(controller, accidentCar);
+            type.GetField("AccidentCar")?.SetValue(controller, accidentCar);
             type.GetMethod("InitializeForSpawn")?.Invoke(controller, null);
         }
 
@@ -137,8 +137,8 @@ namespace VRLearn.Tests.PlayMode
             var controller = ControllerOf(vehicle);
             var type = controller.GetType();
             speed = (float)(type.GetField("Speed")?.GetValue(controller) ?? float.NaN);
-            accidentCar = (bool)(type.GetField("AcidentCar")?.GetValue(controller) ?? true);
-            accidentNumber = (int)(type.GetField("AcidentCarNumber",
+            accidentCar = (bool)(type.GetField("AccidentCar")?.GetValue(controller) ?? true);
+            accidentNumber = (int)(type.GetField("AccidentCarNumber",
                 BindingFlags.NonPublic | BindingFlags.Instance)?.GetValue(controller) ?? -1);
             destPoint = (int)(type.GetField("destPoint",
                 BindingFlags.NonPublic | BindingFlags.Instance)?.GetValue(controller) ?? -1);
@@ -191,7 +191,7 @@ namespace VRLearn.Tests.PlayMode
 
             Assert.That(speed2, Is.EqualTo(speed1), "Speed baseline must match first use.");
             Assert.That(ac2, Is.EqualTo(ac1));
-            Assert.That(num2, Is.EqualTo(1), "Reused accident car must report AcidentCarNumber=1.");
+            Assert.That(num2, Is.EqualTo(1), "Reused accident car must report AccidentCarNumber=1.");
             Assert.That(num2, Is.EqualTo(num1), "First-use and reuse accident numbers must match.");
             Assert.That(ev2, Is.EqualTo(ev1));
             Assert.That(points2.Length, Is.EqualTo(points1.Length));
@@ -230,7 +230,7 @@ namespace VRLearn.Tests.PlayMode
             yield return null;
             SnapshotInitState(reused, out _, out var acB, out var numB, out _, out _, out var pointsB);
 
-            Assert.That(acB, Is.False, "Normal spawn must not inherit AcidentCar=true.");
+            Assert.That(acB, Is.False, "Normal spawn must not inherit AccidentCar=true.");
             Assert.That(numB, Is.EqualTo(0));
             var authoredB = GetAuthoredPoints(routeB);
             Assert.That(pointsB.Length, Is.EqualTo(authoredB.Length));

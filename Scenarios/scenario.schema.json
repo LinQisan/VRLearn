@@ -2,7 +2,7 @@
   "$schema": "https://json-schema.org/draft/2020-12/schema",
   "$id": "https://github.com/LinQisan/VRLearn/Scenarios/scenario.schema.json",
   "title": "VRLearn custom scenario",
-  "description": "A traffic-safety scenario built at runtime in the Hikone Kyobashi scene. Coordinates are Unity world metres on the ground plane (x, z); heights come from the scene. Runtime validation: CustomScenario.Validate (Assets/_Project/Scripts/CustomScenario.cs).",
+  "description": "A traffic-safety scenario built at runtime in the Hikone Kyobashi scene. Coordinates are Unity world metres on the ground plane (x, z); heights come from the scene. Runtime validation: CustomScenario.Validate (Assets/_Project/Scripts/Scenario/CustomScenario.cs).",
   "type": "object",
   "required": ["format", "version", "id", "name", "map", "playerMode", "spawn", "goal"],
   "properties": {

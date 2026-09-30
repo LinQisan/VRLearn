@@ -1,5 +1,5 @@
 // Scenario model shared by the browser, the local server and the tests.
-// Mirrors Assets/_Project/Scripts/CustomScenario.cs: same fields, defaults, order and
+// Mirrors Assets/_Project/Scripts/Scenario/CustomScenario.cs: same fields, defaults, order and
 // validation messages. Keep both sides in step (see CustomScenario.Validate).
 
 export const FORMAT = 'vrlearn-scenario';

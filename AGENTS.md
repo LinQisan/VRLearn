@@ -22,7 +22,7 @@ Design intent and trade-offs: [DESIGN.md](DESIGN.md) (Chinese). Hikone scene par
 
 | Path | Contents |
 | --- | --- |
-| `Assets/_Project/Scripts/` | Runtime code (single assembly, Assembly-CSharp) |
+| `Assets/_Project/Scripts/` | Runtime code (single assembly, Assembly-CSharp), by area: `Core/` (GameDirector, flow, scene routing, retry, CSV), `Scenario/` (scenario data, custom scenarios, accident trigger, goal), `Traffic/` (cars, factories, pool, waypoints, signals), `Player/` (player, avatar, bicycle, phone), `XR/` (rig set-up, input, Editor simulation), `Accident/` (impact, replay, feedback), `Title/` (title menu), `UI/` (UiKit, VrPanel), `Recording/` |
 | `Assets/_Project/Editor/` | Editor tools: font preparation, Android build, title menu generator `TitleMenuLayout.cs` |
 | `Assets/_Project/Hikone/` | Hikone environment: `Models/` (FBX), `Materials/`, `Textures/`, `Prefabs/`, `Layout/hikone_layout.json`, `Editor/HikoneEnvironmentBuilder.cs` |
 | `Art/Hikone/` | **Source** of the Hikone assets: Blender/Python generators and constraint data exported from the standard scene |
@@ -32,7 +32,7 @@ Design intent and trade-offs: [DESIGN.md](DESIGN.md) (Chinese). Hikone scene par
 | `Assets/_Project/Prefabs/` | Vehicles (`Car_Left`, …) and rain particles |
 | `Assets/_Project/Tests/EditMode`, `PlayMode` | Tests (the test assemblies reach game code through reflection) |
 | `Assets/ThirdParty/` | Third-party content; do not modify unless unavoidable |
-| `Docs/` | Design and verification records; dated folders are historical evidence, not current state |
+| `Docs/` | `Hikone/` (current scene notes), `History/` (dated records: evidence of past states, not current rules) |
 
 ## Code map
 
@@ -45,6 +45,20 @@ Design intent and trade-offs: [DESIGN.md](DESIGN.md) (Chinese). Hikone scene par
 - **Accident & results:** `MetaVehicleImpactSensor` → `GameplayFlowController` (`Preparing → Playing → AccidentTriggered → Impact → Replay → Results → Finished`, plus the `GoalReached` branch) → `HybridAccidentPresentation` (impact flash + body-bound view) → `AccidentReplayPresenter` (three-view replay) → `AccidentResultPresenter` (feedback: explanation + evaluation, Title / Try again). A safe arrival goes `GoalController` → `HybridAccidentPresentation.PresentGoal` (chime, short green pulse, haptic; no particles) → `GoalReached → Results` via `MarkGoalResults` → `AccidentResultPresenter.ShowSuccess` with a `CrossingAnalysis` (seconds looking left/right of the travel direction, closest car). `ScenarioRetry` reloads the **current** scene with the current settings. Do not add a competing state machine.
 - **Replay data:** `AccidentReplayRecorder` (on the player object) samples head pose, body, bicycle and every `CarController` at 20 Hz into a 12 s ring buffer and keeps recording through the traffic freeze until the replay starts; `Build()` cuts the window (8 s before to 1.6 s after contact). `AccidentReplayAnalysis` derives the feedback figures (time the participant looked toward the car, last look before contact, speeds). Replay visuals are render-only copies made at contact time (before damage deformation); live objects are hidden, never rewound. The participant is a `ReplayMannequin`: a primitive figure proportioned from the menu **height and weight** (girth from BMI), walking with the recorded body speed, turning its head with the recorded head pose, seated when cycling, falling after contact, with a lime ground ring and the gaze fan. Shared UI look (palette, rounded sprites, pill buttons) is `UiKit`.
 - **Data:** `CSVPrinter` writes `CarData_*`, `HumanData_*`, `HumanData_InExperiment_*`. The last `HumanData` column, `Scene`, records the environment. Only ever append new columns at the end. Numbers are written culture-invariant; each trial is saved exactly once, both on "Title" and on "Try again" (R on the feedback page). R during a run is an operator abort and saves nothing. Files go to `Application.persistentDataPath` (Editor on macOS: `~/Library/Application Support/DefaultCompany/VRLearn`; Quest: `/sdcard/Android/data/com.moxuanxuerain.vrlearn/files`). Tests that save a trial must delete their files.
+
+### Names kept for data compatibility
+
+Code identifiers use correct spelling; renamed serialized fields carry `[FormerlySerializedAs("<old name>")]` so scenes and prefabs still load. These legacy spellings are **data** and must stay as they are:
+
+| Kept as is | Where | Meaning |
+| --- | --- | --- |
+| `OnAcident`, `AfterAcident`, `AcidentProgress`, `AcidentCar` | CSV column names | accident happened / after accident / legacy presentation step / car is the accident car |
+| `AcidentAreas1…9`, `AcidentArea0`, `CarFactory_Acident[_Left/_Right]`, `WayPointContainer_Acident[_Left/_Right]`, `Bicycle_AfterAcident` | scene object names found by code | per-scenario accident area, its car factories and routes |
+| `AcidentFactory` | tag | accident car factory |
+| `DieFlash` (`DieFlashNumber`, CSV `DieFlash`) | option, CSV | 走馬灯 (flashback) effect |
+| `ButtonOption`, `LegacyAccidentPresentation` (was `CenterEyeCamera`) | scripts | the pre-Meta title/result buttons and accident sequence; `LegacyAccidentPresentation` also holds the shared `Accident` / `AccidentProgress` state read by the CSV and goal checks |
+
+Renamed in this cleanup (GUIDs unchanged): scenes `TraficAcidentTitle_Meta` → `Title`, `TraficAcident_Meta` (later removed), `TraficAcident_Hikone_Meta` → `Gameplay_Hikone` (the CSV `Scene` column now records the new names); classes `CenterEyeCamera` → `LegacyAccidentPresentation`, `TrafficLightUP` → `TrafficSignalPreset`, `MetaTitleMenuPages` → `TitleSoundReadout`, `ButtonTest` → `ButtonClickEffect`, `GoalTextController` → `BillboardText`, `ReverseCollider` → `InsideOutMeshCollider`, `CanvasController` → `GameplayCanvasAnchor`; Japanese-named audio/material/texture files → English names.
 
 ## Hard rules (breaking these breaks the experiment)
 
@@ -156,7 +170,7 @@ The standard scene is still in the build and costs package size. If it is no lon
 
 ## Git and delivery
 
-- Commit source, required assets with their `.meta`, package manifests, project settings and docs. Never commit `Library/`, `Logs/`, `Temp/`, `Builds/`, `Backups/`, APKs, `*.csproj` or credentials; the root `VRLearn.apk` is a build artifact.
+- Commit source, required assets with their `.meta`, package manifests, project settings and docs. Never commit `Library/`, `Logs/`, `Temp/`, `Builds/`, `Backups/`, APKs, `*.csproj` or credentials. Keep only the APKs still being tested or handed out in `Builds/`; released APKs live on the GitHub release. Version control is git only (the Plastic / Unity Version Control workspace and package were removed).
 - Run `git diff --check` and drop unrelated Unity-generated changes (see Known pitfalls) before committing.
 - Commit or push only when asked; never force-push over remote history.
 - Every hand-off states what changed, what was verified, and what was not.
