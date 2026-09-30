@@ -4,15 +4,23 @@
 
 **标准场景已删除**（2026-09）：彦根场景最初复制自标准场景，实验对象（道路碰撞体、路点、触发区等）与之完全相同。标题画面没有环境选择，开始、重试和返回标题都进入彦根场景。
 
-## 标题菜单（VR 手柄操作）
+## 截图
 
-- 所有选项都以按钮平铺，指向后扣一次扳机即可选中，不再需要逐级 +/−：
-  - 场面番号：RANDOM 加 0–9，共 11 个按钮；
-  - 不快音：なし 加 3000–17000 Hz，共 16 个按钮，每个都标注频率，右上角有「試聴 / Play」按钮。
-- 已选项以蓝色填充显示。开始按钮为橙色的宽按钮，另有「リセット / Reset」按钮（恢复默认值）。
-- 身高、体重、年龄保留 ±5 步进按钮。
-- 按钮最小约 4.6 × 4.6 单位（在 2 m 距离约为 9 cm），满足 Touch 射线的点选要求（测试中有断言）。
-- 由 `Tools/VRLearn/Rebuild Title Menu (VR tiles)` 生成（`Assets/_Project/Editor/TitleMenuLayout.cs`，可重复执行）。现有控件和绑定都被复用。
+用 `Tools/VRLearn/Docs/Capture Screenshots`（`Assets/_Project/Editor/DocScreenshots.cs`）从固定视点重新拍 01–07；08、09 来自 PlayMode 测试 `AccidentExperienceTests.RecordedReplayCompletesAndRetryRetainsParticipantSettings`（不加 `-nographics` 运行时会存到 `Logs/AccidentExperience-Visuals/`，裁掉黑边后转为 JPG）。环境或菜单变化后请重拍。
+
+| 图 | 内容 |
+| --- | --- |
+| [01](01_kyobashi_intersection.jpg) | 从京桥路口西南角望向彦根城 |
+| [02](02_castle_road.jpg) | 夢京橋キャッスルロード（向南） |
+| [03](03_aerial.jpg) | 航拍：城下町、中堀、京桥和彦根城 |
+| [04](04_bridge.jpg) | 京桥上望向枡形 |
+| [05](05_route25_west_gate.jpg) | 县道 25 号向西，尽头是櫓门（遮挡车辆生成点） |
+| [06](06_junctions_from_above.jpg) | 俯视：本町 T 字路口（左）和京桥路口（右） |
+| [07](07_title_menu.jpg) | 标题菜单（一页） |
+| [08](08_accident_replay.jpg) | 事故回放（三视角） |
+| [09](09_feedback.jpg) | 反馈页 |
+
+标题菜单的设计见 [DESIGN.md](../../DESIGN.md) §6，生成方法见 AGENTS.md「Change the title menu」。
 
 ## 与真实地图的对应
 
@@ -26,6 +34,7 @@
 | 京桥口枡形 | 桥北的石垣围合区；正面是高石垣（z 76），道路在此右转，尽头有城墙 |
 | 夢京橋キャッスルロード | 南口向南延伸至 z −150。两侧是町家和榉树行道树，设蓝色方向指示牌，限速 30 |
 | 本町通（江户町家街） | 与 Castle Road 在 (32, −6) 形成 T 字路口，向西延伸 |
+| 本町 T 字路口 | x 0–20，z 16–36，在京桥路口西侧 2 m 处。它朝东的一侧不画斑马线：那条街已由京桥路口西侧的斑马线横穿，两条并排是错误的（`road_cross(east_crosswalk=False)`） |
 | 路口西侧停车场「P」 | x −80…−60（场景 6/7 车辆由此驶出） |
 | 中堀 | 南岸为低石垣加石柱锁链栏；北岸为高石垣，上方是松、樱和阔叶林 |
 | 彦根城 | 本丸平台中心 (−40, 205)，高 50 m，位于京桥的西北方向，从路口可以看到 |
@@ -56,7 +65,7 @@ S4 的事故车从桥上驶来。实际的京桥路口北侧就是开阔的护�
 python3 Art/Hikone/hk_layout.py      # 布局 + 冲突校验
 ```
 
-在 Blender 中执行：`hk_textures.run(); hk_assets.build_all()`（BlenderMCP 或 headless 均可），然后在 Unity 菜单中依次执行：
+在 Blender 中执行：`hk_textures.run(); hk_assets.build_all()`（BlenderMCP 或 headless 均可）。只改了一个模型时，可以只导出那一个（`hk_lib.export(hk_assets.<函数>(...), -1)`），避免所有 FBX 因时间戳而产生差异。然后在 Unity 菜单中依次执行：
 
 0. `Tools/VRLearn/Hikone/0. Export Constraints From Scene`：仅在场景的道路、路点或触发区有变化时执行。它从彦根场景重新导出 `Art/Hikone/scene_constraints.json` 和 `road_tiles_geometry.json`，结果与现有文件一致即说明这些实验对象没有变化。
 1. `Tools/VRLearn/Hikone/1. Import Models, Materials & Prefabs`

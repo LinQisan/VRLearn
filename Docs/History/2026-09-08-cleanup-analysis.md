@@ -136,8 +136,20 @@ Resources/AccidentReplayMarkers.mat 通过 Resources.Load 读取，Shader.Find �
 
 - 修改范围：3份脚本的3个import与7段注释；2份遗留测试临时场景及其meta从Assets归档。
 - 未改：业务函数/字段、4个正式/旧场景、车辆prefab、10份情景asset、模型参数、包清单、CSV协议；以修改前哈希复核最终实际差异。
-- EditMode：18/18通过；PlayMode：23/23通过；最终文件核对见 [verification.md](2026-09-08-cleanup-audit/verification.md)。
+- EditMode：18/18通过；PlayMode：23/23通过；最终文件核对见下方「验证记录」。
 - 未运行 Android 重构建、Quest 真机实验或参与者消融；不声称完成这些验证。
-- 原始证据保存在 Docs/History/2026-09-08-cleanup-audit：引用清单、依赖候选、修改前哈希、清理diff、测试XML/日志和最终验证说明。日志不是“没有任何警告”的保证，应以测试结果及已说明的环境边界判断。
+- 原始证据（引用清单、依赖候选、修改前哈希、清理diff、测试XML/日志）已于 2026-09-30 从工作树移除，可在 git 提交 `948f58d` 的 `Docs/History/2026-09-08-cleanup-audit/` 中查看。日志不是“没有任何警告”的保证，应以测试结果及已说明的环境边界判断。
 
-快速索引：[72份脚本引用清单](2026-09-08-cleanup-audit/script-reference-inventory.md) · [实际清理差异](2026-09-08-cleanup-audit/cleanup.diff) · [备份说明](/Users/xinyu/VRLearn/Backups/ProjectCleanup-20260908/README.md)
+注：72 份脚本引用清单和实际清理差异同在上述 git 提交中；当时的 Backups/ 备份已于 2026-09-30 移除。
+
+## 验证记录（2026-09-08）
+
+- Unity：6000.3.19f1，macOS batchmode、nographics。
+- EditMode：18/18 通过，失败/跳过均0，退出码0。
+- PlayMode：23/23 通过，失败/跳过均0，退出码0。
+- 未新增测试；运行现有两个项目测试程序集。覆盖场景配置、参数传递、事故回放/结果、实际速度取值、车辆池复用与网格复位等。
+- 无 Android 构建、Quest 真机或参与者试验；无图形模式不验证路径线、后处理、音频实际输出和头显交互。
+- 日志存在本机缺 OpenXR runtime/设备初始化及SDK消息；测试通过不意味着日志无错误消息，不据此推断Quest设备可用。
+- 对3份脚本做修改前后token比对（忽略注释、空白和3个确认未用import）一致。测试完成后只进一步收紧删除注释留下的空白和孤立注释，再次比对有效token一致，未引入运行语句变化。
+- 最终哈希核对：只改变CSVPrinter、CenterEyeCamera、ButtonTest三份脚本；归档两份历史InitTestScene及meta；Assets/Packages/ProjectSettings无其他新增、缺失或改变。正式场景、prefab、模型、情景asset、包锁完全一致。
+- 本轮测试运行器生成的临时场景已自行清理，未保留在Assets。

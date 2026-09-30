@@ -22,7 +22,7 @@ Design intent and trade-offs: [DESIGN.md](DESIGN.md) (Chinese). Hikone scene par
 | Path | Contents |
 | --- | --- |
 | `Assets/_Project/Scripts/` | Runtime code (single assembly, Assembly-CSharp), by area: `Core/` (GameDirector, flow, scene routing, retry, CSV), `Scenario/` (scenario data, custom scenarios, accident trigger, goal), `Traffic/` (cars, factories, pool, waypoints, signals), `Player/` (player, avatar, bicycle, phone), `XR/` (rig set-up, input, Editor simulation), `Accident/` (impact, replay, feedback), `Title/` (title menu), `UI/` (UiKit, VrPanel), `Recording/` |
-| `Assets/_Project/Editor/` | Editor tools: font preparation, Android build, title menu generator `TitleMenuLayout.cs` |
+| `Assets/_Project/Editor/` | Editor tools: font preparation, Android build, title menu generator `TitleMenuLayout.cs`, `DocScreenshots.cs` (`Tools/VRLearn/Docs/Capture Screenshots` re-renders the pictures in `Docs/Hikone`) |
 | `Assets/_Project/Hikone/` | Hikone environment: `Models/` (FBX), `Materials/`, `Textures/`, `Prefabs/`, `Layout/hikone_layout.json`, `Editor/HikoneEnvironmentBuilder.cs` |
 | `Art/Hikone/` | **Source** of the Hikone assets: Blender/Python generators and constraint data exported from the gameplay scene's roads, waypoints and triggers |
 | `Assets/_Project/ScenarioDefinitions/` | `Scenario_00`–`09` scenario assets |
@@ -31,7 +31,7 @@ Design intent and trade-offs: [DESIGN.md](DESIGN.md) (Chinese). Hikone scene par
 | `Assets/_Project/Prefabs/` | Vehicles (`Car_Left`, …) and rain particles |
 | `Assets/_Project/Tests/EditMode`, `PlayMode` | Tests (the test assemblies reach game code through reflection) |
 | `Assets/ThirdParty/` | Third-party content; do not modify unless unavoidable |
-| `Docs/` | `Hikone/` (current scene notes), `History/` (dated records: evidence of past states, not current rules) |
+| `Docs/` | `Hikone/` (current scene notes and screenshots), `History/` (dated records, text only: evidence of past states, not current rules; raw logs and test XML are in git history) |
 
 ## Code map
 

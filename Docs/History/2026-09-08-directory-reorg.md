@@ -43,7 +43,7 @@ Assets/
 - `Scenes/ModularBuildingsFramework` 整包移入 `Assets/ThirdParty`，保留脚本命名空间、Editor 层级和包内部资源结构。
 - 删除已合空的 Art、Images、VFX、Materials、Meshes 及旧场景资源目录和对应文件夹 meta。
 
-逐文件移动路径和 SHA-256 见 [file-audit.json](file-audit.json)。356 个移动文件（含 meta）内容完全不变；保留的资产与目录 GUID 未改变。
+逐文件移动路径和 SHA-256 见 git 提交 `948f58d` 中的 `file-audit.json`。356 个移动文件（含 meta）内容完全不变；保留的资产与目录 GUID 未改变。
 
 ## 删除与必要代码调整
 
@@ -71,7 +71,7 @@ Assets/
 
 整理前后核对 Assets、Packages 和 ProjectSettings：无新增无法解析的 GUID、无重复 GUID、无孤立 meta、无缺失 meta；所有保留资产 GUID 一致。两个正式场景、现有四个车辆预制件、10 个情景配置、包清单与锁文件内容均未改变。现行代码、Build Settings 和 Agent 文档已无两个删除场景的路径或路由常量引用。
 
-静态扫描发现 **整理前已存在** 的 17 个无法在 Assets 与当前 PackageCache meta 中解析的对象引用 GUID，共 53 处、涉及 39 个文件，详见 [pre-existing-unresolved-references.json](pre-existing-unresolved-references.json)。其中包括：
+静态扫描发现 **整理前已存在** 的 17 个无法在 Assets 与当前 PackageCache meta 中解析的对象引用 GUID，共 53 处、涉及 39 个文件，详见 git 提交 `948f58d` 中的 `pre-existing-unresolved-references.json`。其中包括：
 
 - Meta 游戏场景 `Canvas_MainButton` 上一个已禁用 Image 的材质引用。
 - 第三方建筑、车库、卡车材质的贴图/立方体贴图引用，OfficeBuilding 的物理材质引用，以及两个 FBX 的外部材质映射。
@@ -81,8 +81,8 @@ Assets/
 
 ## 验证
 
-- editmode: 18/18 通过，失败 0、跳过 0，Unity 退出码 0。结果见 [editmode-results.xml](editmode-results.xml)。
-- playmode: 23/23 通过，失败 0、跳过 0，Unity 退出码 0。结果见 [playmode-results.xml](playmode-results.xml)。
+- editmode: 18/18 通过，失败 0、跳过 0，Unity 退出码 0。结果 XML 在 git 提交 `948f58d` 中。
+- playmode: 23/23 通过，失败 0、跳过 0，Unity 退出码 0。结果 XML 在 git 提交 `948f58d` 中。
 - 最终展开嵌套材质目录后，顺序重新运行了两个程序集，结果为以上记录。
 - 验证使用 Unity 6000.3.19f1、macOS batchmode/nographics；覆盖正式场景引用与核心对象、全部 10 个情景、事故与目标状态、回放、实际车速、重试和车辆池复用。
 - 无新增编译错误；日志仍包含本机 OpenXR/OVR 设备与初始化消息。没有执行 Android 构建、Quest 真机或图形/音频验收。
