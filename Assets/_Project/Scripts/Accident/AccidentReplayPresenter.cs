@@ -22,8 +22,10 @@ public sealed class AccidentReplayPresenter : MonoBehaviour
     const float SlowMotionUntil = 0.4f;       // seconds after contact
     const float SlowMotionRate = 0.45f;
     const float EndHold = 1.2f;
-    const float PanelDistance = 1.25f;
-    const float PanelScale = 0.8f;
+    // world-locked panel 1.7 m away and 64° wide (see VrPanel); a head-locked black backdrop behind it
+    public const float PanelDistance = 1.7f;
+    public const float PanelAngularWidth = 64f;
+    static readonly Vector2 PanelSize = new Vector2(1760f, 990f);
     const int SortingOrder = 31995;
 
     // lime, because the traffic cars in this project are painted teal
@@ -131,6 +133,7 @@ public sealed class AccidentReplayPresenter : MonoBehaviour
             AnchorCanvas();
             scenarioLabel.text = pendingScenarioLabel;
             canvas.gameObject.SetActive(true);
+            if (backdrop != null) backdrop.gameObject.SetActive(true);
             visible = true;
             OpenXRScene.SetControllersVisible(true);
             OpenXRScene.SetControllerVisualsVisible(false);
@@ -200,6 +203,7 @@ public sealed class AccidentReplayPresenter : MonoBehaviour
         if (participantCamera != null) participantCamera.enabled = false;
         if (driverCamera != null) driverCamera.enabled = false;
         if (canvas != null) canvas.gameObject.SetActive(false);
+        if (backdrop != null) backdrop.gameObject.SetActive(false);
         if (copyRoot != null) copyRoot.gameObject.SetActive(false);
         foreach (var r in hiddenLive)
             if (r != null) r.enabled = true;
@@ -546,11 +550,12 @@ public sealed class AccidentReplayPresenter : MonoBehaviour
         var go = new GameObject("Canvas_AccidentReplay", typeof(RectTransform), typeof(Canvas), typeof(CanvasScaler));
         go.layer = LayerMask.NameToLayer("UI");
         canvas = go.GetComponent<Canvas>();
-        var scaler = go.GetComponent<CanvasScaler>();
-        scaler.uiScaleMode = CanvasScaler.ScaleMode.ScaleWithScreenSize;
-        scaler.referenceResolution = new Vector2(1920f, 1080f);
-        scaler.screenMatchMode = CanvasScaler.ScreenMatchMode.MatchWidthOrHeight;
-        scaler.matchWidthOrHeight = 0.5f;
+        canvas.renderMode = RenderMode.WorldSpace;
+        var rootRect = (RectTransform)go.transform;
+        rootRect.sizeDelta = PanelSize;
+        rootRect.localScale = Vector3.one * VrPanel.ScaleFor(PanelSize.x, PanelAngularWidth, PanelDistance);
+        go.GetComponent<CanvasScaler>().dynamicPixelsPerUnit = 3f;
+        go.AddComponent<VrPanel>();
         if (MetaEditorSimulationController.IsActive)
             MetaEditorSimulationController.ConfigureCanvas(canvas);
         else
@@ -563,25 +568,21 @@ public sealed class AccidentReplayPresenter : MonoBehaviour
         AnchorCanvas();
         var root = (RectTransform)go.transform;
 
-        // dark backdrop over the whole view, then the panel
-        var backdrop = Box(root, "Backdrop", Vector2.zero, Vector2.zero, new Color(0.02f, 0.03f, 0.06f, 0.96f));
-        backdrop.anchorMin = Vector2.zero; backdrop.anchorMax = Vector2.one;
-        backdrop.offsetMin = backdrop.offsetMax = Vector2.zero;
-        var panel = Box(root, "ReplayPanel", Vector2.zero, new Vector2(1760f, 990f), UiKit.Panel, 1.4f);
-        panel.localScale = Vector3.one * PanelScale;
+        EnsureBackdrop();
+        var panel = Box(root, "ReplayPanel", Vector2.zero, PanelSize, UiKit.Panel, 1.4f);
 
         // header: REPLAY chip, title, scenario name; countdown pill on the right
-        var chip = Box(panel, "Chip", new Vector2(-770f, 440f), new Vector2(150f, 50f), UiKit.Coral, 2f);
+        var chip = Box(panel, "Chip", new Vector2(-770f, 452f), new Vector2(150f, 50f), UiKit.Coral, 2f);
         var chipText = Text(chip, "Text", Vector2.zero, chip.sizeDelta, 24f, FontStyles.Bold, TextAlignmentOptions.Center);
         chipText.text = "REPLAY";
         chipText.color = UiKit.Ink;
         chipText.characterSpacing = 8f;
-        var title = Text(panel, "Title", new Vector2(-250f, 440f), new Vector2(860f, 60f), 38f, FontStyles.Bold, TextAlignmentOptions.Left);
+        var title = Text(panel, "Title", new Vector2(-250f, 452f), new Vector2(860f, 60f), 38f, FontStyles.Bold, TextAlignmentOptions.Left);
         title.text = "事故のリプレイ / Accident replay";
         title.color = UiKit.Text;
-        scenarioLabel = Text(panel, "Scenario", new Vector2(-250f, 398f), new Vector2(860f, 36f), 24f, FontStyles.Normal, TextAlignmentOptions.Left);
+        scenarioLabel = Text(panel, "Scenario", new Vector2(-250f, 412f), new Vector2(860f, 36f), 26f, FontStyles.Normal, TextAlignmentOptions.Left);
         scenarioLabel.color = UiKit.Muted;
-        var timePill = Box(panel, "TimePill", new Vector2(640f, 430f), new Vector2(380f, 64f), UiKit.Card, 2f);
+        var timePill = Box(panel, "TimePill", new Vector2(640f, 440f), new Vector2(380f, 64f), UiKit.Card, 2f);
         timeLabel = Text(timePill, "Time", Vector2.zero, new Vector2(350f, 60f), 32f, FontStyles.Bold, TextAlignmentOptions.Center);
 
         // views: overview 1100x619 on the left; participant and driver 540x304 stacked on the right
@@ -597,11 +598,11 @@ public sealed class AccidentReplayPresenter : MonoBehaviour
         driverMissing.color = UiKit.Muted;
 
         // legend chips under the overview
-        LegendChip(panel, new Vector2(-735f, -275f), 250f, ParticipantColor, "あなた（人物）");
-        LegendChip(panel, new Vector2(-470f, -275f), 250f, ParticipantColor, "線：歩いた道");
-        LegendChip(panel, new Vector2(-190f, -275f), 290f, ParticipantColor, "扇：見ていた方向");
-        LegendChip(panel, new Vector2(80f, -275f), 230f, VehicleColor, "ぶつかった車");
-        LegendChip(panel, new Vector2(330f, -275f), 250f, ContactColor, "接触した場所");
+        LegendChip(panel, new Vector2(-860f, -275f), 250f, ParticipantColor, "あなた（人物）");
+        LegendChip(panel, new Vector2(-600f, -275f), 230f, ParticipantColor, "線：歩いた道");
+        LegendChip(panel, new Vector2(-360f, -275f), 290f, ParticipantColor, "扇：見ていた方向");
+        LegendChip(panel, new Vector2(-60f, -275f), 240f, VehicleColor, "ぶつかった車");
+        LegendChip(panel, new Vector2(190f, -275f), 250f, ContactColor, "接触した場所");
 
         // timeline
         var track = Box(panel, "Timeline", new Vector2(0f, -330f), new Vector2(1660f, 14f), UiKit.CardRaised, 0.25f);
@@ -624,7 +625,7 @@ public sealed class AccidentReplayPresenter : MonoBehaviour
             "もう一度再生 / Replay", UiKit.CardRaised, UiKit.Text, Replay);
         skipButton = ButtonBox(panel, "Button_Skip", new Vector2(260f, -410f), new Vector2(480f, 90f),
             "スキップ / Skip", UiKit.Amber, UiKit.Ink, Skip);
-        var hint = Text(panel, "Hint", new Vector2(0f, -474f), new Vector2(1600f, 30f), 21f, FontStyles.Normal, TextAlignmentOptions.Center);
+        var hint = Text(panel, "Hint", new Vector2(0f, -470f), new Vector2(1600f, 34f), 24f, FontStyles.Normal, TextAlignmentOptions.Center);
         hint.text = "B / Y：もう一度再生　　A / X：スキップ";
         hint.color = UiKit.Muted;
         canvas.gameObject.SetActive(false);
@@ -634,7 +635,7 @@ public sealed class AccidentReplayPresenter : MonoBehaviour
     {
         var chip = Box(parent, "Legend_" + label, left + new Vector2(width * 0.5f, 0f), new Vector2(width - 12f, 44f), UiKit.Card, 2f);
         UiKit.Dot(chip, "Dot", color, new Vector2(-width * 0.5f + 30f, 0f), 18f);
-        var text = Text(chip, "Text", new Vector2(14f, 0f), new Vector2(width - 60f, 40f), 22f, FontStyles.Normal, TextAlignmentOptions.Left);
+        var text = Text(chip, "Text", new Vector2(14f, 0f), new Vector2(width - 60f, 40f), 26f, FontStyles.Normal, TextAlignmentOptions.Left);
         text.text = label;
         text.color = UiKit.Text;
     }
@@ -647,15 +648,37 @@ public sealed class AccidentReplayPresenter : MonoBehaviour
             scenarioLabel.text = pendingScenarioLabel;
     }
 
+    /// <summary>World-locked in front of the viewer; sorting keeps it above the backdrop.</summary>
     void AnchorCanvas()
     {
         if (canvas == null || displayCamera == null)
             return;
-        canvas.renderMode = RenderMode.ScreenSpaceCamera;
         canvas.worldCamera = displayCamera;
-        canvas.planeDistance = Mathf.Clamp(PanelDistance, displayCamera.nearClipPlane + 0.05f, displayCamera.farClipPlane - 0.1f);
         canvas.overrideSorting = true;
         canvas.sortingOrder = SortingOrder;
+        canvas.GetComponent<VrPanel>().Attach(displayCamera.transform, PanelDistance);
+    }
+
+    Canvas backdrop;
+
+    /// <summary>Dark, head-locked backdrop at the near plane: nothing of the scene shows around the panel.</summary>
+    void EnsureBackdrop()
+    {
+        if (backdrop != null || displayCamera == null)
+            return;
+        var go = new GameObject("Canvas_ReplayBackdrop", typeof(RectTransform), typeof(Canvas));
+        go.layer = LayerMask.NameToLayer("UI");
+        go.transform.SetParent(displayCamera.transform, false);
+        backdrop = go.GetComponent<Canvas>();
+        backdrop.renderMode = RenderMode.ScreenSpaceCamera;
+        backdrop.worldCamera = displayCamera;
+        backdrop.planeDistance = Mathf.Max(displayCamera.nearClipPlane + 0.01f, 0.04f);
+        backdrop.overrideSorting = true;
+        backdrop.sortingOrder = SortingOrder - 1;
+        var image = Box((RectTransform)go.transform, "Backdrop", Vector2.zero, Vector2.zero, new Color(0.02f, 0.03f, 0.06f, 1f));
+        image.anchorMin = Vector2.zero; image.anchorMax = Vector2.one;
+        image.offsetMin = image.offsetMax = Vector2.zero;
+        go.SetActive(false);
     }
 
     RectTransform View(RectTransform parent, string name, Vector2 position, Vector2 size, RenderTexture texture, string label,
@@ -671,14 +694,14 @@ public sealed class AccidentReplayPresenter : MonoBehaviour
         var raw = imageGo.GetComponent<RawImage>();
         raw.texture = texture;
         raw.raycastTarget = false;
-        var width = Mathf.Min(size.x - 28f, 400f);
-        var tag = Box(frame, "Label", Vector2.zero, new Vector2(width, 44f), new Color(0.02f, 0.03f, 0.06f, 0.8f), 2f);
+        var width = Mathf.Min(size.x - 28f, 440f);
+        var tag = Box(frame, "Label", Vector2.zero, new Vector2(width, 48f), new Color(0.02f, 0.03f, 0.06f, 0.8f), 2f);
         tag.anchorMin = tag.anchorMax = tag.pivot = new Vector2(0f, 0f);
         tag.anchoredPosition = new Vector2(16f, 16f);
         var dot = UiKit.Dot(tag, "Key", key, Vector2.zero, 16f);
         dot.anchorMin = dot.anchorMax = new Vector2(0f, 0.5f);
         dot.anchoredPosition = new Vector2(24f, 0f);
-        var text = Text(tag, "Text", new Vector2(18f, 0f), tag.sizeDelta - new Vector2(56f, 0f), 24f, FontStyles.Bold, TextAlignmentOptions.Left);
+        var text = Text(tag, "Text", new Vector2(18f, 0f), tag.sizeDelta - new Vector2(56f, 0f), 28f, FontStyles.Bold, TextAlignmentOptions.Left);
         text.text = label;
         return frame;
     }
@@ -764,6 +787,7 @@ public sealed class AccidentReplayPresenter : MonoBehaviour
         foreach (var texture in new[] { overviewTexture, participantTexture, driverTexture })
             if (texture != null) { texture.Release(); Destroy(texture); }
         if (canvas != null) Destroy(canvas.gameObject);
+        if (backdrop != null) Destroy(backdrop.gameObject);
         if (copyRoot != null) Destroy(copyRoot.gameObject);
         if (markerMaterial != null) Destroy(markerMaterial);
     }

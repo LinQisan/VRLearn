@@ -18,7 +18,7 @@ public sealed class MetaTitleSceneSetup : MonoBehaviour
     [SerializeField] private Canvas titleCanvas;
     [SerializeField] private OVRInputModule inputModule;
     [SerializeField] private TMP_FontAsset uiFont;
-    [SerializeField, Range(1.5f, 3f)] private float viewingDistance = 2f;
+    [SerializeField, Range(1.2f, 3f)] private float viewingDistance = 1.6f;
 
     private void Awake()
     {
@@ -58,30 +58,13 @@ public sealed class MetaTitleSceneSetup : MonoBehaviour
 
     private void NormalizeMenuText()
     {
+        // Sizes, wrapping and margins are authored by TitleMenuLayout for legibility on Quest 2.
+        // (This used to switch every text to auto-size down to 55 %, which made the menu unreadable.)
         foreach (var text in titleCanvas.GetComponentsInChildren<TMP_Text>(true))
         {
             if (uiFont != null)
                 text.font = uiFont;
             text.extraPadding = true;
-            text.overflowMode = TextOverflowModes.Overflow;
-            text.margin = Vector4.zero;
-
-            string value = text.text ?? string.Empty;
-            bool numericReadout = int.TryParse(value, out _)
-                || value.EndsWith(" Hz")
-                || value == "+5"
-                || value == "-5";
-            if (!numericReadout)
-            {
-                float authoredSize = Mathf.Max(0.8f, text.fontSize);
-                text.enableAutoSizing = true;
-                text.fontSizeMax = authoredSize;
-                text.fontSizeMin = Mathf.Max(0.65f, authoredSize * 0.55f);
-                text.textWrappingMode = value.Contains("\n")
-                    ? TextWrappingModes.Normal
-                    : TextWrappingModes.NoWrap;
-            }
-            text.SetAllDirty();
         }
     }
 
@@ -151,6 +134,8 @@ public sealed class MetaTitleSceneSetup : MonoBehaviour
             yield return null;
 
         AlignOnceWithHeadset();
+        // the menu is almost the only thing drawn here: a larger eye buffer makes its text crisp
+        VrPanel.SetEyeResolution(1.3f);
         Canvas.ForceUpdateCanvases();
         titleCanvas.enabled = true;
     }
@@ -163,13 +148,19 @@ public sealed class MetaTitleSceneSetup : MonoBehaviour
             Debug.LogError("Meta title CenterEye anchor was not found.", cameraRig);
             return;
         }
-        var forward = head.forward.normalized;
-        if (forward.sqrMagnitude < 0.001f)
-            forward = Vector3.forward;
+        // level and upright regardless of how the head is tilted at start, slightly below the eyes
+        var forward = Vector3.ProjectOnPlane(head.forward, Vector3.up);
+        forward = forward.sqrMagnitude < 0.001f ? Vector3.forward : forward.normalized;
 
         var canvasTransform = titleCanvas.transform;
-        canvasTransform.position = head.position + forward * viewingDistance;
-        canvasTransform.rotation = Quaternion.LookRotation(forward, head.up);
+        canvasTransform.position = head.position + forward * viewingDistance + Vector3.down * 0.12f;
+        canvasTransform.rotation = Quaternion.LookRotation(forward, Vector3.up);
+    }
+
+    private void OnDestroy()
+    {
+        // gameplay renders the full scene: back to the default eye buffer
+        VrPanel.SetEyeResolution(1f);
     }
 
     private Transform ResolveRigAnchor(string anchorName, Transform cachedAnchor)

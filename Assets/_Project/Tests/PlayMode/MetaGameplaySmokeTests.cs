@@ -12,7 +12,7 @@ using UnityEngine.UI;
 
 namespace VRLearn.Tests.PlayMode
 {
-    [TestFixture("Assets/_Project/Scenes/TraficAcident_Hikone_Meta.unity")]
+    [TestFixture("Assets/_Project/Scenes/Gameplay_Hikone.unity")]
     public sealed class MetaGameplaySmokeTests
     {
         readonly string GameplayScene;
@@ -21,7 +21,7 @@ namespace VRLearn.Tests.PlayMode
         {
             GameplayScene = gameplayScene;
         }
-        const string TitleScene = "Assets/_Project/Scenes/TraficAcidentTitle_Meta.unity";
+        const string TitleScene = "Assets/_Project/Scenes/Title.unity";
         static readonly int[] ScenarioIds = { 0, 1, 2, 3, 4, 5, 6, 7, 8, 9 };
 
         [UnityTest]
@@ -71,10 +71,10 @@ namespace VRLearn.Tests.PlayMode
 
             var camera = Camera.main;
             Assert.That(camera, Is.Not.Null);
-            Assert.That(
-                Vector3.Distance(camera.transform.position, canvas.transform.position),
-                Is.InRange(1.9f, 2.1f),
-                "The title menu should be readable at the intended two-metre VR distance.");
+            var menuDistance = Vector3.Distance(camera.transform.position, canvas.transform.position);
+            Assert.That(menuDistance, Is.InRange(1.5f, 1.75f),
+                "The title menu sits 1.6 m away so its text is legible on Quest 2.");
+            Assert.That(Vector3.Angle(canvas.transform.up, Vector3.up), Is.LessThan(1f), "The menu stands upright.");
 
             var director = FindSceneComponent("GameDirector_Title", scene);
             Assert.That(director, Is.Not.Null);
@@ -85,13 +85,35 @@ namespace VRLearn.Tests.PlayMode
             var toneTiles = FindOptionTiles(scene, "Hz");
             Assert.That(eventTiles.Count, Is.EqualTo(11), "RANDOM + scenarios 0-9 must all be tiled.");
             Assert.That(toneTiles.Count, Is.EqualTo(16), "None + 3000-17000 Hz must all be tiled.");
-            foreach (var tile in eventTiles.Concat(toneTiles))
+            // the menu is split into steps; every tile is reachable on one of them, and on every step
+            // all text is at least 0.9° tall and every tile at least 2.5° (Quest 2: ~20 px per degree)
+            var pages = FindSceneComponent("TitleMenuPages", scene, true);
+            Assert.That(pages, Is.Not.Null);
+            var pageCount = (int)pages.GetType().GetProperty("Count").GetValue(pages);
+            var reachable = new HashSet<Toggle>();
+            float Degrees(float units) => Mathf.Atan(units * canvas.transform.lossyScale.x / menuDistance) * Mathf.Rad2Deg;
+            for (var p = 0; p < pageCount; p++)
             {
-                Assert.That(tile.gameObject.activeInHierarchy && tile.interactable, Is.True, tile.name);
-                var size = ((RectTransform)tile.transform).rect.size;
-                Assert.That(Mathf.Min(size.x, size.y), Is.GreaterThanOrEqualTo(4.5f),
-                    $"{tile.name} is too small to hit with a Touch ray at two metres.");
+                Invoke(pages, "ShowPage", p);
+                yield return null;
+                foreach (var tile in eventTiles.Concat(toneTiles).Where(t => t.gameObject.activeInHierarchy))
+                {
+                    reachable.Add(tile);
+                    Assert.That(tile.interactable, Is.True, tile.name);
+                    var size = ((RectTransform)tile.transform).rect.size;
+                    Assert.That(Degrees(Mathf.Min(size.x, size.y)), Is.GreaterThanOrEqualTo(2.5f),
+                        $"{tile.name} is too small to hit with a Touch ray.");
+                }
+                foreach (var text in canvas.GetComponentsInChildren<Component>(false).Where(c => c.GetType().Name == "TextMeshProUGUI"))
+                {
+                    var fontSize = (float)text.GetType().GetProperty("fontSize").GetValue(text);
+                    if (string.IsNullOrWhiteSpace(GetText(text)))
+                        continue;
+                    Assert.That(Degrees(fontSize), Is.GreaterThanOrEqualTo(0.9f),
+                        $"'{GetText(text)}' ({text.name}) is too small to read on Quest 2.");
+                }
             }
+            Assert.That(reachable.Count, Is.EqualTo(eventTiles.Count + toneTiles.Count), "Every tile is on one of the steps.");
             var nine = eventTiles.First(t => (int)GetField(t.GetComponent("TitleOptionToggle"), "intValue") == 9);
             nine.isOn = true;
             Assert.That(director.GetType().GetField("EventNumber")?.GetValue(director), Is.EqualTo(9),
@@ -192,14 +214,11 @@ namespace VRLearn.Tests.PlayMode
             Assert.That(GetText(summary), Is.Not.Empty);
             var readableCanvas = GetField(results, "readableCanvas") as Canvas;
             Assert.That(readableCanvas, Is.Not.Null);
-            Assert.That(readableCanvas.renderMode, Is.EqualTo(RenderMode.ScreenSpaceCamera),
-                "Result UI must render in camera space so accident geometry cannot occlude it.");
+            Assert.That(readableCanvas.renderMode, Is.EqualTo(RenderMode.WorldSpace),
+                "The feedback page is a world-locked panel (head-locked full-view pages were unreadable on Quest 2).");
             Assert.That(readableCanvas.worldCamera, Is.EqualTo(Camera.main));
             Assert.That(readableCanvas.sortingOrder, Is.GreaterThan(30000));
-            Assert.That(readableCanvas.planeDistance, Is.InRange(1.1f, 1.4f));
-            var readablePanel = GetField(results, "readablePanel") as RectTransform;
-            Assert.That(readablePanel, Is.Not.Null);
-            Assert.That(readablePanel.localScale.x, Is.InRange(0.79f, 0.81f));
+            AssertComfortablePanel(readableCanvas, 1.4f, 1.8f, 50f, 62f);
 
             Invoke(flow, "BeginScenario", scenarioId);
             Assert.That(InvokeBool(flow, "TryReachGoal"), Is.True);
@@ -273,8 +292,9 @@ namespace VRLearn.Tests.PlayMode
 
             var canvas = replay.GetType().GetProperty("Canvas").GetValue(replay) as Canvas;
             Assert.That(canvas.gameObject.activeSelf, Is.True);
-            Assert.That(canvas.renderMode, Is.EqualTo(RenderMode.ScreenSpaceCamera));
+            Assert.That(canvas.renderMode, Is.EqualTo(RenderMode.WorldSpace));
             Assert.That(canvas.worldCamera, Is.EqualTo(Camera.main));
+            AssertComfortablePanel(canvas, 1.5f, 1.9f, 55f, 66f);
             Assert.That(Camera.main.cullingMask, Is.EqualTo(1 << LayerMask.NameToLayer("UI")),
                 "Ragdoll and live cars must not be drawn over the replay.");
             // overview is the largest view (left); the two side views together are half its area
@@ -567,7 +587,7 @@ namespace VRLearn.Tests.PlayMode
             var firstDelay = launches.Cast<object>().Min(l => (float)GetField(l, "delaySeconds"));
 
             bool AccidentCarActive() => UnityEngine.Object.FindObjectsByType<MonoBehaviour>(FindObjectsSortMode.None)
-                .Any(c => c.GetType().Name == "CarController" && (bool)GetField(c, "AcidentCar"));
+                .Any(c => c.GetType().Name == "CarController" && (bool)GetField(c, "AccidentCar"));
             Assert.That(AccidentCarActive(), Is.False);
 
             var player = FindSceneComponent("PlayerActor", scene);
@@ -577,6 +597,21 @@ namespace VRLearn.Tests.PlayMode
                 yield return null;
             Assert.That(AccidentCarActive(), Is.True,
                 $"Scenario {scenarioId}: the first accident car must appear {firstDelay:0.0} s after the trigger.");
+        }
+
+        /// <summary>World-locked, in front of the eyes, at a comfortable distance and angular width.</summary>
+        static void AssertComfortablePanel(Canvas canvas, float minDistance, float maxDistance, float minDegrees, float maxDegrees)
+        {
+            var head = Camera.main.transform;
+            Assert.That(canvas.transform.IsChildOf(head), Is.False, "Not head-locked.");
+            var toPanel = canvas.transform.position - head.position;
+            Assert.That(toPanel.magnitude, Is.InRange(minDistance, maxDistance));
+            Assert.That(Vector3.Angle(Vector3.ProjectOnPlane(head.forward, Vector3.up), Vector3.ProjectOnPlane(toPanel, Vector3.up)),
+                Is.LessThan(10f), "In front of the viewer.");
+            var rect = (RectTransform)canvas.transform;
+            var width = rect.rect.width * rect.lossyScale.x;
+            var degrees = 2f * Mathf.Atan(width * 0.5f / toPanel.magnitude) * Mathf.Rad2Deg;
+            Assert.That(degrees, Is.InRange(minDegrees, maxDegrees), "The whole panel fits in the sharp part of the lens.");
         }
 
         static Component FindSceneComponent(string typeName, Scene scene, bool includeInactive = false)

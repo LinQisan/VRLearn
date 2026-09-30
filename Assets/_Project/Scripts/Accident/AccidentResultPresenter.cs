@@ -12,8 +12,10 @@ using TMPro;
 [DisallowMultipleComponent]
 public sealed class AccidentResultPresenter : MonoBehaviour
 {
-    const float ResultViewingDistance = 1.25f;
-    const float ResultPanelScale = 0.8f;
+    // world-locked panel: 1.6 m away, 60° wide: body text (26) ≈ 1.1° (whole page inside the sharp part of the lens)
+    public const float ResultViewingDistance = 1.6f;
+    public const float ResultAngularWidth = 60f;
+    static readonly Vector2 PanelSize = new Vector2(1400f, 820f);
 
     [SerializeField] GameObject[] scenarioPanels;
     [SerializeField] GameObject instructionRoot;
@@ -114,10 +116,7 @@ public sealed class AccidentResultPresenter : MonoBehaviour
     private void LateUpdate()
     {
         if (visible)
-        {
-            AnchorReadableCanvas();
             OpenXRScene.SetControllerVisualsVisible(false);
-        }
     }
 
     /// <summary>Feedback after an accident (replay has already been shown).</summary>
@@ -163,7 +162,9 @@ public sealed class AccidentResultPresenter : MonoBehaviour
             Debug.LogError("The accident result canvas could not be created.", this);
             return;
         }
-        AnchorReadableCanvas();
+        PlaceReadableCanvas();
+        // only UI is drawn from here on: a larger eye buffer keeps the text crisp
+        VrPanel.SetEyeResolution(1.3f);
         if (isolatedCamera == null && OpenXRScene.MainCamera != null)
         {
             isolatedCamera = OpenXRScene.MainCamera;
@@ -336,18 +337,16 @@ public sealed class AccidentResultPresenter : MonoBehaviour
             typeof(CanvasScaler));
         canvasObject.layer = LayerMask.NameToLayer("UI");
         readableCanvas = canvasObject.GetComponent<Canvas>();
-        readableCanvas.renderMode = RenderMode.ScreenSpaceCamera;
+        readableCanvas.renderMode = RenderMode.WorldSpace;
         readableCanvas.worldCamera = OpenXRScene.MainCamera;
-        readableCanvas.planeDistance = ResolveResultPlaneDistance(OpenXRScene.MainCamera);
         readableCanvas.overrideSorting = true;
         readableCanvas.sortingOrder = 32000;
 
         var canvasRect = canvasObject.GetComponent<RectTransform>();
-        var scaler = canvasObject.GetComponent<CanvasScaler>();
-        scaler.uiScaleMode = CanvasScaler.ScaleMode.ScaleWithScreenSize;
-        scaler.referenceResolution = new Vector2(1920f, 1080f);
-        scaler.screenMatchMode = CanvasScaler.ScreenMatchMode.MatchWidthOrHeight;
-        scaler.matchWidthOrHeight = 0.5f;
+        canvasRect.sizeDelta = PanelSize;
+        canvasRect.localScale = Vector3.one * VrPanel.ScaleFor(PanelSize.x, ResultAngularWidth, ResultViewingDistance);
+        canvasObject.GetComponent<CanvasScaler>().dynamicPixelsPerUnit = 3f;
+        canvasObject.AddComponent<VrPanel>();
         if (MetaEditorSimulationController.IsActive)
         {
             MetaEditorSimulationController.ConfigureCanvas(readableCanvas);
@@ -360,13 +359,11 @@ public sealed class AccidentResultPresenter : MonoBehaviour
             raycaster.blockingMask = 0;
         }
 
-        // The full-screen canvas is rendered immediately in front of the XR
-        // near plane. Only this centered panel is visible, while scene geometry
-        // can no longer be drawn over it.
+        // The camera draws only the UI layer while this page is shown, in front of the
+        // head-locked black backdrop, so no scene geometry can cover it.
         var font = runtimeFont;
-        var panelRect = UiKit.Box(canvasRect, "ResultPanel", UiKit.Panel, Vector2.zero, new Vector2(1400f, 820f), 1.4f);
+        var panelRect = UiKit.Box(canvasRect, "ResultPanel", UiKit.Panel, Vector2.zero, PanelSize, 1.4f);
         readablePanel = panelRect;
-        panelRect.localScale = Vector3.one * ResultPanelScale;
         accentStrip = UiKit.Box(panelRect, "AccentStrip", UiKit.Coral, new Vector2(-610f, 372f), new Vector2(120f, 10f), 0.3f)
             .GetComponent<Image>();
 
@@ -422,7 +419,7 @@ public sealed class AccidentResultPresenter : MonoBehaviour
         readableReturnButton.onClick.AddListener(TitleButtonFeedback.PlayClickFeedback);
         readableReturnButton.onClick.AddListener(ReturnToMenu);
 
-        UiKit.Label(panelRect, "Footer", font, "A / X・Enter：タイトルへ　　R：もう一度体験", 22f,
+        UiKit.Label(panelRect, "Footer", font, "A / X・Enter：タイトルへ　　R：もう一度体験", 24f,
             new Vector2(0f, -372f), new Vector2(1300f, 36f), UiKit.Muted, FontStyles.Normal, TextAlignmentOptions.Center);
 
         var returnNavigation = readableReturnButton.navigation;
@@ -485,30 +482,16 @@ public sealed class AccidentResultPresenter : MonoBehaviour
         blackoutCanvas.gameObject.SetActive(false);
     }
 
-    void AnchorReadableCanvas()
+    /// <summary>World-locked in front of the participant (see <see cref="VrPanel"/>).</summary>
+    void PlaceReadableCanvas()
     {
         var camera = OpenXRScene.MainCamera;
         if (readableCanvas == null || camera == null)
             return;
-
-        readableCanvas.renderMode = RenderMode.ScreenSpaceCamera;
         readableCanvas.worldCamera = camera;
-        readableCanvas.planeDistance = ResolveResultPlaneDistance(camera);
-        if (readableCanvas.transform.parent != camera.transform)
-            readableCanvas.transform.SetParent(camera.transform, false);
-        readableCanvas.transform.localPosition = Vector3.zero;
-        readableCanvas.transform.localRotation = Quaternion.identity;
-        readableCanvas.transform.localScale = Vector3.one;
-    }
-
-    static float ResolveResultPlaneDistance(Camera camera)
-    {
-        if (camera == null)
-            return ResultViewingDistance;
-        return Mathf.Clamp(
-            ResultViewingDistance,
-            camera.nearClipPlane + 0.05f,
-            camera.farClipPlane - 0.1f);
+        if (readableCanvas.transform.parent != null)
+            readableCanvas.transform.SetParent(null, true);
+        readableCanvas.GetComponent<VrPanel>().Attach(camera.transform, ResultViewingDistance);
     }
 
     public void Hide()

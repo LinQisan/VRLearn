@@ -19,7 +19,7 @@ public class TrafficLightController : MonoBehaviour
                 onVirtualUpdate: (tweenValue) => {
                     GetComponent<Renderer>().material.color = tweenValue;
                 }
-            );
+            ).SetLink(gameObject);   // stops with the light when the scene unloads
             // Emissionを有効化
             GetComponent<Renderer>().material.EnableKeyword("_EMISSION");
             GetComponent<Renderer>().material.SetColor("_EmissionColor",new Color(255, 0, 0, 1) * 1f);
@@ -35,7 +35,7 @@ public class TrafficLightController : MonoBehaviour
                 onVirtualUpdate: (tweenValue) => {
                     GetComponent<Renderer>().material.color = tweenValue;
                 }
-            );
+            ).SetLink(gameObject);   // stops with the light when the scene unloads
             //オフ
             GetComponent<Renderer>().material.DisableKeyword("_EMISSION");
             GetComponent<Renderer>().material.SetColor("_EmissionColor", Color.black);
@@ -51,7 +51,7 @@ public class TrafficLightController : MonoBehaviour
                 onVirtualUpdate: (tweenValue) => {
                     GetComponent<Renderer>().material.color = tweenValue;
                 }
-            );
+            ).SetLink(gameObject);   // stops with the light when the scene unloads
             //オフ
             GetComponent<Renderer>().material.DisableKeyword("_EMISSION");
             GetComponent<Renderer>().material.SetColor("_EmissionColor", Color.black);
@@ -71,7 +71,7 @@ public class TrafficLightController : MonoBehaviour
                 onVirtualUpdate: (tweenValue) => {
                     GetComponent<Renderer>().material.color = tweenValue;
                 }
-            );
+            ).SetLink(gameObject);   // stops with the light when the scene unloads
             //オフ
             GetComponent<Renderer>().material.DisableKeyword("_EMISSION");
             GetComponent<Renderer>().material.SetColor("_EmissionColor", Color.black);
@@ -87,7 +87,7 @@ public class TrafficLightController : MonoBehaviour
                 onVirtualUpdate: (tweenValue) => {
                     GetComponent<Renderer>().material.color = tweenValue;
                 }
-            );
+            ).SetLink(gameObject);   // stops with the light when the scene unloads
             // Emissionを有効化
             GetComponent<Renderer>().material.EnableKeyword("_EMISSION");
             GetComponent<Renderer>().material.SetColor("_EmissionColor", new Color(255, 255, 0, 1) * 1f);
@@ -103,7 +103,7 @@ public class TrafficLightController : MonoBehaviour
                 onVirtualUpdate: (tweenValue) => {
                     GetComponent<Renderer>().material.color = tweenValue;
                 }
-            );
+            ).SetLink(gameObject);   // stops with the light when the scene unloads
             //オフ
             GetComponent<Renderer>().material.DisableKeyword("_EMISSION");
             GetComponent<Renderer>().material.SetColor("_EmissionColor", Color.black);
@@ -123,7 +123,7 @@ public class TrafficLightController : MonoBehaviour
                 onVirtualUpdate: (tweenValue) => {
                     GetComponent<Renderer>().material.color = tweenValue;
                 }
-            );
+            ).SetLink(gameObject);   // stops with the light when the scene unloads
             //オフ
             GetComponent<Renderer>().material.DisableKeyword("_EMISSION");
             GetComponent<Renderer>().material.SetColor("_EmissionColor", Color.black);
@@ -139,7 +139,7 @@ public class TrafficLightController : MonoBehaviour
                 onVirtualUpdate: (tweenValue) => {
                     GetComponent<Renderer>().material.color = tweenValue;
                 }
-            );
+            ).SetLink(gameObject);   // stops with the light when the scene unloads
             //オフ
             GetComponent<Renderer>().material.DisableKeyword("_EMISSION");
             GetComponent<Renderer>().material.SetColor("_EmissionColor", Color.black);
@@ -155,7 +155,7 @@ public class TrafficLightController : MonoBehaviour
                 onVirtualUpdate: (tweenValue) => {
                     GetComponent<Renderer>().material.color = tweenValue;
                 }
-            );
+            ).SetLink(gameObject);   // stops with the light when the scene unloads
             // Emissionを有効化
             GetComponent<Renderer>().material.EnableKeyword("_EMISSION");
             GetComponent<Renderer>().material.SetColor("_EmissionColor", new Color(0, 255, 0, 1) * 1f);
