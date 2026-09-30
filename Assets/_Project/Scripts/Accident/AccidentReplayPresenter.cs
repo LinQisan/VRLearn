@@ -11,7 +11,9 @@ using UnityEngine.UI;
 /// Post-accident replay: the recorded ~10 s before and just after contact, shown at once from
 /// three synchronised cameras — overview (large, left), the participant's own eyes and the
 /// driver's seat (stacked on the right, together half the overview's area). Replay and Skip
-/// buttons sit below. Everything is render-only: live physics is never rewound.
+/// buttons sit below. At the end the replay stops on its last frame until the participant
+/// presses "結果へ進む" (or A/X); it never advances by itself. Everything is render-only: live
+/// physics is never rewound.
 /// </summary>
 [DisallowMultipleComponent]
 public sealed class AccidentReplayPresenter : MonoBehaviour
@@ -21,7 +23,6 @@ public sealed class AccidentReplayPresenter : MonoBehaviour
     const float SlowMotionFrom = 0.8f;        // seconds before contact
     const float SlowMotionUntil = 0.4f;       // seconds after contact
     const float SlowMotionRate = 0.45f;
-    const float EndHold = 1.2f;
     // world-locked panel 1.7 m away and 64° wide (see VrPanel); a head-locked black backdrop behind it
     public const float PanelDistance = 1.7f;
     public const float PanelAngularWidth = 64f;
@@ -60,6 +61,7 @@ public sealed class AccidentReplayPresenter : MonoBehaviour
     string pendingScenarioLabel = string.Empty;
     Image[] viewFrames;
     Button replayButton, skipButton;
+    TMP_Text skipLabel, hintLabel;
     int savedDisplayMask;
     bool visible;
 
@@ -73,6 +75,8 @@ public sealed class AccidentReplayPresenter : MonoBehaviour
 
     public bool IsVisible => visible;
     public bool IsPlaying { get; private set; }
+    /// <summary>The playhead reached the end; waiting for the participant to go on.</summary>
+    public bool IsWaitingAtEnd { get; private set; }
     public Camera OverviewCamera => overviewCamera;
     public Camera ParticipantCamera => participantCamera;
     public Camera DriverCamera => driverCamera;
@@ -107,7 +111,9 @@ public sealed class AccidentReplayPresenter : MonoBehaviour
 
     public ReplayMannequin Participant => participant;
 
-    /// <summary>Runs the replay until the participant skips or it ends; then hides itself.</summary>
+    /// <summary>
+    /// Runs the replay until the participant skips or, after it ends, presses Next; then hides itself.
+    /// </summary>
     /// <param name="weightKg">menu weight; 0 = average build for the height</param>
     public IEnumerator Run(AccidentReplayRecording source, AvatarPresenter avatar, float heightMeters, float weightKg = 0f)
     {
@@ -158,7 +164,7 @@ public sealed class AccidentReplayPresenter : MonoBehaviour
             restartRequested = false;
             playhead = start;
             ResetOverviewFraming();
-            var holdUntil = -1f;
+            SetWaitingAtEnd(false);
             while (!skipRequested && !restartRequested)
             {
                 if (OpenXRInput.PrimaryButtonDown) skipRequested = true;
@@ -178,16 +184,26 @@ public sealed class AccidentReplayPresenter : MonoBehaviour
                     Debug.LogException(exception, this);
                     skipRequested = true;
                 }
-                if (playhead >= end)
-                {
-                    if (holdUntil < 0f) holdUntil = Time.unscaledTime + EndHold;
-                    else if (Time.unscaledTime >= holdUntil) { skipRequested = true; }
-                }
+                // stay on the last frame: the participant decides when to go on
+                if (playhead >= end && !IsWaitingAtEnd)
+                    SetWaitingAtEnd(true);
                 yield return null;
             }
         }
+        SetWaitingAtEnd(false);
         IsPlaying = false;
         Hide();
+    }
+
+    void SetWaitingAtEnd(bool waiting)
+    {
+        IsWaitingAtEnd = waiting;
+        if (skipLabel != null)
+            skipLabel.text = waiting ? "結果へ進む / Next" : "スキップ / Skip";
+        if (hintLabel != null)
+            hintLabel.text = waiting
+                ? "<color=#FBBF24>再生が終わりました。「結果へ進む」か A / X で結果へ。</color>　B / Y：もう一度再生"
+                : "B / Y：もう一度再生　　A / X：スキップ";
     }
 
     public void Skip() => skipRequested = true;
@@ -232,9 +248,18 @@ public sealed class AccidentReplayPresenter : MonoBehaviour
             var earlier = recording.Sample(body.active ? recording.body : recording.head, time - 0.15f);
             var current = body.active ? body.position : head.position;
             var velocity = Vector3.ProjectOnPlane(current - earlier.position, Vector3.up) / 0.15f;
-            var seated = recording.bicycle != null && recording.Sample(recording.bicycle, time).active;
+            var bikePose = recording.bicycle != null ? recording.Sample(recording.bicycle, time) : default;
+            var seated = bikePose.active;
             var fall = time > impact ? Mathf.Clamp01((time - impact) / 0.7f) : 0f;
-            participant.Pose(head, ground, velocity, seated, fall, fallDirection, Mathf.Max(delta, 0.0001f));
+            // riding: the figure sits on the recorded bicycle (not just under the head) until the crash
+            Vector3? seat = null;
+            var seatForward = Vector3.zero;
+            if (seated && fall <= 0f && recording.TrySeat(bikePose, out var seatPoint, out var forward))
+            {
+                seat = seatPoint;
+                seatForward = forward;
+            }
+            participant.Pose(head, ground, velocity, seated, fall, fallDirection, Mathf.Max(delta, 0.0001f), seat, seatForward);
             UpdateGaze(head);
         }
         if (bicycleCopy != null && recording.bicycle != null)
@@ -625,9 +650,10 @@ public sealed class AccidentReplayPresenter : MonoBehaviour
             "もう一度再生 / Replay", UiKit.CardRaised, UiKit.Text, Replay);
         skipButton = ButtonBox(panel, "Button_Skip", new Vector2(260f, -410f), new Vector2(480f, 90f),
             "スキップ / Skip", UiKit.Amber, UiKit.Ink, Skip);
-        var hint = Text(panel, "Hint", new Vector2(0f, -470f), new Vector2(1600f, 34f), 24f, FontStyles.Normal, TextAlignmentOptions.Center);
-        hint.text = "B / Y：もう一度再生　　A / X：スキップ";
-        hint.color = UiKit.Muted;
+        skipLabel = skipButton.GetComponentInChildren<TMP_Text>(true);
+        hintLabel = Text(panel, "Hint", new Vector2(0f, -470f), new Vector2(1600f, 34f), 24f, FontStyles.Normal, TextAlignmentOptions.Center);
+        hintLabel.color = UiKit.Muted;
+        SetWaitingAtEnd(false);
         canvas.gameObject.SetActive(false);
     }
 

@@ -85,35 +85,30 @@ namespace VRLearn.Tests.PlayMode
             var toneTiles = FindOptionTiles(scene, "Hz");
             Assert.That(eventTiles.Count, Is.EqualTo(11), "RANDOM + scenarios 0-9 must all be tiled.");
             Assert.That(toneTiles.Count, Is.EqualTo(16), "None + 3000-17000 Hz must all be tiled.");
-            // the menu is split into steps; every tile is reachable on one of them, and on every step
-            // all text is at least 0.9° tall and every tile at least 2.5° (Quest 2: ~20 px per degree)
-            var pages = FindSceneComponent("TitleMenuPages", scene, true);
-            Assert.That(pages, Is.Not.Null);
-            var pageCount = (int)pages.GetType().GetProperty("Count").GetValue(pages);
-            var reachable = new HashSet<Toggle>();
+            // everything is on one page: every tile is visible, at least 2.5° (Quest 2: ~20 px per
+            // degree), all text is at least 0.9° tall, and the controller ray reaches every control
+            Assert.That(FindSceneComponent("TitleMenuSummary", scene, true), Is.Not.Null);
             float Degrees(float units) => Mathf.Atan(units * canvas.transform.lossyScale.x / menuDistance) * Mathf.Rad2Deg;
-            for (var p = 0; p < pageCount; p++)
+            foreach (var tile in eventTiles.Concat(toneTiles))
             {
-                Invoke(pages, "ShowPage", p);
-                yield return null;
-                foreach (var tile in eventTiles.Concat(toneTiles).Where(t => t.gameObject.activeInHierarchy))
-                {
-                    reachable.Add(tile);
-                    Assert.That(tile.interactable, Is.True, tile.name);
-                    var size = ((RectTransform)tile.transform).rect.size;
-                    Assert.That(Degrees(Mathf.Min(size.x, size.y)), Is.GreaterThanOrEqualTo(2.5f),
-                        $"{tile.name} is too small to hit with a Touch ray.");
-                }
-                foreach (var text in canvas.GetComponentsInChildren<Component>(false).Where(c => c.GetType().Name == "TextMeshProUGUI"))
-                {
-                    var fontSize = (float)text.GetType().GetProperty("fontSize").GetValue(text);
-                    if (string.IsNullOrWhiteSpace(GetText(text)))
-                        continue;
-                    Assert.That(Degrees(fontSize), Is.GreaterThanOrEqualTo(0.9f),
-                        $"'{GetText(text)}' ({text.name}) is too small to read on Quest 2.");
-                }
+                Assert.That(tile.gameObject.activeInHierarchy, Is.True, tile.name + " must be visible without paging.");
+                Assert.That(tile.interactable, Is.True, tile.name);
+                var size = ((RectTransform)tile.transform).rect.size;
+                Assert.That(Degrees(Mathf.Min(size.x, size.y)), Is.GreaterThanOrEqualTo(2.5f),
+                    $"{tile.name} is too small to hit with a Touch ray.");
             }
-            Assert.That(reachable.Count, Is.EqualTo(eventTiles.Count + toneTiles.Count), "Every tile is on one of the steps.");
+            foreach (var text in canvas.GetComponentsInChildren<Component>(false).Where(c => c.GetType().Name == "TextMeshProUGUI"))
+            {
+                var fontSize = (float)text.GetType().GetProperty("fontSize").GetValue(text);
+                if (string.IsNullOrWhiteSpace(GetText(text)))
+                    continue;
+                Assert.That(Degrees(fontSize), Is.GreaterThanOrEqualTo(0.9f),
+                    $"'{GetText(text)}' ({text.name}) is too small to read on Quest 2.");
+            }
+            var menuSize = ((RectTransform)canvas.transform).rect.size * canvas.transform.lossyScale.x;
+            Assert.That(2f * Mathf.Atan(menuSize.x / 2f / menuDistance) * Mathf.Rad2Deg, Is.LessThanOrEqualTo(80f),
+                "The one-page menu stays within a comfortable width.");
+            AssertEveryControlIsHitByThePointer(canvas);
             var nine = eventTiles.First(t => (int)GetField(t.GetComponent("TitleOptionToggle"), "intValue") == 9);
             nine.isOn = true;
             Assert.That(director.GetType().GetField("EventNumber")?.GetValue(director), Is.EqualTo(9),
@@ -122,6 +117,56 @@ namespace VRLearn.Tests.PlayMode
             tone.isOn = true;
             Assert.That(director.GetType().GetField("Hz")?.GetValue(director), Is.EqualTo(12000f));
             Assert.That(FindCommandButton(scene, "EventDown"), Is.Null, "The scenario stepper was replaced by tiles.");
+        }
+
+        /// <summary>
+        /// The controller ray must reach every visible control: it is interactable (no CanvasGroup
+        /// switches it off), its canvas has a raycaster, and at its centre it is the top-most
+        /// raycast target (no label, heading or panel drawn over it).
+        /// </summary>
+        static void AssertEveryControlIsHitByThePointer(Canvas canvas)
+        {
+            bool Blocks(Graphic g)
+            {
+                if (!g.raycastTarget || !g.isActiveAndEnabled)
+                    return false;
+                for (var t = g.transform; t != null; t = t.parent)
+                {
+                    var group = t.GetComponent<CanvasGroup>();
+                    if (group != null && group.enabled)
+                    {
+                        if (!group.blocksRaycasts)
+                            return false;
+                        if (group.ignoreParentGroups)
+                            break;
+                    }
+                }
+                return true;
+            }
+            // depth-first order is the draw order: later graphics are on top
+            var targets = canvas.GetComponentsInChildren<Graphic>(false).Where(Blocks).ToList();
+            var problems = new List<string>();
+            foreach (var control in canvas.GetComponentsInChildren<Selectable>(false))
+            {
+                if (!control.interactable)
+                    continue;  // deliberately disabled (e.g. a page arrow on the first page)
+                if (!control.IsInteractable())
+                {
+                    problems.Add(control.name + " (switched off by a CanvasGroup)");
+                    continue;
+                }
+                var owner = control.GetComponentInParent<Canvas>();
+                if (owner.GetComponent<BaseRaycaster>() == null)
+                {
+                    problems.Add($"{control.name} (canvas {owner.name} has no raycaster)");
+                    continue;
+                }
+                var center = control.transform.TransformPoint(((RectTransform)control.transform).rect.center);
+                var top = targets.LastOrDefault(g => g.rectTransform.rect.Contains(g.rectTransform.InverseTransformPoint(center)));
+                if (top == null || top.GetComponentInParent<Selectable>() != control)
+                    problems.Add($"{control.name} (covered by {(top != null ? top.name : "nothing")})");
+            }
+            Assert.That(problems, Is.Empty, "The controller ray cannot reach: " + string.Join(", ", problems));
         }
 
         static List<Toggle> FindOptionTiles(Scene scene, string kind)
@@ -174,6 +219,11 @@ namespace VRLearn.Tests.PlayMode
             Assert.That(active.GetType().GetProperty("Id")?.GetValue(active), Is.EqualTo(scenarioId));
             Assert.That(CountActiveScenarioRoots(runtime), Is.EqualTo(1));
             Assert.That(flow.GetType().GetProperty("Phase")?.GetValue(flow)?.ToString(), Is.EqualTo("Playing"));
+            var rays = scene.GetRootGameObjects().SelectMany(r => r.GetComponentsInChildren<Component>(true))
+                .Where(c => c != null && c.GetType().Name == "XRRayInteractor").ToList();
+            Assert.That(rays, Is.Not.Empty);
+            Assert.That(rays.Any(r => r.gameObject.activeInHierarchy), Is.False,
+                "No pointer ray while walking or riding.");
 
             var expectedBicycle = scenarioId == 6 || scenarioId == 7 || scenarioId == 9;
             Assert.That(active.GetType().GetProperty("PlayerMode")?.GetValue(active)?.ToString(),
@@ -212,6 +262,8 @@ namespace VRLearn.Tests.PlayMode
             Assert.That(summary, Is.Not.Null);
             Assert.That(GetText(title), Does.Contain((scenarioId + 1).ToString()));
             Assert.That(GetText(summary), Is.Not.Empty);
+            Assert.That(rays.All(r => r.gameObject.activeInHierarchy && r.GetComponent<LineRenderer>().enabled), Is.True,
+                "The feedback page shows the pointer rays.");
             var readableCanvas = GetField(results, "readableCanvas") as Canvas;
             Assert.That(readableCanvas, Is.Not.Null);
             Assert.That(readableCanvas.renderMode, Is.EqualTo(RenderMode.WorldSpace),
@@ -310,6 +362,10 @@ namespace VRLearn.Tests.PlayMode
                 Is.LessThan(canvas.transform.Find("ReplayPanel/View_Participant").localPosition.x));
             Assert.That(canvas.transform.Find("ReplayPanel/Button_Replay"), Is.Not.Null);
             Assert.That(canvas.transform.Find("ReplayPanel/Button_Skip"), Is.Not.Null);
+            var replayRays = scene.GetRootGameObjects().SelectMany(r => r.GetComponentsInChildren<Component>(true))
+                .Where(c => c != null && c.GetType().Name == "XRRayInteractor").ToList();
+            Assert.That(replayRays.All(r => r.gameObject.activeInHierarchy && r.GetComponent<LineRenderer>().enabled), Is.True,
+                "The replay shows the pointer rays for Replay / Next.");
 
             // the participant is shown as a figure of the menu height, on a layer their own view skips
             var figure = replay.GetType().GetProperty("Participant").GetValue(replay) as Component;
@@ -322,7 +378,20 @@ namespace VRLearn.Tests.PlayMode
             Assert.That(participant.cullingMask & (1 << figure.gameObject.layer), Is.Zero);
             Assert.That(figure.GetComponentsInChildren<Renderer>().Length, Is.GreaterThan(10));
 
-            // skip -> feedback
+            // at the end the replay stays on its last frame until the participant presses Next
+            bool WaitingAtEnd() => (bool)replay.GetType().GetProperty("IsWaitingAtEnd").GetValue(replay);
+            deadline = Time.realtimeSinceStartup + 20f;
+            while (!WaitingAtEnd() && Time.realtimeSinceStartup < deadline)
+                yield return null;
+            Assert.That(WaitingAtEnd(), Is.True, "The replay reaches its end.");
+            yield return new WaitForSecondsRealtime(3f);
+            Assert.That(flow.GetType().GetProperty("Phase")?.GetValue(flow)?.ToString(), Is.EqualTo("Replay"),
+                "The replay must not advance to feedback by itself.");
+            Assert.That(replay.GetType().GetProperty("IsVisible").GetValue(replay), Is.True);
+            Assert.That(GetText(canvas.transform.Find("ReplayPanel/Button_Skip").GetComponentsInChildren<Component>(true)
+                .First(c => c.GetType().Name == "TextMeshProUGUI")), Does.Contain("結果へ"));
+
+            // Next -> feedback
             Invoke(replay, "Skip");
             deadline = Time.realtimeSinceStartup + 3f;
             while (flow.GetType().GetProperty("Phase")?.GetValue(flow)?.ToString() != "Results" && Time.realtimeSinceStartup < deadline)

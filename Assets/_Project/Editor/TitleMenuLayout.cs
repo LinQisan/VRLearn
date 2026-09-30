@@ -17,8 +17,8 @@ public static class TitleMenuLayout
 {
     const string TitleScene = "Assets/_Project/Scenes/Title.unity";
     const string Root = "MenuWorldRoot/Canvas_TitleMenu";
-    const float W = 120f, H = 76f;
-    public const float MenuWidthMeters = 2.0f;
+    const float W = 150f, H = 88f;
+    public const float MenuWidthMeters = 2.5f;
     public const float ViewingDistance = 1.6f;
 
     static readonly Color Panel = new Color32(11, 18, 32, 245);
@@ -43,7 +43,7 @@ public static class TitleMenuLayout
         var menu = canvas.Find("MenuRoot") as RectTransform;
         var page = menu.Find("Page_Main") as RectTransform;
         canvas.sizeDelta = menu.sizeDelta = page.sizeDelta = new Vector2(W, H);
-        // 2.0 m wide at 1.6 m (MetaTitleSceneSetup): 1 unit ≈ 0.6°, body text 2.2 ≈ 1.3° (legible on Quest 2)
+        // 2.5 m wide at 1.6 m (MetaTitleSceneSetup): 1 unit ≈ 0.6°, body text 2.0 ≈ 1.2° (legible on Quest 2)
         canvas.localScale = Vector3.one * (MenuWidthMeters / W / canvas.parent.lossyScale.x);
         var setup = UnityEngine.Object.FindFirstObjectByType<MetaTitleSceneSetup>(FindObjectsInactive.Include);
         if (setup != null)
@@ -62,102 +62,100 @@ public static class TitleMenuLayout
         if (outline) { outline.effectColor = CardEdge; outline.effectDistance = new Vector2(0.2f, -0.2f); }
         menu.Find("BackgroundInner").gameObject.SetActive(false);
         menu.Find("Header_Background").gameObject.SetActive(false);
+        // the header has its own non-interactive canvas group: it must never hold a control
         var header = menu.Find("Header_Content") as RectTransform;
-        Place(header, 0, H / 2 - 5f, W - 6, 8);
+        foreach (var n in new[] { "Tab_Step1", "Tab_Step2", "Tab_Step3" })
+            Remove(header, n);
+        Place(header, 0, H / 2 - 4.5f, W - 6, 7);
         var brand = Ensure(header, "Accent_Bar", null, typeof(Image));
-        Place(brand, -(W - 6) / 2 + 0.7f, 0f, 1.4f, 6.6f);
+        Place(brand, -(W - 6) / 2 + 0.7f, 0f, 1.4f, 6f);
         Style(brand.GetComponent<Image>(), Accent, 20f);
         brand.GetComponent<Image>().raycastTarget = false;
         var title = header.Find("Title");
-        Place(title, -28f, 1.3f, 54f, 4.6f);
-        Text(title, "Deadly Bounce Simulator", 3.4f, TextMain, TextAlignmentOptions.Left, FontStyles.Bold);
+        Place(title, -(W - 6) / 2 + 33f, 1.2f, 62f, 4.4f);
+        Text(title, "Deadly Bounce Simulator", 3.2f, TextMain, TextAlignmentOptions.Left, FontStyles.Bold);
         var subtitle = header.Find("Subtitle");
-        Place(subtitle, -28f, -2.6f, 54f, 2.6f);
-        Text(subtitle, "彦根・京橋 ・ Aoi Miyamura - Shiga Univ. Kawai Lab.", 1.7f, TextSub, TextAlignmentOptions.Left);
+        Place(subtitle, -(W - 6) / 2 + 33f, -2.3f, 62f, 2.4f);
+        Text(subtitle, "彦根・京橋 ・ Aoi Miyamura - Shiga Univ. Kawai Lab.", 1.6f, TextSub, TextAlignmentOptions.Left);
         foreach (var n in new[] { "Chip_Environment", "Hint_Controls" })
             header.Find(n)?.gameObject.SetActive(false);
 
-        // ---------------------------------------------------------------- steps
-        var steps = new[] { FullRect(page, "Step_1"), FullRect(page, "Step_2"), FullRect(page, "Step_3") };
-        var user = FindDeep("Card_UserInformation"); user.SetParent(steps[0], false);
-        var survey = FindDeep("Card_SurveyInformation"); survey.SetParent(steps[0], false);
-        var cond = FindDeep("Card_ScenarioConditions"); cond.SetParent(steps[1], false);
-        var tone = FindDeep("Card_SoundQuickSelect"); tone.SetParent(steps[1], false);
-        var evt = FindDeep("Card_EventNumber"); evt.SetParent(steps[2], false);
-        const float bodyY = 1f, bodyH = 54f;
-        Card(user.parent, user.name, -29.5f, bodyY, 57, bodyH, "参加者 / Participant");
-        Card(survey.parent, survey.name, 29.5f, bodyY, 57, bodyH, "調査 / Survey");
-        Card(cond.parent, cond.name, -29.5f, bodyY, 57, bodyH, "場面条件 / Conditions");
-        Card(tone.parent, tone.name, 29.5f, bodyY, 57, bodyH, "不快音 / Unpleasant tone");
-        Card(evt.parent, evt.name, 0f, bodyY, 116, bodyH, "");
+        // ---------------------------------------------------------------- one page
+        // v0.2.1 split the menu into three steps; everything is back on one page (the step tabs
+        // sat in the non-interactive header, so step ③ could not be reached on the headset).
+        var user = FindDeep("Card_UserInformation"); user.SetParent(page, false);
+        var survey = FindDeep("Card_SurveyInformation"); survey.SetParent(page, false);
+        var cond = FindDeep("Card_ScenarioConditions"); cond.SetParent(page, false);
+        var tone = FindDeep("Card_SoundQuickSelect"); tone.SetParent(page, false);
+        var evt = FindDeep("Card_EventNumber"); evt.SetParent(page, false);
+        foreach (var n in new[] { "Step_1", "Step_2", "Step_3" })
+            Remove(page, n);
+        // top band: participant, conditions, survey, tone
+        const float topY = 17f, topH = 35f;
+        Card(page, user.name, -50f, topY, 48, topH, "参加者 / Participant");
+        Card(page, cond.name, -7f, topY, 34, topH, "場面条件 / Conditions");
+        Card(page, survey.name, 27f, topY, 30, topH, "調査 / Survey");
+        Card(page, tone.name, 58.5f, topY, 31, topH, "不快音 / Tone (Hz)");
+        // bottom band: scenarios (with the detail of the selected one), then the start column
+        const float bottomY = -22.25f, bottomH = 41.5f;
+        Card(page, evt.name, -17f, bottomY, 114, bottomH, "場面 / Scenario");
 
-        // step tabs in the header
-        var reset0 = page.Find("Button_Reset");
-        var tabNames = new[] { "① 参加者", "② 条件", "③ 場面" };
-        var tabs = new Button[3];
-        for (var i = 0; i < 3; i++)
-        {
-            tabs[i] = PlainButton(reset0, header, "Tab_Step" + (i + 1), 13f + i * 16.5f, 0f, 15.5f, 6.4f, tabNames[i]);
-            tabs[i].transform.Find("Label").GetComponent<TMP_Text>().fontSize = 2.3f;
-        }
-
-        // ① participant: steppers + gender
-        float[] rows = { 13.5f, 4f, -5.5f, -15f };
+        // participant: steppers + gender
+        float[] rows = { 8.4f, 1.4f, -5.6f, -12.6f };
+        const float rowH = 6.2f;
         string[] stepped = { "Height", "Weight", "Age" };
         for (var i = 0; i < stepped.Length; i++)
         {
             var y = rows[i];
-            RowLabel(user.Find("Label_" + stepped[i]), -19.5f, y, 13f);
-            Command(user.Find($"Button_{stepped[i]}_Down"), -5f, y, 8f, 7.4f, "-5");
+            RowLabel(user.Find("Label_" + stepped[i]), -16.5f, y, 13f);
+            Command(user.Find($"Button_{stepped[i]}_Down"), -4f, y, 7.5f, rowH, "-5");
             var field = user.Find("Field_" + stepped[i]);
-            Place(field, 7.5f, y, 14f, 7.4f);
+            Place(field, 6.5f, y, 12f, rowH);
             Style(field.GetComponent<Image>(), FieldColor, 10f);
             var value = field.Find("Value_" + stepped[i]);
-            Place(value, -1.6f, 0, 9.5f, 7.4f);
-            Text(value, null, 3.6f, TextMain, TextAlignmentOptions.Right, FontStyles.Bold);
+            Place(value, -1.4f, 0, 8f, rowH);
+            Text(value, null, 3.4f, TextMain, TextAlignmentOptions.Right, FontStyles.Bold);
             var unit = field.Find("Unit_" + stepped[i]);
-            Place(unit, 4.9f, -0.8f, 3.6f, 3.4f);
+            Place(unit, 4.2f, -0.7f, 3.4f, 3.2f);
             Text(unit, null, 1.7f, TextSub, TextAlignmentOptions.Left);
-            Command(user.Find($"Button_{stepped[i]}_Up"), 20f, y, 8f, 7.4f, "+5");
+            Command(user.Find($"Button_{stepped[i]}_Up"), 17f, y, 7.5f, rowH, "+5");
             foreach (var b in new[] { "Down", "Up" })
-                user.Find($"Button_{stepped[i]}_{b}/Label").GetComponent<TMP_Text>().fontSize = 2.6f;
+                user.Find($"Button_{stepped[i]}_{b}/Label").GetComponent<TMP_Text>().fontSize = 2.4f;
         }
-        RowLabel(user.Find("Label_Gender"), -19.5f, rows[3], 13f);
-        Tile(user.Find("Gender_Male"), -4.5f, rows[3], 11.8f, 7.4f, "男\n<size=80%>Male</size>", 2.1f);
-        Tile(user.Find("Gender_Female"), 8f, rows[3], 11.8f, 7.4f, "女\n<size=80%>Female</size>", 2.1f);
-        Tile(user.Find("Gender_Unknown"), 20.5f, rows[3], 11.8f, 7.4f, "不明\n<size=80%>Other</size>", 2.1f);
+        RowLabel(user.Find("Label_Gender"), -16.5f, rows[3], 13f);
+        Tile(user.Find("Gender_Male"), -3.8f, rows[3], 10.2f, rowH, "男\n<size=80%>Male</size>", 2.0f);
+        Tile(user.Find("Gender_Female"), 7f, rows[3], 10.2f, rowH, "女\n<size=80%>Female</size>", 2.0f);
+        Tile(user.Find("Gender_Unknown"), 17.8f, rows[3], 10.2f, rowH, "不明\n<size=80%>Other</size>", 2.0f);
 
-        // ① survey: two three-way groups
-        foreach (var (label, y) in new[] { ("Label_License", 15.5f), ("Label_Incident", -1.5f) })
+        // survey: two three-way groups, each under its own label
+        foreach (var (label, y) in new[] { ("Label_License", 9.6f), ("Label_Incident", -3.6f) })
         {
             var l = survey.Find(label);
-            Place(l, 0, y, 50, 3.4f);
-            Text(l, null, 2.1f, TextSub, TextAlignmentOptions.Center);
+            Place(l, 0, y, 27, 3f);
+            Text(l, null, 1.9f, TextSub, TextAlignmentOptions.Center);
         }
-        foreach (var (prefix, y) in new[] { ("License", 8f), ("Incident", -9f) })
+        foreach (var (prefix, y) in new[] { ("License", 4.2f), ("Incident", -9f) })
         {
             var names = prefix == "License" ? new[] { "License_Have", "License_None", "License_Unknown" } : new[] { "Incident_Yes", "Incident_No", "Incident_Unknown" };
             var labels = new[] { "有\n<size=80%>Yes</size>", "無\n<size=80%>No</size>", "不明\n<size=80%>Unknown</size>" };
             for (var i = 0; i < 3; i++)
-                Tile(survey.Find(names[i]), -17f + i * 17f, y, 15.5f, 7.4f, labels[i], 2.1f);
+                Tile(survey.Find(names[i]), -9.4f + i * 9.4f, y, 8.8f, rowH, labels[i], 2.0f);
         }
 
-        // ② conditions: four two-way rows (the environment row is gone: Hikone only)
+        // conditions: four two-way rows (the environment row is gone: Hikone only)
         foreach (var n in new[] { "Label_Scene", "Scene_First", "Scene_Second" })
             Remove(cond, n);
         string[] cRows = { "DieFlash", "Smartphone", "Weather", "Time" };
         for (var i = 0; i < cRows.Length; i++)
         {
-            RowLabel(cond.Find("Label_" + cRows[i]), -16.5f, rows[i], 19f);
-            Tile(cond.Find(cRows[i] + "_First"), 6.5f, rows[i], 13f, 7.4f, null, 2.1f);
-            Tile(cond.Find(cRows[i] + "_Second"), 20.5f, rows[i], 13f, 7.4f, null, 2.1f);
+            RowLabel(cond.Find("Label_" + cRows[i]), -10f, rows[i], 12.5f);
+            Tile(cond.Find(cRows[i] + "_First"), 4f, rows[i], 8f, rowH, null, 2.0f);
+            Tile(cond.Find(cRows[i] + "_Second"), 12.4f, rows[i], 8f, rowH, null, 2.0f);
         }
 
-        // ② unpleasant tones: none + 3000..17000 Hz in four rows of four
+        // unpleasant tones: none + 3000..17000 Hz in four rows of four ("Hz" is in the card title)
         var template = FindDeep("DieFlash_First");
-        var sel = tone.Find("Value_SelectedSound");
-        Place(sel, 19.5f, 23.6f, 14f, 3.4f);
-        Text(sel, null, 2.2f, Accent, TextAlignmentOptions.Right, FontStyles.Bold);
+        tone.Find("Value_SelectedSound").gameObject.SetActive(false);  // the summary shows it
         var none = tone.Find("Button_Hz_None") ?? Clone(template, tone, "Button_Hz_None");
         Option(none, TitleOptionKind.Hz, 0, 0f);
         var hzTiles = new List<Transform> { none };
@@ -172,16 +170,15 @@ public static class TitleMenuLayout
                 label.name = "Label";
             }
             t.GetComponent<Toggle>().group = null;
-            var text = i == 0 ? "なし" : $"{(i + 2) * 1000}<size=70%> Hz</size>";
-            Tile(t, -19.5f + (i % 4) * 13f, 15.5f - (i / 4) * 8.5f, 12.2f, 7.4f, text, 2.1f);
+            var text = i == 0 ? "なし" : ((i + 2) * 1000).ToString();
+            Tile(t, -10.5f + (i % 4) * 7f, 8.6f - (i / 4) * 6f, 6.6f, 5.4f, text, 1.8f);
         }
-        Command(tone.Find("Button_PreviewSound"), 0f, -20.5f, 51f, 6.4f, "試聴 / Play");
-        tone.Find("Button_PreviewSound/Label").GetComponent<TMP_Text>().fontSize = 2.2f;
+        Command(tone.Find("Button_PreviewSound"), 0f, -14.9f, 27.5f, 4.4f, "試聴 / Play");
+        tone.Find("Button_PreviewSound/Label").GetComponent<TMP_Text>().fontSize = 2.0f;
         var toneGroup = tone.GetComponent<ToggleGroup>();
         if (toneGroup) UnityEngine.Object.DestroyImmediate(toneGroup);
 
-        // ③ scenarios
-        // grouped by where they happen; each tile shows number, Japanese and English name
+        // scenarios, grouped by where they happen; each tile shows number, Japanese and English name
         var definitions = AssetDatabase.FindAssets("t:ScenarioDefinitionAsset", new[] { "Assets/_Project/ScenarioDefinitions" })
             .Select(g => AssetDatabase.LoadAssetAtPath<ScenarioDefinitionAsset>(AssetDatabase.GUIDToAssetPath(g)))
             .Where(d => d != null).OrderBy(d => d.id).ToArray();
@@ -193,23 +190,24 @@ public static class TitleMenuLayout
             if (child.name.StartsWith("Group_") || (child.name.StartsWith("Event_") && child.name != "Event_Random"))
                 child.SetParent(builtinView, false);
         var groups = new[] { ScenarioSetting.Crossing, ScenarioSetting.MidBlock, ScenarioSetting.Bicycle };
-        float ColumnX(int c) => -44f + c * 27f;
-        float RowY(int r) => 15f - r * 9.2f;
+        const float headY = 12.8f;
+        float ColumnX(int c) => -43f + c * 26.5f;
+        float RowY(int r) => 6.8f - r * 7.6f;
         for (var g = 0; g < groups.Length; g++)
         {
             var x = ColumnX(g);
             var head = builtinView.Find("Group_" + groups[g])
                 ?? NewText(builtinView, "Group_" + groups[g], fontSource, 0f, 0f, 1f, 1f, "", 1f, TextMain, TextAlignmentOptions.Left).transform;
-            Place(head, x + 1f, 22.6f, 25, 3.4f);
+            Place(head, x + 1f, headY, 25, 3.4f);
             var count = definitions.Count(d => d.setting == groups[g]);
             Text(head, $"<color={Hex(TitleScenarioDetail.SettingColor(groups[g]))}>●</color> {TitleScenarioDetail.SettingLabel(groups[g])}"
-                + $"<color={Hex(TextSub)}><size=75%>  {count}</size></color>", 2.2f, TextMain, TextAlignmentOptions.Left, FontStyles.Bold);
+                + $"<color={Hex(TextSub)}><size=75%>  {count}</size></color>", 2.1f, TextMain, TextAlignmentOptions.Left, FontStyles.Bold);
             var i = 0;
             foreach (var d in definitions.Where(d => d.setting == groups[g]))
             {
                 var t = Clone(template, builtinView, "Event_" + d.id);
                 Option(t, TitleOptionKind.EventNumber, d.id, 0f);
-                var label = $"<alpha=#99>{d.id + 1:00}<alpha=#FF> {d.shortTitle}\n<size=72%><alpha=#B3>{d.shortTitleEn}</size>";
+                var label = $"<alpha=#99>{d.id + 1:00}<alpha=#FF> {d.shortTitle}\n<size=76%><alpha=#B3>{d.shortTitleEn}</size>";
                 ScenarioTile(t, x, RowY(i), label, TitleScenarioDetail.SettingColor(d.setting));
                 i++;
             }
@@ -218,9 +216,9 @@ public static class TitleMenuLayout
         var customView = FullRect(evt, "View_Custom");
         var customHead = customView.Find("Heading")
             ?? NewText(customView, "Heading", fontSource, 0f, 0f, 1f, 1f, "", 1f, TextMain, TextAlignmentOptions.Left).transform;
-        Place(customHead, -30f, 22.6f, 54f, 3.4f);
-        Text(customHead, "<color=#7DD3FC>●</color> カスタム場面<color=#94A3B8><size=75%>　PC のシナリオエディタで作成</size></color>",
-            2.2f, TextMain, TextAlignmentOptions.Left, FontStyles.Bold);
+        Place(customHead, -30f, headY, 50f, 3.4f);
+        Text(customHead, "<color=#7DD3FC>●</color> カスタム場面<color=#94A3B8><size=80%>　PC のシナリオエディタで作成</size></color>",
+            2.1f, TextMain, TextAlignmentOptions.Left, FontStyles.Bold);
         var slots = new List<TitleOptionToggle>();
         for (var n = 0; n < 12; n++)
         {
@@ -232,27 +230,29 @@ public static class TitleMenuLayout
         }
         var empty = customView.Find("Empty")?.GetComponent<TMP_Text>()
             ?? NewText(customView, "Empty", fontSource, 0f, 0f, 1f, 1f, "", 1f, TextSub, TextAlignmentOptions.Center);
-        Place(empty.transform, -17.5f, 0f, 76f, 20f);
+        Place(empty.transform, -16.5f, -4f, 76f, 20f);
         Text(empty.transform, "カスタム場面がありません。", 2.1f, TextSub, TextAlignmentOptions.Center);
         empty.textWrappingMode = TextWrappingModes.Normal;
         var pageText = customView.Find("Page")?.GetComponent<TMP_Text>()
             ?? NewText(customView, "Page", fontSource, 0f, 0f, 1f, 1f, "", 1f, TextSub, TextAlignmentOptions.Center);
-        Place(pageText.transform, 11.5f, 22.6f, 8f, 3.4f);
-        Text(pageText.transform, "1 / 1", 1.9f, TextSub, TextAlignmentOptions.Center);
-        var previous = PlainButton(reset0, customView, "Button_PagePrevious", 4f, 22.6f, 6.2f, 5.6f, "◀");
-        var next = PlainButton(reset0, customView, "Button_PageNext", 19f, 22.6f, 6.2f, 5.6f, "▶");
+        Place(pageText.transform, 12f, headY, 8f, 3.4f);
+        Text(pageText.transform, "1 / 1", 1.8f, TextSub, TextAlignmentOptions.Center);
+        var reset0 = page.Find("Button_Reset");
+        var previous = PlainButton(reset0, customView, "Button_PagePrevious", 4.2f, headY, 5.6f, 5f, "◀");
+        var next = PlainButton(reset0, customView, "Button_PageNext", 19.8f, headY, 5.6f, 5f, "▶");
 
-        // right column: tabs, RANDOM (built-in) or reload (custom), then the detail panel
-        const float detailX = 42f, detailW = 30f;
-        var builtinTab = PlainButton(reset0, evt, "Tab_Builtin", detailX - 7.6f, 22.6f, 14.8f, 6f, "組み込み（10）");
-        var customTab = PlainButton(reset0, evt, "Tab_Custom", detailX + 7.6f, 22.6f, 14.8f, 6f, "カスタム（0）");
+        // right part of the card: built-in / custom tabs on the title row, RANDOM (built-in) or
+        // reload (custom), then the detail panel
+        const float detailX = 40f, detailW = 30f, titleRowY = bottomH / 2 - 3.4f;
+        var builtinTab = PlainButton(reset0, evt, "Tab_Builtin", detailX - 7.6f, titleRowY, 14.6f, 5f, "組み込み（10）");
+        var customTab = PlainButton(reset0, evt, "Tab_Custom", detailX + 7.6f, titleRowY, 14.6f, 5f, "カスタム（0）");
         foreach (var tab in new[] { builtinTab, customTab })
             tab.transform.Find("Label").GetComponent<TMP_Text>().fontSize = 1.8f;
         var random = Clone(template, evt, "Event_Random");
         Option(random, TitleOptionKind.EventNumber, SceneRoute.RandomScenarioId, 0f);
-        Tile(random, detailX, 14.8f, detailW, 7f, "ランダム / Random", 2.2f);
-        var refresh = PlainButton(reset0, evt, "Button_RefreshCustom", detailX, 14.8f, detailW, 7f, "読み直す / Reload");
-        refresh.transform.Find("Label").GetComponent<TMP_Text>().fontSize = 2.2f;
+        Tile(random, detailX, 10.6f, detailW, 6.4f, "ランダム / Random", 2.1f);
+        var refresh = PlainButton(reset0, evt, "Button_RefreshCustom", detailX, 10.6f, detailW, 6.4f, "読み直す / Reload");
+        refresh.transform.Find("Label").GetComponent<TMP_Text>().fontSize = 2.1f;
         refresh.gameObject.SetActive(false);
         customView.gameObject.SetActive(false);
 
@@ -260,22 +260,20 @@ public static class TitleMenuLayout
         var readout = evt.GetComponentsInChildren<TMP_Text>(true).First(t => t.name == "Value_EventNumber").transform;
         readout.SetParent(evt, false);
         Remove(evt, "ScenarioDetail");
-        var detail = NewBox(evt, "ScenarioDetail", detailX, -7f, detailW, 34f, FieldColor);
-        var caption = NewText(detail, "Caption", fontSource, 0f, 14.6f, 27f, 2.6f, "選択中の場面 / Selected", 1.6f, TextSub, TextAlignmentOptions.Left);
+        var detail = NewBox(evt, "ScenarioDetail", detailX, -6.2f, detailW, 26f, FieldColor);
         readout.SetParent(detail, false);
-        Place(readout, 0f, 10.4f, 27f, 5f);
-        Text(readout, null, 4f, Accent, TextAlignmentOptions.Left, FontStyles.Bold);
-        var detailTitle = NewText(detail, "Title", fontSource, 0f, 4.6f, 27f, 6.4f, "", 2.4f, TextMain, TextAlignmentOptions.TopLeft, FontStyles.Bold);
+        Place(readout, 0f, 9.6f, 27f, 3.6f);
+        Text(readout, null, 3.4f, Accent, TextAlignmentOptions.Left, FontStyles.Bold);
+        var detailTitle = NewText(detail, "Title", fontSource, 0f, 5.2f, 27f, 5.0f, "", 2.2f, TextMain, TextAlignmentOptions.TopLeft, FontStyles.Bold);
         detailTitle.textWrappingMode = TextWrappingModes.Normal;
-        var detailEn = NewText(detail, "English", fontSource, 0f, 0.2f, 27f, 2.6f, "", 1.6f, TextSub, TextAlignmentOptions.Left);
-        var settingChip = NewBox(detail, "SettingChip", 0f, -3.4f, 27f, 3.4f, Accent);
+        var detailEn = NewText(detail, "English", fontSource, 0f, 1.4f, 27f, 2.2f, "", 1.6f, TextSub, TextAlignmentOptions.Left);
+        var settingChip = NewBox(detail, "SettingChip", 0f, -1.6f, 27f, 2.8f, Accent);
         Style(settingChip.GetComponent<Image>(), Accent, 20f);
-        var settingText = NewText(settingChip, "Text", fontSource, 0f, 0f, 26f, 3.4f, "", 1.7f, Dark, TextAlignmentOptions.Center, FontStyles.Bold);
-        var goal = NewText(detail, "Goal", fontSource, 0f, -11.4f, 27f, 11f, "", 1.9f, TextMain, TextAlignmentOptions.TopLeft);
+        var settingText = NewText(settingChip, "Text", fontSource, 0f, 0f, 26f, 2.8f, "", 1.6f, Dark, TextAlignmentOptions.Center, FontStyles.Bold);
+        var goal = NewText(detail, "Goal", fontSource, 0f, -7.6f, 27f, 9.6f, "", 1.8f, TextMain, TextAlignmentOptions.TopLeft);
         goal.textWrappingMode = TextWrappingModes.Normal;
         var detailComponent = detail.gameObject.AddComponent<TitleScenarioDetail>();
         detailComponent.EditorConfigure(director, definitions, detailTitle, detailEn, goal, settingText, settingChip.GetComponent<Image>());
-        caption.raycastTarget = false;
 
         var customList = evt.GetComponent<TitleCustomScenarios>() ?? evt.gameObject.AddComponent<TitleCustomScenarios>();
         customList.EditorConfigure(director, builtinView.gameObject, customView.gameObject, random.gameObject,
@@ -283,30 +281,46 @@ public static class TitleMenuLayout
             empty, pageText, previous, next, refresh);
         EditorUtility.SetDirty(customList);
 
-        // ---------------------------------------------------------------- footer: summary, reset, start
+        // ---------------------------------------------------------------- start column: summary, reset, start
+        const float startX = 58f, startW = 30f;
+        var summaryBox = page.Find("Summary_Box") as RectTransform ?? NewBox(page, "Summary_Box", 0f, 0f, 1f, 1f, CardColor);
+        Place(summaryBox, startX, -7.6f, startW + 2f, 13.2f);
+        Style(summaryBox.GetComponent<Image>(), CardColor, 5f);
+        var summaryCaption = summaryBox.Find("Caption")?.GetComponent<TMP_Text>()
+            ?? NewText(summaryBox, "Caption", fontSource, 0f, 0f, 1f, 1f, "", 1f, TextSub, TextAlignmentOptions.Left);
+        Place(summaryCaption.transform, 0f, 4.6f, startW - 2f, 2.6f);
+        Text(summaryCaption.transform, "この条件で開始 / Selection", 1.6f, TextSub, TextAlignmentOptions.Left);
         var summary = page.Find("Footer_Summary")?.GetComponent<TMP_Text>()
-            ?? NewText(page, "Footer_Summary", fontSource, 0f, 0f, 1f, 1f, "", 1f, TextMain, TextAlignmentOptions.Left);
-        Place(summary.transform, -26f, -H / 2 + 5.2f, 64f, 5f);
-        Text(summary.transform, "場面 ランダム　不快音 なし", 2.0f, TextMain, TextAlignmentOptions.Left);
-        var start = page.Find("Button_Start");
-        Command(start, 43.5f, -H / 2 + 5.2f, 27f, 7.6f, "開始 / Start");
-        start.Find("Label").GetComponent<TMP_Text>().fontSize = 3.2f;
-        Primary(start, new Color32(245, 158, 11, 255), new Color32(251, 191, 36, 255), new Color32(217, 119, 6, 255), Dark);
-        var reset = page.Find("Button_Reset") ?? Clone(start, page, "Button_Reset");
+            ?? summaryBox.Find("Footer_Summary")?.GetComponent<TMP_Text>()
+            ?? NewText(summaryBox, "Footer_Summary", fontSource, 0f, 0f, 1f, 1f, "", 1f, TextMain, TextAlignmentOptions.Left);
+        summary.transform.SetParent(summaryBox, false);
+        Place(summary.transform, 0f, -1.4f, startW - 2f, 8.4f);
+        Text(summary.transform, "場面　ランダム\n不快音　なし\n170 cm・70 kg・30 歳", 1.9f, TextMain, TextAlignmentOptions.TopLeft);
+        summary.textWrappingMode = TextWrappingModes.NoWrap;
+        summary.overflowMode = TextOverflowModes.Ellipsis;
+        var reset = page.Find("Button_Reset");
         reset.GetComponent<TitleCommandButton>().EditorConfigure(director, TitleCommand.ResetDefaults);
-        Command(reset, 18f, -H / 2 + 5.2f, 20f, 6.6f, "リセット / Reset");
-        reset.Find("Label").GetComponent<TMP_Text>().fontSize = 2.1f;
+        Command(reset, startX, -19f, startW, 6.2f, "リセット / Reset");
+        reset.Find("Label").GetComponent<TMP_Text>().fontSize = 2.0f;
         var resetStyle = reset.GetComponent<TitleButtonStyle>();
         if (resetStyle) UnityEngine.Object.DestroyImmediate(resetStyle);
         Primary(reset, TitleButtonFeedback.NormalColor, TitleButtonFeedback.HoverColor, TitleButtonFeedback.PressedColor, TextMain);
+        var start = page.Find("Button_Start");
+        Command(start, startX, -33.6f, startW + 2f, 17f, "開始\n<size=70%>Start</size>");
+        start.Find("Label").GetComponent<TMP_Text>().fontSize = 4.2f;
+        Primary(start, new Color32(245, 158, 11, 255), new Color32(251, 191, 36, 255), new Color32(217, 119, 6, 255), Dark);
         start.SetAsLastSibling();
         reset.SetAsLastSibling();
 
-        var pagesComponent = page.GetComponent<TitleMenuPages>() ?? page.gameObject.AddComponent<TitleMenuPages>();
-        pagesComponent.EditorConfigure(director, steps.Select(t => t.gameObject).ToArray(), tabs, summary);
-        EditorUtility.SetDirty(pagesComponent);
-        for (var i = 0; i < steps.Length; i++)
-            steps[i].gameObject.SetActive(i == 0);
+        GameObjectUtility.RemoveMonoBehavioursWithMissingScript(page.gameObject);
+        var summaryComponent = page.GetComponent<TitleMenuSummary>() ?? page.gameObject.AddComponent<TitleMenuSummary>();
+        summaryComponent.EditorConfigure(director, summary);
+        EditorUtility.SetDirty(summaryComponent);
+
+        // only controls take the pointer: labels and headings never cover a tile
+        foreach (var text in canvas.GetComponentsInChildren<TMP_Text>(true))
+            if (text.GetComponentInParent<Selectable>(true) == null)
+                text.raycastTarget = false;
 
         // readouts & selection state as the participant will see them
         EditorUtility.SetDirty(director);
@@ -343,7 +357,7 @@ public static class TitleMenuLayout
 
     static void ScenarioTile(Transform t, float x, float y, string label, Color accent)
     {
-        Tile(t, x, y, 26f, 8.2f, label, 2.1f);
+        Tile(t, x, y, 25.5f, 6.6f, label, 2.0f);
         var labelText = t.Find("Label").GetComponent<TMP_Text>();
         labelText.alignment = TextAlignmentOptions.Left;
         labelText.margin = new Vector4(1.8f, 0f, 0.6f, 0f);
@@ -353,7 +367,7 @@ public static class TitleMenuLayout
         // long names shrink a little rather than being cut off
         labelText.enableAutoSizing = true;
         labelText.fontSizeMin = 1.7f;
-        labelText.fontSizeMax = 2.1f;
+        labelText.fontSizeMax = 2.0f;
         AccentBar(t, accent);
     }
 
@@ -431,11 +445,9 @@ public static class TitleMenuLayout
         var head = card.Find("Header");
         if (head) head.gameObject.SetActive(false);
         var t = card.Find("Title");
-        // cards with a readout on the right keep that space free
-        var reserve = name == "Card_SoundQuickSelect" ? 15f : 0f;
         t.gameObject.SetActive(!string.IsNullOrEmpty(heading));
-        Place(t, -reserve / 2, h / 2 - 3.4f, w - 4f - reserve, 4f);
-        Text(t, heading, 2.6f, Accent, TextAlignmentOptions.Left, FontStyles.Bold);
+        Place(t, 0f, h / 2 - 3.4f, w - 4f, 4f);
+        Text(t, heading, 2.5f, Accent, TextAlignmentOptions.Left, FontStyles.Bold);
         return card;
     }
 
@@ -565,8 +577,8 @@ public static class TitleMenuLayout
             + string.Concat(definitions.Select(d => d.shortTitle + d.shortTitleEn + d.learningGoal))
             + "ランダムRandom scenario10の場面から1つを選びます。どの場面かは始まるまでわかりません。横断歩道・交差点道路の途中自転車?0123456789"
             + AccidentExperienceValidation.ReadScript("TitleCustomScenarios")
-            + AccidentExperienceValidation.ReadScript("TitleMenuPages")
-            + "①②③参加者条件場面組み込みカスタム読み直す"
+            + AccidentExperienceValidation.ReadScript("TitleMenuSummary")
+            + "参加者条件場面組み込みカスタム読み直す"
             + AccidentExperienceValidation.ReadScript("TitleScenarioDetail");
         all = System.Text.RegularExpressions.Regex.Replace(all, "<[^>]+>", "");
         var missing = new string(all.Where(c => !char.IsWhiteSpace(c) && !font.HasCharacter(c)).Distinct().ToArray());

@@ -167,8 +167,6 @@ namespace VRLearn.Tests.PlayMode
                 yield return null;
                 yield return null;
 
-                Call(Find("TitleMenuPages"), "ShowPage", 2);     // ③ 場面
-                yield return null;
                 var list = Find("TitleCustomScenarios");
                 Assert.That(list, Is.Not.Null);
                 Call(list, "Show", true);

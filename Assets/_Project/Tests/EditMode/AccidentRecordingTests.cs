@@ -76,8 +76,12 @@ namespace VRLearn.Tests.EditMode
                 capture.Invoke(recorder, new object[] { 0f, new List<Transform> { car } });
                 head.position = Vector3.right * 100f;          // respawn-like jump
                 capture.Invoke(recorder, new object[] { 0.05f, new List<Transform>() });   // car gone
-                var recording = Build(recorder, car, 0.05f, 1f, 0f);
+                // a jump after contact is shown as a cut
+                var recording = Build(recorder, car, 0f, 1f, 1f);
                 Assert.That(SamplePosition(recording, "head", 0.02f).x, Is.EqualTo(0f), "a jump must not slide");
+                // a jump before contact is a placement: the replay starts after it
+                var placed = Build(recorder, car, 0.05f, 1f, 0f);
+                Assert.That(Recording.GetProperty("StartTime").GetValue(placed), Is.EqualTo(0.05f));
                 var vehicles = (System.Collections.IList)Recording.GetField("vehicles").GetValue(recording);
                 Assert.That(vehicles.Count, Is.EqualTo(1));
                 Assert.That(Recording.GetField("impactVehicleIndex").GetValue(recording), Is.EqualTo(0));

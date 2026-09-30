@@ -158,6 +158,10 @@ public static class OpenXRScene
             controller.gameObject.SetActive(visible);
     }
 
+    /// <summary>
+    /// Shows or hides the controller models. The pointer ray (its LineRenderer) is never touched:
+    /// whether it shows follows <see cref="SetControllersVisible"/>.
+    /// </summary>
     public static void SetControllerVisualsVisible(bool visible)
     {
         var origin = Origin;
@@ -166,10 +170,12 @@ public static class OpenXRScene
 
         foreach (var controller in origin.GetComponentsInChildren<UnityEngine.XR.Interaction.Toolkit.XRBaseController>(true))
             foreach (var renderer in controller.GetComponentsInChildren<Renderer>(true))
-                renderer.enabled = visible;
+                if (!(renderer is LineRenderer))
+                    renderer.enabled = visible;
 
         foreach (var controller in origin.GetComponentsInChildren<OVRControllerHelper>(true))
             foreach (var renderer in controller.GetComponentsInChildren<Renderer>(true))
-                renderer.enabled = visible;
+                if (!(renderer is LineRenderer))
+                    renderer.enabled = visible;
     }
 }

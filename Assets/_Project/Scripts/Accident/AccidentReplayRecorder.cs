@@ -23,6 +23,11 @@ public sealed class AccidentReplayRecording
 
     /// <summary>Jumps larger than this between two frames are shown as a cut, not a slide.</summary>
     public const float TeleportDistance = 8f;
+    /// <summary>
+    /// A participant never moves this far in one sample (30 m/s); a larger step is a placement
+    /// or teleport, and the replay window starts after the last one before contact.
+    /// </summary>
+    public const float PlacementJump = 1.5f;
 
     public float[] times;
     public Pose[] head;
@@ -31,6 +36,10 @@ public sealed class AccidentReplayRecording
     public readonly List<Track> vehicles = new List<Track>();
     public int impactVehicleIndex = -1;
     public float impactTime;
+    /// <summary>Seat (hip target) and riding direction in the bicycle's frame (unscaled).</summary>
+    public bool hasBicycleSeat;
+    public Vector3 bicycleSeatLocal;
+    public Vector3 bicycleForwardLocal = Vector3.forward;
 
     public int FrameCount => times != null ? times.Length : 0;
     public float StartTime => FrameCount > 0 ? times[0] : 0f;
@@ -40,6 +49,21 @@ public sealed class AccidentReplayRecording
     public Track ImpactVehicle => impactVehicleIndex >= 0 && impactVehicleIndex < vehicles.Count
         ? vehicles[impactVehicleIndex]
         : null;
+
+    /// <summary>Where the rider sits on the bicycle pose <paramref name="bike"/>, and which way it faces.</summary>
+    public bool TrySeat(Pose bike, out Vector3 seat, out Vector3 forward)
+    {
+        seat = bike.position;
+        forward = Vector3.forward;
+        if (!bike.active || !hasBicycleSeat)
+            return false;
+        seat = bike.position + bike.rotation * bicycleSeatLocal;
+        forward = Vector3.ProjectOnPlane(bike.rotation * bicycleForwardLocal, Vector3.up);
+        if (forward.sqrMagnitude < 1e-4f)
+            return false;
+        forward.Normalize();
+        return true;
+    }
 
     /// <summary>Interpolated pose at <paramref name="time"/>; inactive frames and teleports are not blended.</summary>
     public Pose Sample(Pose[] track, float time)
@@ -180,7 +204,9 @@ public sealed class AccidentReplayRecorder : MonoBehaviour
 
     /// <summary>
     /// Builds the replay window [impactTime - secondsBefore, impactTime + secondsAfter], clipped to
-    /// what was recorded. Vehicles that never appear in the window are dropped.
+    /// what was recorded and to the last placement before contact (the participant or the bicycle
+    /// jumped, or the bicycle appeared): frames from before the participant was put at the start
+    /// would show the figure and the bicycle apart. Vehicles that never appear are dropped.
     /// </summary>
     public AccidentReplayRecording Build(Transform impactVehicle, float impactTime, float secondsBefore, float secondsAfter)
     {
@@ -202,6 +228,18 @@ public sealed class AccidentReplayRecorder : MonoBehaviour
             if (t >= from - 1e-4f && t <= to + 1e-4f)
                 frames.Add(f % Capacity);
         }
+        bool Jumped(AccidentReplayRecording.Pose[] ring, int a, int b) => ring[a].active != ring[b].active
+            || (ring[a].active && (ring[a].position - ring[b].position).sqrMagnitude
+                > AccidentReplayRecording.PlacementJump * AccidentReplayRecording.PlacementJump);
+        var firstFrame = 0;
+        for (var i = 1; i < frames.Count && times[frames[i]] <= impactTime; i++)
+        {
+            int a = frames[i - 1], b = frames[i];
+            if (Jumped(headRing, a, b) || Jumped(bodyRing, a, b) || Jumped(bicycleRing, a, b))
+                firstFrame = i;
+        }
+        if (firstFrame > 0)
+            frames.RemoveRange(0, firstFrame);
         recording.times = new float[frames.Count];
         recording.head = new AccidentReplayRecording.Pose[frames.Count];
         recording.body = new AccidentReplayRecording.Pose[frames.Count];
@@ -218,6 +256,21 @@ public sealed class AccidentReplayRecorder : MonoBehaviour
         }
         if (!anyBicycle)
             recording.bicycle = null;
+        else if (bicycle != null)
+        {
+            var hip = bicycle.Find("HipTarget");
+            var eyes = bicycle.Find("HeadTarget");
+            if (hip != null)
+            {
+                var inverse = Quaternion.Inverse(bicycle.rotation);
+                recording.hasBicycleSeat = true;
+                recording.bicycleSeatLocal = inverse * (hip.position - bicycle.position);
+                // riding direction: seat towards the rider's eyes, else the model's forward (-x)
+                var forward = eyes != null ? eyes.position - hip.position : -bicycle.right;
+                forward = Vector3.ProjectOnPlane(forward, Vector3.up);
+                recording.bicycleForwardLocal = inverse * (forward.sqrMagnitude > 1e-4f ? forward.normalized : -bicycle.right);
+            }
+        }
 
         foreach (var ring in vehicles.Values)
         {

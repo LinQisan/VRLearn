@@ -56,7 +56,13 @@ namespace VRLearn.Tests.PlayMode
                 yield return new WaitForSecondsRealtime(0.5f);
                 SaveCamera(Camera.main, "recorded-replay.png");
             }
+            // the replay plays to its end and then waits for the participant to go on
             deadline = Time.realtimeSinceStartup + 18f;
+            while (!(bool)replay.GetType().GetProperty("IsWaitingAtEnd").GetValue(replay) && Time.realtimeSinceStartup < deadline)
+                yield return null;
+            Assert.That(flow.GetType().GetProperty("Phase").GetValue(flow).ToString(), Is.EqualTo("Replay"));
+            replay.GetType().GetMethod("Skip").Invoke(replay, null);
+            deadline = Time.realtimeSinceStartup + 3f;
             while (flow.GetType().GetProperty("Phase").GetValue(flow).ToString() != "Results" && Time.realtimeSinceStartup < deadline)
                 yield return null;
             Assert.That(flow.GetType().GetProperty("Phase").GetValue(flow).ToString(), Is.EqualTo("Results"));

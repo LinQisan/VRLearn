@@ -158,6 +158,10 @@ public sealed class GameplayFlowController : MonoBehaviour
         phase = next;
         if (phase == GameplayPhase.AccidentTriggered)
             TrafficAccidentState.FreezeAll();
+        // pointer rays only where there is something to press: hidden while walking or riding
+        // and during the impact, shown on the goal, replay and feedback pages
+        OpenXRScene.SetControllersVisible(phase == GameplayPhase.GoalReached
+            || phase == GameplayPhase.Replay || phase == GameplayPhase.Results);
         PhaseChanged?.Invoke(phase);
     }
 }

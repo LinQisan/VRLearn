@@ -110,7 +110,7 @@ namespace VRLearn.Tests.EditMode
                 poseType.GetField("position").SetValue(pose, new Vector3(0f, height * 0.936f, 0f));
                 poseType.GetField("rotation").SetValue(pose, Quaternion.identity);
                 poseType.GetField("active").SetValue(pose, true);
-                type.GetMethod("Pose").Invoke(figure, new object[] { pose, 0f, Vector3.zero, false, 0f, Vector3.zero, 0.02f });
+                type.GetMethod("Pose").Invoke(figure, new object[] { pose, 0f, Vector3.zero, false, 0f, Vector3.zero, 0.02f, null, Vector3.zero });
                 Assert.That((float)Prop(figure, "TopOfHeadY"), Is.EqualTo(height).Within(0.04f * height));
                 var bounds = new Bounds(figure.transform.position, Vector3.zero);
                 foreach (var r in figure.GetComponentsInChildren<Renderer>())
@@ -121,6 +121,80 @@ namespace VRLearn.Tests.EditMode
             finally
             {
                 UnityEngine.Object.DestroyImmediate(figure.gameObject);
+            }
+        }
+
+        [Test]
+        public void CyclingReplayStartsAtPlacementWithTheRiderOnTheSaddle()
+        {
+            var recorderType = T("AccidentReplayRecorder");
+            var recordingType = T("AccidentReplayRecording");
+            var root = new GameObject("Player");
+            var head = new GameObject("Head").transform;
+            var bike = new GameObject("Bicycle");
+            // the model's forward is -x; the seat is behind the rider's eyes
+            var hip = new GameObject("HipTarget").transform;
+            hip.SetParent(bike.transform, false);
+            hip.localPosition = new Vector3(0.3f, 0.9f, 0f);
+            var eyes = new GameObject("HeadTarget").transform;
+            eyes.SetParent(bike.transform, false);
+            eyes.localPosition = new Vector3(-0.1f, 1.5f, 0f);
+            Component figure = null;
+            try
+            {
+                var recorder = root.AddComponent(recorderType);
+                recorderType.GetMethod("Configure").Invoke(recorder, new object[] { head, root.transform, bike.transform });
+                var capture = recorderType.GetMethod("CaptureFrame");
+                // 1 s somewhere else without the bicycle (before placement), then 3 s riding +z at 5 m/s
+                bike.SetActive(false);
+                root.transform.position = new Vector3(40f, 0f, 30f);
+                head.position = root.transform.position + Vector3.up * 1.6f;
+                for (var i = 0; i < 20; i++)
+                    capture.Invoke(recorder, new object[] { i * 0.05f, new List<Transform>() });
+                bike.SetActive(true);
+                bike.transform.rotation = Quaternion.Euler(0f, 90f, 0f);   // -x (forward) -> +z
+                for (var i = 20; i <= 80; i++)
+                {
+                    var t = i * 0.05f;
+                    bike.transform.position = new Vector3(0f, 0f, (t - 1f) * 5f);
+                    head.position = eyes.position;
+                    head.rotation = Quaternion.Euler(0f, t < 2f ? -70f : 0f, 0f);   // looks left, then ahead
+                    root.transform.position = new Vector3(head.position.x, 0f, head.position.z);
+                    capture.Invoke(recorder, new object[] { t, new List<Transform>() });
+                }
+                var recording = recorderType.GetMethod("Build").Invoke(recorder, new object[] { null, 4f, 8f, 0f });
+                Assert.That((float)Prop(recording, "StartTime"), Is.EqualTo(1f).Within(0.001f),
+                    "The replay starts where the participant was placed, not before.");
+                var bicycle = (Array)Get(recording, "bicycle");
+                var poseType = recordingType.GetNestedType("Pose");
+                foreach (var pose in bicycle)
+                    Assert.That((bool)poseType.GetField("active").GetValue(pose), Is.True, "The bicycle is there from the first frame.");
+
+                var first = bicycle.GetValue(0);
+                var args = new[] { first, null, null };
+                Assert.That((bool)recordingType.GetMethod("TrySeat").Invoke(recording, args), Is.True);
+                var seat = (Vector3)args[1];
+                // the first frame has the bicycle at the origin, so the seat is the saddle's offset
+                Assert.That(Vector3.Distance(seat, hip.position - bike.transform.position), Is.LessThan(0.01f));
+                Assert.That(Vector3.Angle((Vector3)args[2], Vector3.forward), Is.LessThan(1f));
+
+                // the figure sits on the saddle and points along the bicycle, even while looking left
+                const float height = 1.6f;
+                figure = (Component)T("ReplayMannequin").GetMethod("Build").Invoke(null, new object[] { null, height, 60f, 0 });
+                var headPose = ((Array)Get(recording, "head")).GetValue(0);
+                T("ReplayMannequin").GetMethod("Pose").Invoke(figure, new object[]
+                    { headPose, 0f, Vector3.zero, true, 0f, Vector3.zero, 0.02f, (Vector3?)seat, (Vector3)args[2] });
+                var hips = figure.transform.position + Vector3.up * (0.53f * height);
+                Assert.That(Vector3.Distance(hips, seat), Is.LessThan(0.02f), "The rider's hips are on the saddle.");
+                Assert.That(Vector3.Angle(figure.transform.forward, Vector3.forward), Is.LessThan(1f),
+                    "The rider faces the way the bicycle points, not where the head looks.");
+            }
+            finally
+            {
+                if (figure != null) UnityEngine.Object.DestroyImmediate(figure.gameObject);
+                UnityEngine.Object.DestroyImmediate(root);
+                UnityEngine.Object.DestroyImmediate(head.gameObject);
+                UnityEngine.Object.DestroyImmediate(bike);
             }
         }
 

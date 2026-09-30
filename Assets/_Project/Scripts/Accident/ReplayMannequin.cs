@@ -130,8 +130,10 @@ public sealed class ReplayMannequin : MonoBehaviour
     /// <param name="seated">riding the bicycle</param>
     /// <param name="fall">0 upright … 1 lying, after contact</param>
     /// <param name="fallDirection">horizontal direction the car pushed the participant</param>
+    /// <param name="seat">on a bicycle: where the hips sit and which way the bicycle points; the
+    /// figure is then fixed to the bicycle and only the head follows the recorded head</param>
     public void Pose(AccidentReplayRecording.Pose headPose, float groundY, Vector3 velocity, bool seated,
-        float fall, Vector3 fallDirection, float deltaTime)
+        float fall, Vector3 fallDirection, float deltaTime, Vector3? seat = null, Vector3 seatForward = default)
     {
         var h = HeightMeters;
         var speed = new Vector2(velocity.x, velocity.z).magnitude;
@@ -146,12 +148,22 @@ public sealed class ReplayMannequin : MonoBehaviour
             targetYaw = headYaw;
         bodyYaw = Mathf.LerpAngle(bodyYaw, targetYaw, 1f - Mathf.Exp(-6f * Mathf.Max(0.001f, deltaTime)));
 
-        var feet = new Vector3(headPose.position.x, groundY, headPose.position.z);
+        Vector3 feet;
+        if (seated && seat.HasValue && seatForward.sqrMagnitude > 1e-4f)
+        {
+            // riding: hips on the saddle, body along the bicycle
+            bodyYaw = Mathf.Atan2(seatForward.x, seatForward.z) * Mathf.Rad2Deg;
+            feet = seat.Value - Vector3.up * (HipRatio * h);
+        }
+        else
+        {
+            feet = new Vector3(headPose.position.x, groundY, headPose.position.z);
+            // put the head (not the feet) under the recorded eyes horizontally
+            feet -= Quaternion.Euler(0f, bodyYaw, 0f) * new Vector3(0f, 0f, seated ? 0.15f * h : 0.02f * h);
+            if (seated)
+                feet.y = headPose.position.y - 0.906f * h;   // eye height with the chest leaning 22°
+        }
         var yaw = Quaternion.Euler(0f, bodyYaw, 0f);
-        // put the head (not the feet) under the recorded eyes horizontally
-        feet -= yaw * new Vector3(0f, 0f, seated ? 0.15f * h : 0.02f * h);
-        if (seated)
-            feet.y = headPose.position.y - 0.906f * h;   // eye height with the chest leaning 22°
         transform.SetPositionAndRotation(feet, yaw);
 
         // falling pivots the whole body about the feet, away from the car
