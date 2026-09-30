@@ -82,7 +82,9 @@ public static class ScenarioMapExporter
             {
                 name = s.name + (s.transform.parent != null ? " / " + s.transform.parent.name : ""),
                 x = s.transform.position.x, z = s.transform.position.z, yaw = s.transform.eulerAngles.y
-            }).ToArray();
+            })
+            // stable order: the find order changes between runs and would churn map.json
+            .OrderBy(m => m.name, StringComparer.Ordinal).ThenBy(m => m.x).ThenBy(m => m.z).ToArray();
 
         map.vehicleModels = UnityEngine.Object.FindObjectsByType<CarFactory>(FindObjectsInactive.Include, FindObjectsSortMode.None)
             .Where(f => f.CarPrefab != null).Select(f => f.CarPrefab.name).Distinct().OrderBy(n => n).ToArray();

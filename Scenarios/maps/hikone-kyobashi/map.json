@@ -6208,10 +6208,10 @@
     ],
     "signals": [
         {
-            "name": "TrafficLight_Car_Right / Beside",
-            "x": 24.52,
-            "z": 22.75,
-            "yaw": 270.0
+            "name": "TrafficLight_Car_Left / Beside",
+            "x": 45.41,
+            "z": 28.01,
+            "yaw": 90.0
         },
         {
             "name": "TrafficLight_Car_Left / Vertical",
@@ -6220,9 +6220,15 @@
             "yaw": 0.0
         },
         {
-            "name": "TrafficLight_Walk / Beside",
-            "x": 43.41,
-            "z": 20.97,
+            "name": "TrafficLight_Car_Right / Beside",
+            "x": 24.52,
+            "z": 22.75,
+            "yaw": 270.0
+        },
+        {
+            "name": "TrafficLight_Car_Right / Vertical",
+            "x": 34.68,
+            "z": 20.52,
             "yaw": 180.0
         },
         {
@@ -6232,15 +6238,9 @@
             "yaw": 0.0
         },
         {
-            "name": "TrafficLight_Car_Left / Beside",
-            "x": 45.41,
-            "z": 28.01,
-            "yaw": 90.0
-        },
-        {
-            "name": "TrafficLight_Car_Right / Vertical",
-            "x": 34.68,
-            "z": 20.52,
+            "name": "TrafficLight_Walk / Beside",
+            "x": 43.41,
+            "z": 20.97,
             "yaw": 180.0
         }
     ],

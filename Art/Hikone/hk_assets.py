@@ -322,7 +322,9 @@ def _corner(b, sx, sz, r=4.5, c=8.5, n=8):
     _curb_line(b, curb)
 
 
-def road_cross(name="HK_Road_Cross", tee=False, surface_only=False):
+def road_cross(name="HK_Road_Cross", tee=False, surface_only=False, east_crosswalk=True):
+    """east_crosswalk=False leaves out the crosswalk on the +x edge (the Honmachi T lies 2 m west of
+    the Kyobashi junction, whose own crosswalk already crosses that street: two side by side is wrong)."""
     clear_asset(name)
     b = MB(name)
     _rect(b, -10, 10, -10, 10, 0.004, "HK_Asphalt")
@@ -338,7 +340,9 @@ def road_cross(name="HK_Road_Cross", tee=False, surface_only=False):
             _curb_line(b, [(-10, 4.09), (10, 4.09)])
         _rect(b, -6, 6, 3.475, 3.625, PAINT_Y, "HK_WhitePaint")
     # crosswalks at the tile edges (6.25..10 from centre), matching the original layout
-    _zebra(b, "x", -8.125); _zebra(b, "x", 8.125)
+    _zebra(b, "x", -8.125)
+    if east_crosswalk:
+        _zebra(b, "x", 8.125)
     _zebra(b, "z", -8.125)
     if not tee:
         _zebra(b, "z", 8.125)
@@ -995,7 +999,7 @@ def build_all():
     obs.append(road_straight())                                   # visual-only Castle Road extension
     obs.append(road_straight("HK_RoadSurf_Straight", surface_only=True))
     obs.append(road_cross("HK_RoadSurf_Cross", tee=False, surface_only=True))
-    obs.append(road_cross("HK_RoadSurf_Tee", tee=True, surface_only=True))
+    obs.append(road_cross("HK_RoadSurf_Tee", tee=True, surface_only=True, east_crosswalk=False))
     obs.append(road_turn("HK_RoadSurf_Turn", surface_only=True))
     obs.append(road_turn("HK_RoadSurf_TurnOpen", surface_only=True, outer_line=False))
     geo = "/Users/xinyu/VRLearn/Art/Hikone/road_tiles_geometry.json"
