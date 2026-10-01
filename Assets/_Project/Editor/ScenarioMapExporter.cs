@@ -196,13 +196,28 @@ public static class ScenarioMapExporter
         }
     }
 
+    const float MinWallTop = 0.6f;
+
+    /// <summary>Highest world point of a box collider (from its corners; bounds are not reliable outside play mode).</summary>
+    static float Top(BoxCollider b)
+    {
+        var e = b.size * 0.5f;
+        var top = float.MinValue;
+        for (var i = 0; i < 8; i++)
+            top = Mathf.Max(top, b.transform.TransformPoint(b.center + new Vector3((i & 1) == 0 ? -e.x : e.x, (i & 2) == 0 ? -e.y : e.y, (i & 4) == 0 ? -e.z : e.z)).y);
+        return top;
+    }
+
     static Wall[] CollectWalls()
     {
         var container = GameObject.Find("Environment/InvisibleWallContainer");
         if (container == null)
             return new Wall[0];
+        // A collider that stays below the sidewalk plus one step (0.41 + CharacterController stepOffset
+        // ≥ 0.2 m) is walked onto, not a wall: InvisibleBlock at the far kerb of the mid-block
+        // crossings is a box tilted 75°, i.e. a 15° ramp from the road up to y 0.385.
         return container.GetComponentsInChildren<BoxCollider>()
-            .Where(b => b.enabled && !b.isTrigger)
+            .Where(b => b.enabled && !b.isTrigger && Top(b) >= MinWallTop)
             .Select(b =>
             {
                 var t = b.transform;
