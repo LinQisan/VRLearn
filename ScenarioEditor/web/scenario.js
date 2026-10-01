@@ -22,9 +22,13 @@ export const MODE_LABELS = { walking: '歩行', bicycle: '自転車' };
 
 const round = v => Math.round(v * 100) / 100;
 
+/** Car bodies (mirrors ScenarioVehicle.Bodies): '' is the prefab's sedan. */
+export const BODIES = ['', 'kei-tall', 'kei-hatch'];
+export const BODY_LABELS = { '': 'セダン（標準）', 'kei-tall': '軽ハイトワゴン', 'kei-hatch': '軽ハッチバック' };
+
 export function newVehicle(overrides = {}) {
   return {
-    name: '車', model: 'Car_Left', route: [], speedKmh: 36, start: START_BEGIN, delaySeconds: 0,
+    name: '車', model: 'Car_Left', body: '', route: [], speedKmh: 36, start: START_BEGIN, delaySeconds: 0,
     repeatMinSeconds: 0, repeatMaxSeconds: 0, stopOnTrigger: false, accident: false,
     overrideYaw: false, yaw: 0, ...overrides
   };
@@ -61,7 +65,7 @@ export function serialize(s) {
     learningGoal: s.learningGoal, situation: s.situation, point: s.point, map: s.map, playerMode: s.playerMode,
     spawn: pt(s.spawn), goal: area(s.goal), trigger: area(s.trigger),
     vehicles: s.vehicles.map(v => ({
-      name: v.name, model: v.model, route: v.route.map(pt), speedKmh: round(v.speedKmh), start: v.start,
+      name: v.name, model: v.model, body: v.body ?? '', route: v.route.map(pt), speedKmh: round(v.speedKmh), start: v.start,
       delaySeconds: round(v.delaySeconds), repeatMinSeconds: round(v.repeatMinSeconds),
       repeatMaxSeconds: round(v.repeatMaxSeconds), stopOnTrigger: !!v.stopOnTrigger, accident: !!v.accident,
       overrideYaw: !!v.overrideYaw, yaw: round(v.yaw)
@@ -106,6 +110,7 @@ export function validateStructure(s) {
     if (!v.route || v.route.length < 2) add(label + ': route には 2 点以上が必要です。', target);
     else v.route.forEach((p, k) => checkInside(label + '.route', p.x, p.z, { ...target, point: k }));
     if (!(v.speedKmh >= 5 && v.speedKmh <= 80)) add(label + ': speedKmh は 5〜80 です。', target);
+    if (!BODIES.includes(v.body ?? '')) add(label + ': body は 空（セダン）・kei-tall・kei-hatch のいずれかです。', target);
     if (v.start !== START_BEGIN && v.start !== START_TRIGGER) add(label + ': start は begin か trigger です。', target);
     if (!(v.delaySeconds >= 0 && v.delaySeconds <= 120)) add(label + ': delaySeconds は 0〜120 秒です。', target);
     if (v.repeatMinSeconds < 0 || v.repeatMaxSeconds < v.repeatMinSeconds) add(label + ': repeatMinSeconds ≤ repeatMaxSeconds にしてください。', target);

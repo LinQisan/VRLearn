@@ -143,6 +143,8 @@ public sealed class CustomScenario
                     CheckInside(label + ".route", p.x, p.z, errors);
             if (v.speedKmh < 5f || v.speedKmh > 80f)
                 errors.Add(label + ": speedKmh は 5〜80 です。");
+            if (Array.IndexOf(ScenarioVehicle.Bodies, v.body ?? "") < 0)
+                errors.Add(label + ": body は 空（セダン）・kei-tall・kei-hatch のいずれかです。");
             if (v.start != ScenarioVehicle.StartBegin && v.start != ScenarioVehicle.StartTrigger)
                 errors.Add(label + ": start は begin か trigger です。");
             if (v.delaySeconds < 0f || v.delaySeconds > 120f)
@@ -194,6 +196,10 @@ public sealed class ScenarioVehicle
     public string name;
     /// <summary>Vehicle prefab name (Car_Left, Car_Right, Car_SideHit, Car_EndlessGo).</summary>
     public string model = "Car_Left";
+    /// <summary>Car body: "" = the prefab's sedan, or a kei car ("kei-tall", "kei-hatch"); see VehicleBody.</summary>
+    public string body = "";
+    /// <summary>Allowed bodies; the kei ids must match Resources/VehicleBodies (a test checks it).</summary>
+    public static readonly string[] Bodies = { "", "kei-tall", "kei-hatch" };
     /// <summary>The car appears at route[0] and drives through the rest.</summary>
     public GroundPoint[] route = new GroundPoint[0];
     public float speedKmh = 36f;

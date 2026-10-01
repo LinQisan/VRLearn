@@ -20,9 +20,10 @@ public static class DocScreenshots
         public string file;
         public Vector3 position, target;
         public float fov;
-        public View(string file, Vector3 position, Vector3 target, float fov = 60f)
+        public int scenario;   // only this built-in scenario's objects are shown (0-based)
+        public View(string file, Vector3 position, Vector3 target, float fov = 60f, int scenario = 0)
         {
-            this.file = file; this.position = position; this.target = target; this.fov = fov;
+            this.file = file; this.position = position; this.target = target; this.fov = fov; this.scenario = scenario;
         }
     }
 
@@ -36,6 +37,7 @@ public static class DocScreenshots
         new View("04_bridge.jpg", new Vector3(32f, 2.0f, 37f), new Vector3(32f, 3.5f, 90f)),
         new View("05_route25_west_gate.jpg", new Vector3(20f, 2.0f, 21f), new Vector3(-60f, 3f, 26f)),
         new View("06_junctions_from_above.jpg", new Vector3(21f, 38f, 3f), new Vector3(21f, 0f, 26f), 55f),
+        new View("10_parked_trucks.jpg", new Vector3(44f, 1.8f, 21.5f), new Vector3(56f, 1.6f, 24f), 60f, 2),
     };
 
     [MenuItem("Tools/VRLearn/Docs/Capture Screenshots")]
@@ -43,12 +45,17 @@ public static class DocScreenshots
     {
         Directory.CreateDirectory(OutputFolder);
         EditorSceneManager.OpenScene(GameplayScene, OpenSceneMode.Single);
+        var runtime = Object.FindFirstObjectByType<ScenarioRuntime>(FindObjectsInactive.Include);
+        var entries = new SerializedObject(runtime).FindProperty("entries");
         var camera = NewCamera();
         try
         {
             camera.orthographic = false;
             foreach (var view in Views)
             {
+                // as the participant sees it: one scenario at a time (the scene is not saved)
+                for (var i = 0; i < entries.arraySize; i++)
+                    (entries.GetArrayElementAtIndex(i).FindPropertyRelative("root").objectReferenceValue as GameObject)?.SetActive(i == view.scenario);
                 camera.fieldOfView = view.fov;
                 camera.transform.position = view.position;
                 camera.transform.LookAt(view.target);

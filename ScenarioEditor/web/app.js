@@ -706,6 +706,8 @@ function vehicleForm(i) {
   const form = html('div', { class: 'form' },
     ...field('名前', `${p}.name`, 'text'),
     ...field('車種', `${p}.model`, 'select', { choices: models }),
+    ...field('車体', `${p}.body`, 'select', { choices: (state.map.vehicleBodies ?? S.BODIES.map(id => ({ id, label: S.BODY_LABELS[id] })))
+      .map(b => [b.id, b.label]) }),
     html('label', {}, '事故車'), html('label', { class: 'check' }, fieldInput(`${p}.accident`, 'checkbox'), 'この車が体験者にぶつかる（CSV に記録）'),
     ...field('速さ', `${p}.speedKmh`, 'number', { unit: 'km/h', min: 5, max: 80, step: 1 }),
     ...field('出発の基準', `${p}.start`, 'select', { choices: trigger

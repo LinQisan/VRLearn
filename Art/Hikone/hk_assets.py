@@ -371,7 +371,7 @@ def road_turn(name="HK_Road_Turn", surface_only=False, outer_line=True):
     return b.finish()
 
 
-def road_raised(name, tiles, geometry_path, drop_z_above=None, drop_tiles=(), corridor=None):
+def road_raised(name, tiles, geometry_path, drop_z_above=None, drop_tiles=(), corridor=None, clip_moat=False):
     """Sidewalks, curbs and corner ramps copied from the original road meshes (world space),
     re-skinned with Hikone paving. The flat carriageway (y <= 0.05) is left to the surface
     modules. corridor=(tile, x0, x1): cut a straight road corridor through one tile."""
@@ -395,6 +395,16 @@ def road_raised(name, tiles, geometry_path, drop_z_above=None, drop_tiles=(), co
             ln = math.sqrt(nx * nx + ny * ny + nz * nz) or 1.0
             flat_top = ny / ln > 0.85          # sidewalks and corner ramps; steep faces are curbs
             b.face(pts, "HK_Sidewalk" if flat_top else "HK_Curb")
+    if clip_moat:
+        # original sidewalk triangles that straddle the bank line would stick out over the water
+        # (the bridge has its own sidewalks): cut at both banks and drop what lies over the moat
+        from hk_terrain import TOWN_Z as _tz, PEN as _pen
+        bm = b.bm
+        for z in (_tz, _pen[2]):      # unity z -> blender -y
+            geom = bm.verts[:] + bm.edges[:] + bm.faces[:]
+            _bm.ops.bisect_plane(bm, geom=geom, dist=1e-4, plane_co=_V((0, -z, 0)), plane_no=_V((0, 1, 0)))
+        dead = [f for f in bm.faces if _tz + 1e-3 < -f.calc_center_median().y < _pen[2] - 1e-3]
+        _bm.ops.delete(bm, geom=dead, context='FACES')
     if corridor:
         x0, x1 = corridor
         bm = b.bm
@@ -730,8 +740,9 @@ def chain_fence(name="HK_ChainFence", L=2.0):
     return b.finish()
 
 
-def tree_zelkova(name="HK_Tree_Zelkova", seed=21, h=11.0):
-    """Keyaki street tree: straight trunk, vase-shaped canopy (Castle Road photo)."""
+def tree_zelkova(name="HK_Tree_Zelkova", seed=21, h=8.5):
+    """Keyaki street tree, pruned as Japanese street trees are: straight trunk, vase-shaped
+    canopy about 8.5 m tall and 5.5 m across (the 11 m / 10 m crown was far too big)."""
     clear_asset(name)
     b = MB(name)
     rnd = random.Random(seed)
@@ -742,13 +753,188 @@ def tree_zelkova(name="HK_Tree_Zelkova", seed=21, h=11.0):
     # vase-shaped crown: a ring of wide lobes low, a narrower ring above
     for i in range(7):
         ang = i * 2 * math.pi / 7 + rnd.uniform(-0.25, 0.25)
-        rr = rnd.uniform(2.0, 2.6)
-        b.blob((math.cos(ang) * rr, h * rnd.uniform(0.6, 0.7), math.sin(ang) * rr), h * rnd.uniform(0.2, 0.24),
+        rr = rnd.uniform(1.3, 1.6)
+        b.blob((math.cos(ang) * rr, h * rnd.uniform(0.62, 0.7), math.sin(ang) * rr), h * rnd.uniform(0.15, 0.17),
                "HK_Leaf", sy=0.72, seed=seed * 10 + i, subdiv=1)
     for i in range(4):
         ang = i * 2 * math.pi / 4 + 0.5
-        b.blob((math.cos(ang) * 1.2, h * 0.84, math.sin(ang) * 1.2), h * 0.2, "HK_Leaf", sy=0.7, seed=seed * 10 + 20 + i, subdiv=1)
+        b.blob((math.cos(ang) * 0.8, h * 0.84, math.sin(ang) * 0.8), h * 0.15, "HK_Leaf", sy=0.7, seed=seed * 10 + 20 + i, subdiv=1)
     return b.finish()
+
+
+def _wheel(b, cx, cy, cz, r, w, m="HK_Rubber", seg=12):
+    """Wheel with its axle along z (a vertical cyl turned 90 deg about x, so windings stay outward)."""
+    ring = [(math.cos(2 * math.pi * i / seg), math.sin(2 * math.pi * i / seg)) for i in range(seg)]
+    P = lambda c, sn, h: (cx + r * c, cy - r * sn, cz + h)
+    h0, h1 = -w / 2, w / 2
+    for i in range(seg):
+        j = (i + 1) % seg
+        b.face([P(*ring[j], h0), P(*ring[i], h0), P(*ring[i], h1), P(*ring[j], h1)], m)
+    b.face([P(c, sn, h1) for (c, sn) in reversed(ring)], m)
+    b.face([P(c, sn, h0) for (c, sn) in ring], m)
+    # hub caps
+    for sgn in (-1, 1):
+        rr = r * 0.52
+        hub = [(cx + rr * c, cy - rr * sn, cz + sgn * (w / 2 + 0.005)) for (c, sn) in ring]
+        b.face(list(reversed(hub)) if sgn > 0 else hub, "HK_MetalLight")
+
+
+def box_truck(name, L, W, H, cab_len, cab_h, wheel_r, axles, rear_dual=True):
+    """Japanese cab-over box truck (aluminium van body), as parked on town streets.
+    Cab at -x, origin at the centre of the footprint on the ground. Sized to the scene's truck
+    colliders so the occlusion of the parked-truck scenarios stays the same."""
+    clear_asset(name)
+    b = MB(name)
+    xf, xr = -L / 2, L / 2
+    # chassis, wheels, side guards, fuel tank
+    b.box((0.25, wheel_r + 0.12, 0), (L - 0.9, 0.26, W * 0.55), "HK_Metal", bottom=True)
+    for k, ax in enumerate(axles):
+        dual = rear_dual and k > 0
+        for sgn in (-1, 1):
+            if dual:
+                for off in (0.0, 0.34):
+                    _wheel(b, ax, wheel_r, sgn * (W / 2 - 0.2 - off), wheel_r, 0.3)
+            else:
+                _wheel(b, ax, wheel_r, sgn * (W / 2 - 0.2), wheel_r, 0.3)
+    span0, span1 = axles[0] + wheel_r + 0.35, axles[1] - wheel_r - 0.3
+    for sgn in (-1, 1):
+        for y in (0.45, 0.72):
+            b.box(((span0 + span1) / 2, y, sgn * (W / 2 - 0.06)), (span1 - span0, 0.09, 0.04), "HK_MetalLight")
+    b.box((xf + cab_len + 0.9, 0.78, -(W / 2 - 0.4)), (1.1, 0.48, 0.5), "HK_MetalLight")
+    # cab (flat cab-over front, white), windscreen, grille, bumper, lights, mirrors, green plate
+    cx = xf + cab_len / 2
+    b.box((cx, (0.6 + cab_h) / 2, 0), (cab_len, cab_h - 0.6, W), "HK_TruckCab", bottom=True)
+    b.box((xf + 0.55, cab_h + 0.12, 0), (1.0, 0.24, W - 0.25), "HK_TruckCab")          # sun visor / roof lip
+    b.box((xf - 0.015, cab_h - 0.72, 0), (0.04, 1.0, W - 0.32), "HK_Glass")
+    for sgn in (-1, 1):
+        b.box((xf + cab_len * 0.42, cab_h - 0.75, sgn * (W / 2 + 0.012)), (cab_len * 0.5, 0.82, 0.03), "HK_Glass")
+        b.box((xf + cab_len * 0.8, (0.9 + cab_h - 1.25) / 2 + 0.2, sgn * (W / 2 + 0.012)), (0.04, cab_h - 1.4, 0.03), "HK_Metal")  # door line
+        b.box((xf + 0.12, cab_h - 0.55, sgn * (W / 2 + 0.22)), (0.07, 0.48, 0.14), "HK_Metal")   # mirror
+        b.box((xf + 0.12, cab_h - 0.3, sgn * (W / 2 + 0.1)), (0.04, 0.04, 0.26), "HK_Metal")    # mirror arm
+        b.box((xf - 0.03, 0.9, sgn * (W / 2 - 0.36)), (0.05, 0.2, 0.38), "HK_Lamp")           # headlight
+        b.box((xf - 0.03, 0.9, sgn * (W / 2 - 0.1)), (0.05, 0.16, 0.12), "HK_SignYellow")     # indicator
+    b.box((xf - 0.02, 1.2, 0), (0.04, 0.38, W * 0.62), "HK_Metal")                      # grille
+    b.box((xf - 0.06, 0.62, 0), (0.16, 0.3, W + 0.02), "HK_Metal", bottom=True)         # bumper
+    b.box((xf - 0.15, 0.62, 0), (0.02, 0.2, 0.33), "HK_PlateGreen")
+    # aluminium van body with ribs, rails, rear doors, tail lights
+    bx0 = xf + cab_len + 0.12
+    y0 = wheel_r * 2 + 0.05
+    bl = xr - bx0
+    b.box(((bx0 + xr) / 2, (y0 + H) / 2, 0), (bl, H - y0, W), "HK_VanBody", bottom=True)
+    n = max(4, int(bl / 0.62))
+    for i in range(1, n):
+        x = bx0 + i * bl / n
+        for sgn in (-1, 1):
+            b.box((x, (y0 + H) / 2, sgn * (W / 2 + 0.012)), (0.05, H - y0 - 0.1, 0.02), "HK_VanRib")
+    for y in (y0 + 0.05, H - 0.06):
+        for sgn in (-1, 1):
+            b.box(((bx0 + xr) / 2, y, sgn * (W / 2 + 0.02)), (bl, 0.1, 0.03), "HK_VanRib")
+    b.box((xr + 0.012, (y0 + H) / 2, 0), (0.02, H - y0 - 0.1, 0.05), "HK_VanRib")           # door split
+    for sgn in (-1, 1):
+        b.box((xr + 0.012, (y0 + H) / 2, sgn * (W / 2 - 0.05)), (0.02, H - y0 - 0.1, 0.06), "HK_VanRib")
+        b.box((xr + 0.03, 0.75, sgn * (W / 2 - 0.3)), (0.04, 0.16, 0.36), "HK_SignRed")      # tail light
+    b.box((xr - 0.05, 0.5, 0), (0.12, 0.14, W - 0.1), "HK_Metal")                       # rear underrun bar
+    return b.finish()
+
+
+def _oface(b, pts, m, inside):
+    """Face whose normal points away from the point `inside` (winding picked automatically)."""
+    nx = ny = nz = 0.0
+    for i in range(len(pts)):
+        (x0, y0, z0), (x1, y1, z1) = pts[i], pts[(i + 1) % len(pts)]
+        nx += (y0 - y1) * (z0 + z1); ny += (z0 - z1) * (x0 + x1); nz += (x0 - x1) * (y0 + y1)
+    c = [sum(p[k] for p in pts) / len(pts) for k in range(3)]
+    if nx * (c[0] - inside[0]) + ny * (c[1] - inside[1]) + nz * (c[2] - inside[2]) < 0:
+        pts = list(reversed(pts))
+    b.face(pts, m)
+
+
+def _extrude_x(b, profile, x0, x1, m):
+    """A side profile [(z, y), ...] (star-shaped around its centroid) extruded from x0 to x1."""
+    cz = sum(p[0] for p in profile) / len(profile)
+    cy = sum(p[1] for p in profile) / len(profile)
+    inside = ((x0 + x1) / 2, cy, cz)
+    n = len(profile)
+    for i in range(n):
+        (za, ya), (zb, yb) = profile[i], profile[(i + 1) % n]
+        _oface(b, [(x0, ya, za), (x0, yb, zb), (x1, yb, zb), (x1, ya, za)], m, inside)
+        for x in (x0, x1):   # side caps as a fan from the centroid
+            _oface(b, [(x, cy, cz), (x, ya, za), (x, yb, zb)], m, inside)
+
+
+def _wheel_x(b, x, y, z, r, w, seg=12):
+    """Car wheel, axle along x: tyre and a silver wheel cover on the outer face."""
+    ring = [(math.cos(2 * math.pi * i / seg), math.sin(2 * math.pi * i / seg)) for i in range(seg)]
+    x0, x1 = x - w / 2, x + w / 2
+    c = (x, y, z)
+    for i in range(seg):
+        (ca, sa), (cb, sb) = ring[i], ring[(i + 1) % seg]
+        _oface(b, [(x0, y + r * sa, z + r * ca), (x0, y + r * sb, z + r * cb), (x1, y + r * sb, z + r * cb), (x1, y + r * sa, z + r * ca)], "HK_Rubber", c)
+    for xx in (x0, x1):
+        _oface(b, [(xx, y + r * sn, z + r * cs) for (cs, sn) in ring], "HK_Rubber", c)
+    out = x1 + 0.004 if x > 0 else x0 - 0.004
+    _oface(b, [(out, y + 0.62 * r * sn, z + 0.62 * r * cs) for (cs, sn) in ring], "HK_MetalLight", (x, y, z))
+
+
+def kei_car(name, profile, H, windshield, side_window, rear_window, pillars, door_lines):
+    """Japanese kei car (3.395 x 1.475 m, the kei limits): painted body (HK_KeiPaint, tinted per car
+    at runtime), glass, lights, bumpers, yellow kei plates, wheels. Front at +z, origin on the
+    ground at the centre of the footprint, like the scene's car prefabs."""
+    clear_asset(name)
+    b = MB(name)
+    L, W, r, wb = 3.395, 1.475, 0.28, 2.52
+    hw = W / 2
+    _extrude_x(b, profile, -hw, hw, "HK_KeiPaint")
+    # glass, just proud of the body (side windows on both sides; windscreen and rear window as quads)
+    for x in (-hw - 0.004, hw + 0.004):
+        _oface(b, [(x, y, z) for (z, y) in side_window], "HK_Glass", (0.0, H * 0.7, 0.0))
+        for (z0, z1) in pillars:     # body-coloured pillars over the glass
+            _oface(b, [(x * 1.001, side_window[0][1], z0), (x * 1.001, side_window[0][1], z1),
+                       (x * 1.001, side_window[-1][1], z1), (x * 1.001, side_window[-1][1], z0)], "HK_KeiPaint", (0.0, H * 0.7, 0.0))
+        for z in door_lines:
+            _oface(b, [(x * 1.002, 0.38, z - 0.01), (x * 1.002, 0.38, z + 0.01), (x * 1.002, side_window[0][1] - 0.02, z + 0.01),
+                       (x * 1.002, side_window[0][1] - 0.02, z - 0.01)], "HK_Metal", (0.0, H * 0.7, 0.0))
+    (zb, yb), (zt, yt) = windshield
+    for (pts, ref) in (([(-hw + 0.1, yb, zb + 0.004), (hw - 0.1, yb, zb + 0.004), (hw - 0.14, yt, zt + 0.004), (-hw + 0.14, yt, zt + 0.004)], (0, 0.5, 0)),):
+        _oface(b, pts, "HK_Glass", ref)
+    (zr, yr0, yr1) = rear_window
+    _oface(b, [(-hw + 0.14, yr0, zr - 0.004), (hw - 0.14, yr0, zr - 0.004), (hw - 0.16, yr1, zr - 0.004), (-hw + 0.16, yr1, zr - 0.004)], "HK_Glass", (0, 0.5, 0))
+    zf = max(p[0] for p in profile); zrr = min(p[0] for p in profile)
+    # lights, bumpers, plates, mirrors
+    for sx in (-1, 1):
+        b.box((sx * (hw - 0.25), 0.8, zf - 0.035), (0.34, 0.15, 0.06), "HK_Lamp")
+        b.box((sx * (hw - 0.08), 0.95, zrr + 0.018), (0.12, 0.42, 0.03), "HK_SignRed")
+        b.box((sx * (hw + 0.08), side_window[0][1] + 0.05, windshield[0][0] - 0.12), (0.16, 0.11, 0.08), "HK_KeiPaint")
+    # bumpers, grille and plates flush with the body: the whole car stays within 3.395 m
+    b.box((0, 0.36, zf - 0.055), (W - 0.02, 0.22, 0.1), "HK_KeiPaint", bottom=True)
+    b.box((0, 0.44, zf - 0.004), (0.9, 0.1, 0.008), "HK_Metal")                        # lower grille
+    b.box((0, 0.36, zrr + 0.055), (W - 0.02, 0.22, 0.1), "HK_KeiPaint", bottom=True)
+    b.box((0, 0.58, zf - 0.004), (0.33, 0.165, 0.008), "HK_SignYellow")                # kei plates are yellow
+    b.box((0, 0.72, zrr + 0.004), (0.33, 0.165, 0.008), "HK_SignYellow")
+    # wheels and a dark underbody between them
+    b.box((0, 0.22, 0), (W - 0.3, 0.14, L - 0.5), "HK_Metal", bottom=True)
+    for sx in (-1, 1):
+        for zz in (wb / 2, -wb / 2):
+            _wheel_x(b, sx * (hw - 0.09), r, zz, r, 0.16)
+    return b.finish()
+
+
+def kei_tall():
+    """Tall-wagon kei (N-BOX / Tanto type): box body 1.79 m high, short nose, sliding rear door."""
+    profile = [(-1.69, 0.3), (1.66, 0.3), (1.697, 0.55), (1.68, 0.86), (1.14, 1.02), (0.62, 1.74),
+               (0.48, 1.79), (-1.58, 1.79), (-1.697, 1.68)]
+    return kei_car("HK_Kei_Tall", profile, 1.79, windshield=((1.1, 1.08), (0.66, 1.7)),
+                   side_window=[(-1.5, 1.14), (0.99, 1.14), (0.64, 1.68), (-1.5, 1.68)],
+                   rear_window=(-1.697, 1.16, 1.62), pillars=[(0.02, 0.1), (-0.95, -0.85)], door_lines=[0.06, -0.9])
+
+
+def kei_hatch():
+    """Two-box kei hatchback (Alto / Mira type), 1.525 m high."""
+    profile = [(-1.69, 0.3), (1.66, 0.3), (1.697, 0.55), (1.66, 0.78), (0.95, 0.92), (0.28, 1.49),
+               (0.05, 1.525), (-1.22, 1.525), (-1.62, 1.34), (-1.697, 0.96)]
+    return kei_car("HK_Kei_Hatch", profile, 1.525, windshield=((0.92, 0.97), (0.33, 1.46)),
+                   side_window=[(-1.3, 1.0), (0.84, 1.0), (0.3, 1.44), (-1.18, 1.44)],
+                   rear_window=(-1.64, 1.02, 1.3), pillars=[(-0.2, -0.12)], door_lines=[-0.16])
 
 
 def hedge(name="HK_Hedge", L=3.0):
@@ -1007,7 +1193,8 @@ def build_all():
     all_tiles = list(_json.load(open(geo)).keys())
     honmachi = "Road_1_line_turn (1)"
     obs.append(road_raised("HK_RoadRaised", [t for t in all_tiles if t != honmachi], geo,
-                           drop_z_above=TOWN_Z - 0.05, drop_tiles=("Road_1_line (23)", "Road_1_line (24)")))
+                           drop_z_above=TOWN_Z - 0.05, drop_tiles=("Road_1_line (23)", "Road_1_line (24)"),
+                           clip_moat=True))
     obs.append(road_raised("HK_RoadRaised_Honmachi", [honmachi], geo, corridor=(28.0, 36.0)))
     obs.append(ground_slab())
     obs.append(far_ground())
@@ -1034,6 +1221,14 @@ def build_all():
     obs.append(chain_fence())
     obs.append(tree_zelkova())
     obs.append(hedge())
+    # kei cars mixed into the background traffic (VehicleBody)
+    obs.append(kei_tall())
+    obs.append(kei_hatch())
+    # parked trucks of the truck scenarios (10 t and 4 t class), sized to their colliders
+    obs.append(box_truck("HK_Truck_Large", L=11.8, W=2.49, H=3.62, cab_len=2.3, cab_h=3.05, wheel_r=0.52,
+                         axles=(-11.8 / 2 + 1.35, 11.8 / 2 - 3.1, 11.8 / 2 - 1.8)))
+    obs.append(box_truck("HK_Truck_Medium", L=8.6, W=2.3, H=3.62, cab_len=1.95, cab_h=2.8, wheel_r=0.46,
+                         axles=(-8.6 / 2 + 1.15, 8.6 / 2 - 2.3)))
     obs.append(sign_guide())
     obs.append(sign_speed())
     obs.append(water())

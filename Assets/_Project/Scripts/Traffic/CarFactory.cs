@@ -53,6 +53,8 @@ public class CarFactory : MonoBehaviour
         controller.pointsParent = pointsParent;
         //事故車フラグをオン
         controller.AccidentCar = true;
+        // the accident car of a built-in scenario is always the prefab's sedan (the stimulus)
+        VehicleBody.For(Car).RestoreSedan();
         controller.InitializeForSpawn();
     }
 
@@ -203,6 +205,8 @@ public class CarFactory : MonoBehaviour
                     // Pooled instances may carry AcidentCar=true from an
                     // accident life; ordinary traffic must reset it every spawn.
                     Car.GetComponent<CarController>().AccidentCar = false;
+                    // ordinary traffic mixes in kei cars (Resources/VehicleBodies)
+                    VehicleBody.ApplyTrafficMix(Car);
                     Car.GetComponent<CarController>().InitializeForSpawn();
 
                     TimeProgress = 0;   //経過時間をリセットする

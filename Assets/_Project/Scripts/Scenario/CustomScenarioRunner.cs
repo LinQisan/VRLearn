@@ -154,6 +154,7 @@ public sealed class CustomScenarioRunner : MonoBehaviour
         director.CarID += 1;
         controller.pointsParent = route;
         controller.AccidentCar = vehicle.accident;
+        VehicleBody.For(car).Apply(vehicle.body, SpawnCount);
         controller.InitializeForSpawn();
         controller.SetCruiseSpeed(vehicle.SpeedMetersPerSecond);
         SpawnCount++;

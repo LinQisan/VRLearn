@@ -32,6 +32,7 @@
         {
             "name": "車の流れ Acident_Left",
             "model": "Car_Left",
+            "body": "",
             "route": [
                 {
                     "x": -107.87,
@@ -67,6 +68,7 @@
         {
             "name": "車の流れ Acident_Right",
             "model": "Car_Left",
+            "body": "",
             "route": [
                 {
                     "x": -19.0,

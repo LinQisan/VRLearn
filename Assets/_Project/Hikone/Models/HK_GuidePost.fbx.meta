@@ -42,6 +42,11 @@ ModelImporter:
   - first:
       type: UnityEngine:Material
       assembly: UnityEngine.CoreModule
+      name: HK_KeiPaint
+    second: {fileID: 2100000, guid: 8ab6e6e96cc704918920781d1b4e63b9, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
       name: HK_Lamp
     second: {fileID: 2100000, guid: 44dd171d0587d45f093fd5b55e91e5c5, type: 2}
   - first:
@@ -92,6 +97,11 @@ ModelImporter:
   - first:
       type: UnityEngine:Material
       assembly: UnityEngine.CoreModule
+      name: HK_PlateGreen
+    second: {fileID: 2100000, guid: defede835b0e54dfbb4bc28302b6fbe1, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
       name: HK_RoofRidge
     second: {fileID: 2100000, guid: 8a7e8fcc8cc62424b84f6c4f199f8d54, type: 2}
   - first:
@@ -99,6 +109,11 @@ ModelImporter:
       assembly: UnityEngine.CoreModule
       name: HK_RoofTile
     second: {fileID: 2100000, guid: da0991b7927034cc1a541bc355c516a1, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: HK_Rubber
+    second: {fileID: 2100000, guid: 48628be455aac41c2ac4707d924c10fa, type: 2}
   - first:
       type: UnityEngine:Material
       assembly: UnityEngine.CoreModule
@@ -144,6 +159,21 @@ ModelImporter:
       assembly: UnityEngine.CoreModule
       name: HK_StoneDark
     second: {fileID: 2100000, guid: 8040beb0551874ccd8644dec133fbe56, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: HK_TruckCab
+    second: {fileID: 2100000, guid: e57c5639d0b4c4adfb3430e9a55e80f4, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: HK_VanBody
+    second: {fileID: 2100000, guid: 65c7d8a18f6724c62ab1dfda6c9db65c, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: HK_VanRib
+    second: {fileID: 2100000, guid: df8727349a1464c6ebdb94a58606f35d, type: 2}
   - first:
       type: UnityEngine:Material
       assembly: UnityEngine.CoreModule

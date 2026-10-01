@@ -69,6 +69,57 @@ namespace VRLearn.Tests.PlayMode
             yield return null;
         }
 
+        [UnityTest]
+        public IEnumerator KeiBodyChangesLookCollisionAndMassAndPoolRestoresTheSedan()
+        {
+            yield return LoadGameplay();
+            var pool = PoolInstance();
+            var prefab = FindCarPrefab();
+            Assert.That(prefab, Is.Not.Null);
+            var bodyType = GameType("VehicleBody");
+            var car = PoolGet(pool, prefab);
+            var body = bodyType.GetMethod("For").Invoke(null, new object[] { car }) as Component;
+            var box = car.transform.Find("CarCollider1").GetComponent<BoxCollider>();
+            var rigid = car.GetComponent<Rigidbody>();
+            var sedanSize = box.size;
+            var sedanMass = rigid.mass;
+            var sedanRenderers = new List<Renderer>();
+            var lights = car.transform.Find("LightContainer");   // kept and scaled to the body
+            foreach (var r in car.GetComponentsInChildren<Renderer>())
+                if (r.enabled && (lights == null || !r.transform.IsChildOf(lights))) sedanRenderers.Add(r);
+
+            bodyType.GetMethod("Apply").Invoke(body, new object[] { "kei-tall", 3 });
+            Assert.That(bodyType.GetProperty("Id").GetValue(body), Is.EqualTo("kei-tall"));
+            var kei = car.transform.Find("BodyMain");
+            Assert.That(kei != null && kei.gameObject.activeSelf, Is.True, "The kei body is named BodyMain so impacts dent it.");
+            var stillShown = sedanRenderers.FindAll(r => r.enabled && !r.transform.IsChildOf(kei)).ConvertAll(r => r.name + ":" + r.GetType().Name);
+            Assert.That(stillShown, Is.Empty, "The sedan is hidden.");
+            Assert.That(box.size.z, Is.LessThan(sedanSize.z), "A kei car is shorter than the sedan.");
+            Assert.That(rigid.mass, Is.EqualTo(900f).Within(0.01f));
+            Assert.That(bodyType.GetProperty("CsvName").GetValue(body), Is.EqualTo("kei-tall"));
+
+            // back in the pool: exactly the prefab's sedan again (an accident car may reuse it)
+            Assert.That(PoolRelease(pool, car), Is.True);
+            Assert.That(bodyType.GetProperty("Id").GetValue(body), Is.EqualTo(""));
+            Assert.That(box.size, Is.EqualTo(sedanSize));
+            Assert.That(rigid.mass, Is.EqualTo(sedanMass));
+            Assert.That(sedanRenderers.TrueForAll(r => r.enabled), Is.True);
+            Assert.That(kei.gameObject.activeSelf, Is.False);
+
+            // the traffic mix: roughly the catalog's 40 % kei cars, never an unknown id
+            var reused = PoolGet(pool, prefab);
+            int kei_ = 0;
+            for (var i = 0; i < 400; i++)
+            {
+                bodyType.GetMethod("ApplyTrafficMix").Invoke(null, new object[] { reused });
+                var id = (string)bodyType.GetProperty("Id").GetValue(body);
+                Assert.That(new[] { "", "kei-tall", "kei-hatch" }, Does.Contain(id));
+                if (id != "") kei_++;
+            }
+            Assert.That(kei_, Is.InRange(110, 210));
+            PoolRelease(pool, reused);
+        }
+
         static GameObject FindCarPrefab()
         {
             foreach (var behaviour in UnityEngine.Object.FindObjectsByType(

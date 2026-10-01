@@ -257,6 +257,77 @@ def tree(asset, x, z, s=1.0, y=None, group="Trees", check=True, buf=1.2):
     return True
 
 
+# ------------------------------------------------------------------ tree clearance
+# crown radius at scale 1 (after the Blender models); street trees are pruned, so they must not
+# swallow the lanterns, sign posts or signals, and no crown may lie on a roof
+CROWN = {"HK_Tree_Zelkova": 3.0, "HK_Tree_Round": 3.0, "HK_Tree_Pine": 2.6, "HK_Tree_Cedar": 2.2,
+         "HK_Tree_Sakura": 2.8, "HK_Tree_RoundLow": 3.3}
+TOWN_TREE_GROUPS = ("StreetTrees", "Trees")
+BUILT = ("HK_Machiya", "HK_Kura", "HK_Dobei", "HK_Gate", "HK_CastleWall")
+
+
+def _obstacles():
+    """(x, z, kind) of poles and lanterns the crowns must keep clear of."""
+    out = []
+    for e in ITEMS:
+        x, _, z = e["p"]
+        if e["a"] == "HK_StreetLamp":
+            a = math.radians(e["r"])
+            out.append((x, z, "pole"))
+            out.append((x + 1.2 * math.sin(a), z + 1.2 * math.cos(a), "lantern"))
+        elif e["g"] == "Signs" or e["a"] == "HK_GuidePost":
+            out.append((x, z, "pole"))
+    for (x, _, z) in POLES:
+        out.append((x, z, "pole"))
+    for p in PTS:
+        if p["kind"] == "signal":
+            out.append((p["p"][0], p["p"][2], "signal"))
+    return out
+
+
+def tree_conflict(asset, x, z, s=1.0, obstacles=None):
+    r = CROWN.get(asset, 2.5) * s
+    for (ox, oz, kind) in (obstacles if obstacles is not None else _obstacles()):
+        d = math.hypot(ox - x, oz - z)
+        if kind == "lantern" and d < r + 0.3:
+            return "crown over a lantern"
+        if kind in ("pole", "signal") and d < (r if kind == "signal" else 1.5):
+            return "trunk/crown at a " + kind
+    for f in FOOT:
+        if not str(f[4]).startswith(BUILT):
+            continue
+        cx = min(max(x, f[0] + 0.3), f[2] - 0.3); cz = min(max(z, f[1] + 0.3), f[3] - 0.3)
+        if math.hypot(cx - x, cz - z) < r * 0.85:
+            return "crown on " + f[4]
+    return None
+
+
+def clear_town_trees():
+    """Street trees slide along their row to a clear spot; scattered town trees are dropped."""
+    obstacles = _obstacles()
+    moved = dropped = 0
+    for e in list(ITEMS):
+        if e["g"] not in TOWN_TREE_GROUPS or e["a"] not in CROWN:
+            continue
+        x, y, z = e["p"]
+        if not tree_conflict(e["a"], x, z, e["s"][0], obstacles):
+            continue
+        spot = None
+        if e["g"] == "StreetTrees":
+            for dz in (1, -1, 2, -2, 3, -3, 4, -4, 5, -5):
+                if not tree_conflict(e["a"], x, z + dz, e["s"][0], obstacles) and not any(
+                        math.hypot(p["p"][0] - x, p["p"][2] - (z + dz)) < 1.2 for p in PTS):
+                    spot = z + dz
+                    break
+        if spot is None:
+            ITEMS.remove(e); dropped += 1
+            REPORT.append(f"   dropped {e['a']} at ({x:.1f}, {z:.1f}): {tree_conflict(e['a'], x, z, e['s'][0], obstacles)}")
+        else:
+            REPORT.append(f"   moved {e['a']} ({x:.1f}, {z:.1f}) -> z {spot:.1f}: {tree_conflict(e['a'], x, z, e['s'][0], obstacles)}")
+            e["p"][2] = round(spot, 3); moved += 1
+    return moved, dropped
+
+
 def dobei_run(x0, z0, x1, z1, group="Walls"):
     L = math.hypot(x1 - x0, z1 - z0)
     n = max(1, round(L / 5.0)); seg = L / n
@@ -479,6 +550,9 @@ def main():
             count += 1
     REPORT.append(f"castle-side trees: {count}")
 
+    moved, dropped = clear_town_trees()
+    REPORT.append(f"town trees moved clear of lamps/signs/buildings: {moved}, dropped: {dropped}")
+
     os.makedirs(os.path.dirname(OUT), exist_ok=True)
     json.dump({"version": 2, "items": ITEMS}, open(OUT, "w"), ensure_ascii=False, indent=0)
 
@@ -500,8 +574,13 @@ def main():
             for p in PTS:
                 if math.hypot(p["p"][0] - e["p"][0], p["p"][2] - e["p"][2]) < 1.2:
                     print("!! tree on gameplay point", a, e["p"], p["name"]); bad += 1
+    for e in ITEMS:
+        if e["g"] in TOWN_TREE_GROUPS and e["a"] in CROWN:
+            why = tree_conflict(e["a"], e["p"][0], e["p"][2], e["s"][0])
+            if why:
+                print("!! tree", why, e["a"], e["p"]); bad += 1
     print("validation problems:", bad)
-    for r in REPORT[-8:]:
+    for r in REPORT[-30:]:
         print("  ", r)
 
 

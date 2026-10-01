@@ -478,6 +478,13 @@ public sealed class AccidentReplayPresenter : MonoBehaviour
             copy.GetComponent<MeshFilter>().sharedMesh = filter.sharedMesh;
             var copyRenderer = copy.GetComponent<MeshRenderer>();
             copyRenderer.sharedMaterials = renderer.sharedMaterials;
+            // per-car paint (VehicleBody) lives in property blocks
+            var block = new MaterialPropertyBlock();
+            for (var i = 0; i < renderer.sharedMaterials.Length; i++)
+            {
+                renderer.GetPropertyBlock(block, i);
+                if (!block.isEmpty) copyRenderer.SetPropertyBlock(block, i);
+            }
             copyRenderer.shadowCastingMode = ShadowCastingMode.Off;
             any = true;
         }

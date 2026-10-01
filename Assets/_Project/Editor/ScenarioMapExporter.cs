@@ -45,10 +45,13 @@ public static class ScenarioMapExporter
         public Marker[] signals = new Marker[0];
         /// <summary>Values allowed for a vehicle's "model" in scenario files.</summary>
         public string[] vehicleModels = new string[0];
+        /// <summary>Values allowed for a vehicle's "body" ("" = the prefab's sedan) with their labels.</summary>
+        public BodyInfo[] vehicleBodies = new BodyInfo[0];
         public string exportedFrom = HikoneScene;
     }
 
     [Serializable] public sealed class WorldRect { public float xMin, zMin, xMax, zMax; }
+    [Serializable] public sealed class BodyInfo { public string id; public string label; }
     [Serializable] public sealed class Surface { public string kind; public float height; public float[] triangles; }
     /// <summary>Footprint of an invisible wall (closed polygon, x/z pairs).</summary>
     [Serializable] public sealed class Wall { public string name; public float[] polygon; }
@@ -88,6 +91,10 @@ public static class ScenarioMapExporter
 
         map.vehicleModels = UnityEngine.Object.FindObjectsByType<CarFactory>(FindObjectsInactive.Include, FindObjectsSortMode.None)
             .Where(f => f.CarPrefab != null).Select(f => f.CarPrefab.name).Distinct().OrderBy(n => n).ToArray();
+        var catalog = Resources.Load<VehicleBodyCatalog>(VehicleBody.CatalogResource);
+        map.vehicleBodies = new[] { new BodyInfo { id = VehicleBody.Sedan, label = "セダン（標準）" } }
+            .Concat(catalog != null ? catalog.bodies.Select(b => new BodyInfo { id = b.id, label = b.label }) : Enumerable.Empty<BodyInfo>())
+            .ToArray();
 
         // frame: everything a vehicle or participant can use, plus a margin
         var xs = new List<float>();

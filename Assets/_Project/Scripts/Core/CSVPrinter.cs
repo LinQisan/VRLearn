@@ -69,14 +69,17 @@ public class CSVPrinter : MonoBehaviour
         [FormerlySerializedAs("AcidentCar")] public int AccidentCar = 0;
         //車の時間
         public float CarTime = 0;
+        // car body (VehicleBody: "sedan" or a kei car id)
+        public string Body = VehicleBody.SedanCsvName;
 
         //コンストラクタ
-        public CarData(Vector3 position, int carid , int accidentcar , float cartime)
+        public CarData(Vector3 position, int carid , int accidentcar , float cartime, string body = VehicleBody.SedanCsvName)
         {
             CarPosition = position;
             CarID = carid;
             AccidentCar = accidentcar;
             CarTime = cartime;
+            Body = body;
         }
     }
 
@@ -110,9 +113,9 @@ public class CSVPrinter : MonoBehaviour
     }
 
     //車からデータを受け取り、クラスに保存するメソッド
-    public void CarDataReceiver(Vector3 position , int carid , int accidentcar)
+    public void CarDataReceiver(Vector3 position , int carid , int accidentcar, string body = VehicleBody.SedanCsvName)
     {
-        cardata = new CarData(position,carid, accidentcar, this.NowTime);
+        cardata = new CarData(position,carid, accidentcar, this.NowTime, body);
         CarDataList.Add(cardata);
     }
 
@@ -311,11 +314,12 @@ public class CSVPrinter : MonoBehaviour
         "CarPositionX",
         "CarPositionY",
         "CarPositionZ",
-        "AcidentCar"
+        "AcidentCar",
+        "Body"
         };
         streamwriter_CarData.WriteLine(string.Join(",", cardata_head));
         //2行目以降部分
-        string[] cardata_string = new string[6];
+        string[] cardata_string = new string[7];
         foreach (CarData car in CarDataList)
         {
             cardata_string[0] = F(car.CarTime);
@@ -324,6 +328,7 @@ public class CSVPrinter : MonoBehaviour
             cardata_string[3] = F(car.CarPosition.y);
             cardata_string[4] = F(car.CarPosition.z);
             cardata_string[5] = car.AccidentCar.ToString();
+            cardata_string[6] = string.IsNullOrEmpty(car.Body) ? VehicleBody.SedanCsvName : car.Body;
 
             //車のデータを","で連結して書き込む
             streamwriter_CarData.WriteLine(string.Join(",", cardata_string));

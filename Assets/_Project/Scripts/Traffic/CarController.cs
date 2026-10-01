@@ -216,6 +216,9 @@ public class CarController : MonoBehaviour
             rigid.linearVelocity = Vector3.zero;
             rigid.angularVelocity = Vector3.zero;
         }
+        // every pooled car comes back as the prefab's sedan (accident cars rely on it)
+        if (TryGetComponent<VehicleBody>(out var body))
+            body.RestoreSedan();
     }
 
     void RestoreIgnoredCollisions()
@@ -1317,7 +1320,8 @@ public class CarController : MonoBehaviour
 
             //������CSV�o�͗p�̂��̂�����(�Ԃ̃|�W�V�����AID�A���̎Ԃ��ǂ����A����)
             //CSVPrinter�ɓn��
-            csvprinter.CarDataReceiver(this.transform.position , this.CarID , this.AccidentCarNumber);
+            csvprinter.CarDataReceiver(this.transform.position , this.CarID , this.AccidentCarNumber,
+                TryGetComponent<VehicleBody>(out var body) ? body.CsvName : VehicleBody.SedanCsvName);
         }
 
     }

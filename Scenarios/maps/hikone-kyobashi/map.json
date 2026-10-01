@@ -6250,5 +6250,19 @@
         "Car_Right",
         "Car_SideHit"
     ],
+    "vehicleBodies": [
+        {
+            "id": "",
+            "label": "セダン（標準）"
+        },
+        {
+            "id": "kei-tall",
+            "label": "軽ハイトワゴン / Kei tall wagon"
+        },
+        {
+            "id": "kei-hatch",
+            "label": "軽ハッチバック / Kei hatchback"
+        }
+    ],
     "exportedFrom": "Assets/_Project/Scenes/Gameplay_Hikone.unity"
 }

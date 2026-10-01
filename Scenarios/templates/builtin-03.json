@@ -32,6 +32,7 @@
         {
             "name": "事故車 1",
             "model": "Car_Left",
+            "body": "",
             "route": [
                 {
                     "x": 52.26,
@@ -67,6 +68,7 @@
         {
             "name": "事故車 2",
             "model": "Car_Left",
+            "body": "",
             "route": [
                 {
                     "x": 22.26,
@@ -102,6 +104,7 @@
         {
             "name": "事故車 3",
             "model": "Car_Left",
+            "body": "",
             "route": [
                 {
                     "x": 22.26,

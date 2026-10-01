@@ -76,6 +76,13 @@ public static class HikoneEnvironmentBuilder
             ["HK_SignBlue"] = new MatSpec(null, 1f, C(0.08f, 0.3f, 0.66f), 0.3f),
             ["HK_SignYellow"] = new MatSpec(null, 1f, C(0.95f, 0.78f, 0.1f), 0.3f),
             ["HK_Guard"] = new MatSpec(null, 1f, C(0.3f, 0.22f, 0.16f), 0.3f),
+            ["HK_TruckCab"] = new MatSpec(null, 1f, C(0.9f, 0.9f, 0.88f), 0.45f),
+            ["HK_Rubber"] = new MatSpec(null, 1f, C(0.05f, 0.05f, 0.05f), 0.15f),
+            ["HK_PlateGreen"] = new MatSpec(null, 1f, C(0.1f, 0.34f, 0.19f), 0.3f),
+            ["HK_VanBody"] = new MatSpec(null, 1f, C(0.8f, 0.81f, 0.82f), 0.35f),
+            ["HK_VanRib"] = new MatSpec(null, 1f, C(0.6f, 0.61f, 0.62f), 0.3f),
+            // kei car paint: white, tinted per car (VehicleBody) through a property block
+            ["HK_KeiPaint"] = new MatSpec(null, 1f, C(1f, 1f, 1f), 0.6f),
         };
         var lamp = new MatSpec(null, 1f, C(1f, 0.86f, 0.62f), 0.2f) { Emissive = true };
         d["HK_Lamp"] = lamp;
@@ -205,6 +212,7 @@ public static class HikoneEnvironmentBuilder
         var mats = BuildMaterials();
         ConfigureModels(mats);
         BuildPrefabs();
+        WriteVehicleBodyCatalog();
         AssetDatabase.SaveAssets();
         Debug.Log($"[Hikone] assets ready: {mats.Count} materials");
     }
@@ -295,7 +303,8 @@ public static class HikoneEnvironmentBuilder
             mi.importLights = false;
             mi.importAnimation = false;
             mi.animationType = ModelImporterAnimationType.None;
-            mi.isReadable = false;
+            // car bodies are dented on impact (AccidentVehicleDamage needs readable meshes)
+            mi.isReadable = Path.GetFileNameWithoutExtension(path).StartsWith("HK_Kei_");
             mi.meshCompression = ModelImporterMeshCompression.Off;
             mi.importBlendShapes = false;
             mi.addCollider = false;
@@ -305,6 +314,40 @@ public static class HikoneEnvironmentBuilder
                 mi.AddRemap(new AssetImporter.SourceAssetIdentifier(typeof(Material), kv.Key), kv.Value);
             mi.SaveAndReimport();
         }
+    }
+
+    const string VehicleBodyCatalogPath = "Assets/_Project/Resources/VehicleBodies.asset";
+
+    /// <summary>
+    /// The kei cars mixed into the background traffic (VehicleBody). Sizes are the kei limits
+    /// (3.395 x 1.475 m); shares follow the roughly 40 % kei share of Japanese passenger cars.
+    /// </summary>
+    static void WriteVehicleBodyCatalog()
+    {
+        EnsureFolder(Path.GetDirectoryName(VehicleBodyCatalogPath).Replace('\\', '/'));
+        var catalog = AssetDatabase.LoadAssetAtPath<VehicleBodyCatalog>(VehicleBodyCatalogPath);
+        if (catalog == null)
+        {
+            catalog = ScriptableObject.CreateInstance<VehicleBodyCatalog>();
+            AssetDatabase.CreateAsset(catalog, VehicleBodyCatalogPath);
+        }
+        // pearl white, silver, black, ivory, pale pink, sky blue, mint, red
+        var colors = new[]
+        {
+            C(0.93f, 0.93f, 0.91f), C(0.72f, 0.73f, 0.75f), C(0.08f, 0.08f, 0.09f), C(0.86f, 0.81f, 0.7f),
+            C(0.9f, 0.74f, 0.76f), C(0.58f, 0.72f, 0.82f), C(0.65f, 0.8f, 0.72f), C(0.62f, 0.1f, 0.12f)
+        };
+        VehicleBodyCatalog.Entry Body(string id, string label, string prefab, float h, float mass, float share) => new VehicleBodyCatalog.Entry
+        {
+            id = id, label = label, prefab = AssetDatabase.LoadAssetAtPath<GameObject>($"{PrefabDir}/{prefab}.prefab"),
+            size = new Vector3(1.475f, h, 3.395f), massKg = mass, trafficShare = share, paintMaterial = "HK_KeiPaint", colors = colors
+        };
+        catalog.bodies = new[]
+        {
+            Body("kei-tall", "軽ハイトワゴン / Kei tall wagon", "HK_Kei_Tall", 1.79f, 900f, 0.25f),
+            Body("kei-hatch", "軽ハッチバック / Kei hatchback", "HK_Kei_Hatch", 1.525f, 680f, 0.15f),
+        };
+        EditorUtility.SetDirty(catalog);
     }
 
     static void BuildPrefabs()
@@ -376,6 +419,7 @@ public static class HikoneEnvironmentBuilder
 
         HideLegacyVisuals(env.transform);
         ConfigureSpawnOccluders(scene);
+        ReplaceTruckVisuals(scene);
 
         var existing = env.transform.Find(EnvironmentRootName);
         if (existing != null) UnityEngine.Object.DestroyImmediate(existing.gameObject);
@@ -422,6 +466,67 @@ public static class HikoneEnvironmentBuilder
             if (t == null) continue;
             foreach (var r in t.GetComponentsInChildren<Renderer>(true)) r.enabled = false;
         }
+    }
+
+    /// <summary>
+    /// The parked trucks of the truck scenarios (an imported European tractor-trailer) are shown as
+    /// Japanese box trucks: the old tractor and trailer renderers are switched off (their colliders,
+    /// the TruckCollider and every transform stay) and HK_Truck_Large (10 t) or HK_Truck_Medium (4 t)
+    /// is placed on the old visual's footprint, so the occlusion stays the same. Idempotent.
+    /// </summary>
+    static void ReplaceTruckVisuals(UnityEngine.SceneManagement.Scene scene)
+    {
+        var large = AssetDatabase.LoadAssetAtPath<GameObject>($"{PrefabDir}/HK_Truck_Large.prefab");
+        var medium = AssetDatabase.LoadAssetAtPath<GameObject>($"{PrefabDir}/HK_Truck_Medium.prefab");
+        if (large == null || medium == null)
+        {
+            Debug.LogWarning("[Hikone] truck prefabs missing; run step 1 first. Trucks left unchanged.");
+            return;
+        }
+        var replaced = 0;
+        foreach (var root in scene.GetRootGameObjects())
+        foreach (var truck in root.GetComponentsInChildren<Transform>(true)
+                     .Where(t => t.name.StartsWith("Trucks") && t.parent != null && t.parent.name == "TrucksContainer").ToArray())
+        {
+            var parts = new[] { truck.Find("Truck"), truck.Find("Trailer") }.Where(p => p != null).ToArray();
+            if (parts.Length == 0) continue;
+            // world bounds from the meshes (valid whether or not the renderers are already off)
+            var bounds = new Bounds();
+            var first = true;
+            foreach (var mf in parts.SelectMany(p => p.GetComponentsInChildren<MeshFilter>(true)))
+            {
+                if (mf.sharedMesh == null) continue;
+                var mb = mf.sharedMesh.bounds;
+                foreach (var sx in new[] { -1f, 1f })
+                foreach (var sy in new[] { -1f, 1f })
+                foreach (var sz in new[] { -1f, 1f })
+                {
+                    var w = mf.transform.TransformPoint(mb.center + Vector3.Scale(mb.extents, new Vector3(sx, sy, sz)));
+                    if (first) { bounds = new Bounds(w, Vector3.zero); first = false; }
+                    else bounds.Encapsulate(w);
+                }
+            }
+            foreach (var r in parts.SelectMany(p => p.GetComponentsInChildren<Renderer>(true)))
+                r.enabled = false;
+            var old = truck.Find("HK_TruckVisual");
+            if (old != null) UnityEngine.Object.DestroyImmediate(old.gameObject);
+            // the cab points the same way as the old tractor (towards the truck's root)
+            var along = truck.right;
+            var cabAtRoot = Vector3.Dot(bounds.center - truck.position, along) > 0f;
+            var prefab = Mathf.Max(bounds.size.x, bounds.size.z) > 10f ? large : medium;
+            var go = (GameObject)PrefabUtility.InstantiatePrefab(prefab, truck);
+            go.name = "HK_TruckVisual";
+            go.transform.SetPositionAndRotation(new Vector3(bounds.center.x, bounds.min.y, bounds.center.z),
+                truck.rotation * Quaternion.Euler(0f, cabAtRoot ? 0f : 180f, 0f));
+            go.transform.localScale = Vector3.one;
+            foreach (var t in go.GetComponentsInChildren<Transform>(true))
+            {
+                t.gameObject.layer = parts[0].gameObject.layer;
+                GameObjectUtility.SetStaticEditorFlags(t.gameObject, 0);
+            }
+            replaced++;
+        }
+        Debug.Log($"[Hikone] truck visuals replaced: {replaced}");
     }
 
     /// <summary>

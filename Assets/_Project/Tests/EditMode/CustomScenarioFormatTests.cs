@@ -76,6 +76,39 @@ namespace VRLearn.Tests.EditMode
                 Set(first, "route", shorter);
             }), "route").SetName("RouteWithOnePoint");
             yield return new TestCaseData((Action<object>)(s => Set(((Array)Get(s, "vehicles")).GetValue(0), "speedKmh", 200f)), "speedKmh").SetName("TooFast");
+            yield return new TestCaseData((Action<object>)(s => Set(((Array)Get(s, "vehicles")).GetValue(0), "body", "truck")), "body").SetName("UnknownBody");
+        }
+
+        [Test]
+        public void KeiBodiesAreCatalogedWithinTheKeiLimitsAndFilesWithoutABodyKeepTheSedan()
+        {
+            var catalog = Resources.Load("VehicleBodies");
+            Assert.That(catalog, Is.Not.Null, "Resources/VehicleBodies (written by Hikone step 1)");
+            var bodies = (Array)catalog.GetType().GetField("bodies").GetValue(catalog);
+            var ids = new List<string>();
+            foreach (var entry in bodies)
+            {
+                ids.Add((string)Get(entry, "id"));
+                var prefab = (GameObject)Get(entry, "prefab");
+                Assert.That(prefab, Is.Not.Null);
+                var size = (Vector3)Get(entry, "size");
+                Assert.That(size.z, Is.LessThanOrEqualTo(3.4f), "kei length limit");
+                Assert.That(size.x, Is.LessThanOrEqualTo(1.48f), "kei width limit");
+                Assert.That(size.y, Is.LessThanOrEqualTo(2.0f), "kei height limit");
+                var mesh = prefab.GetComponentInChildren<MeshFilter>().sharedMesh;
+                Assert.That(mesh.isReadable, Is.True, "impacts dent the body");
+                Assert.That(mesh.bounds.size.z, Is.EqualTo(size.z).Within(0.05f), "the model matches its catalog size");
+            }
+            var allowed = (string[])T("ScenarioVehicle").GetField("Bodies").GetValue(null);
+            CollectionAssert.AreEquivalent(allowed, new[] { "" }.Concat(ids).ToArray(), "scenario files and the catalog agree");
+
+            // files written before the body field existed load with the sedan
+            var json = Template("builtin-01").Replace("\"body\": \"\",", "");
+            Assert.That(json, Does.Not.Contain("\"body\""));
+            var errors = new List<string>();
+            var scenario = Parse(json, errors);
+            Assert.That(errors, Is.Empty);
+            Assert.That(Get(((Array)Get(scenario, "vehicles")).GetValue(0), "body"), Is.EqualTo(""));
         }
 
         [TestCaseSource(nameof(BrokenFiles))]

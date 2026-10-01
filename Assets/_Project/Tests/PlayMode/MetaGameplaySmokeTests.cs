@@ -599,7 +599,8 @@ namespace VRLearn.Tests.PlayMode
 
                 Assert.That(track[0], Is.EqualTo("Time,PlayerPositionX,PlayerPositionY,PlayerPositionZ,PlayerRotationX,PlayerRotationY,PlayerRotationZ,AfterAcident,AcidentProgress"));
                 Assert.That(track.Length, Is.GreaterThan(5), "Head samples are recorded during the trial.");
-                Assert.That(car[0], Is.EqualTo("Time,CarID,CarPositionX,CarPositionY,CarPositionZ,AcidentCar"));
+                // Body (VehicleBody) was appended last; the older columns keep their order
+                Assert.That(car[0], Is.EqualTo("Time,CarID,CarPositionX,CarPositionY,CarPositionZ,AcidentCar,Body"));
                 var previous = -1f;
                 foreach (var line in track.Skip(1))
                 {
@@ -613,7 +614,11 @@ namespace VRLearn.Tests.PlayMode
                     previous = time;
                 }
                 foreach (var line in car.Skip(1))
-                    Assert.That(line.Split(',').Length, Is.EqualTo(6), line);
+                {
+                    var cells = line.Split(',');
+                    Assert.That(cells.Length, Is.EqualTo(7), line);
+                    Assert.That(new[] { "sedan", "kei-tall", "kei-hatch" }, Does.Contain(cells[6]), line);
+                }
             }
             finally
             {

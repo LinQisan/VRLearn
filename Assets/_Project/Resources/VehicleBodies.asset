@@ -1,0 +1,47 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5da57f7bbd91040038a76b82b78a16e3, type: 3}
+  m_Name: VehicleBodies
+  m_EditorClassIdentifier: Assembly-CSharp::VehicleBodyCatalog
+  bodies:
+  - id: kei-tall
+    label: "\u8EFD\u30CF\u30A4\u30C8\u30EF\u30B4\u30F3 / Kei tall wagon"
+    prefab: {fileID: 4494431080731395150, guid: 89edee743fb2a4312bc2dddc5b12e583, type: 3}
+    size: {x: 1.475, y: 1.79, z: 3.395}
+    massKg: 900
+    trafficShare: 0.25
+    paintMaterial: HK_KeiPaint
+    colors:
+    - {r: 0.93, g: 0.93, b: 0.91, a: 1}
+    - {r: 0.72, g: 0.73, b: 0.75, a: 1}
+    - {r: 0.08, g: 0.08, b: 0.09, a: 1}
+    - {r: 0.86, g: 0.81, b: 0.7, a: 1}
+    - {r: 0.9, g: 0.74, b: 0.76, a: 1}
+    - {r: 0.58, g: 0.72, b: 0.82, a: 1}
+    - {r: 0.65, g: 0.8, b: 0.72, a: 1}
+    - {r: 0.62, g: 0.1, b: 0.12, a: 1}
+  - id: kei-hatch
+    label: "\u8EFD\u30CF\u30C3\u30C1\u30D0\u30C3\u30AF / Kei hatchback"
+    prefab: {fileID: 1542788717708463473, guid: 970fecc08197541e9a93bbe1230cf76e, type: 3}
+    size: {x: 1.475, y: 1.525, z: 3.395}
+    massKg: 680
+    trafficShare: 0.15
+    paintMaterial: HK_KeiPaint
+    colors:
+    - {r: 0.93, g: 0.93, b: 0.91, a: 1}
+    - {r: 0.72, g: 0.73, b: 0.75, a: 1}
+    - {r: 0.08, g: 0.08, b: 0.09, a: 1}
+    - {r: 0.86, g: 0.81, b: 0.7, a: 1}
+    - {r: 0.9, g: 0.74, b: 0.76, a: 1}
+    - {r: 0.58, g: 0.72, b: 0.82, a: 1}
+    - {r: 0.65, g: 0.8, b: 0.72, a: 1}
+    - {r: 0.62, g: 0.1, b: 0.12, a: 1}

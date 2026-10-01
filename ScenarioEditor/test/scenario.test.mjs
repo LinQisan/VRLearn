@@ -25,12 +25,15 @@ test('07/08 cross the sidewalk at the parking exit: a warning, not an error', ()
 test('structural errors use the same messages as Unity', () => {
   const s = template('builtin-01');
   s.name = ''; s.id = 'Bad Id'; s.vehicles[0].speedKmh = 200; s.vehicles[1].route = [s.vehicles[1].route[0]];
+  s.vehicles[2].body = 'truck';
   const m = errors(s).join('\n');
-  for (const part of ['name（場面の名前）がありません。', 'id は英小文字', 'speedKmh は 5〜80 です。', 'route には 2 点以上が必要です。'])
+  for (const part of ['name（場面の名前）がありません。', 'id は英小文字', 'speedKmh は 5〜80 です。', 'route には 2 点以上が必要です。',
+    'body は 空（セダン）・kei-tall・kei-hatch のいずれかです。'])
     assert.ok(m.includes(part), part);
   const csharp = fs.readFileSync(path.resolve(root, '..', 'Assets', '_Project', 'Scripts', 'Scenario', 'CustomScenario.cs'), 'utf8');
   for (const part of ['name（場面の名前）がありません。', 'speedKmh は 5〜80 です。', 'route には 2 点以上が必要です。',
-    'trigger を使うには trigger エリアが必要です。', 'spawn と goal は 3 m 以上離してください。'])
+    'trigger を使うには trigger エリアが必要です。', 'spawn と goal は 3 m 以上離してください。',
+    'body は 空（セダン）・kei-tall・kei-hatch のいずれかです。'])
     assert.ok(csharp.includes(part), 'C# has the same text: ' + part);
 });
 

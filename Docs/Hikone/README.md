@@ -6,7 +6,7 @@
 
 ## 截图
 
-用 `Tools/VRLearn/Docs/Capture Screenshots`（`Assets/_Project/Editor/DocScreenshots.cs`）从固定视点重新拍 01–07；08、09 来自 PlayMode 测试 `AccidentExperienceTests.RecordedReplayCompletesAndRetryRetainsParticipantSettings`（不加 `-nographics` 运行时会存到 `Logs/AccidentExperience-Visuals/`，裁掉黑边后转为 JPG）。环境或菜单变化后请重拍。
+用 `Tools/VRLearn/Docs/Capture Screenshots`（`Assets/_Project/Editor/DocScreenshots.cs`）从固定视点重新拍 01–07 和 10（每张只显示一个情景的对象，与体验时相同）；08、09 来自 PlayMode 测试 `AccidentExperienceTests.RecordedReplayCompletesAndRetryRetainsParticipantSettings`（不加 `-nographics` 运行时会存到 `Logs/AccidentExperience-Visuals/`，裁掉黑边后转为 JPG）。环境或菜单变化后请重拍。
 
 | 图 | 内容 |
 | --- | --- |
@@ -19,6 +19,7 @@
 | [07](07_title_menu.jpg) | 标题菜单（一页） |
 | [08](08_accident_replay.jpg) | 事故回放（三视角） |
 | [09](09_feedback.jpg) | 反馈页 |
+| [10](10_parked_trucks.jpg) | 情景 03 的停放卡车（日式厢式货车） |
 
 标题菜单的设计见 [DESIGN.md](../../DESIGN.md) §6，生成方法见 AGENTS.md「Change the title menu」。
 
@@ -49,8 +50,14 @@
   - `BlackWall (1)` 缩小并移到南侧小街的長屋門通道内（位置 (10, 2.4, 6.63)，缩放 9.4×5）。
   - `BlackWall (2)` 已停用，由本町通北侧的土塀和路口西南角的土蔵代替。
 - 核查结果：在所有场景中，车辆生成点和消失点的遮挡程度均不低于原场景（`HikoneSceneTests` 和下方的视线核查）。
+- **停放的卡车**（情景 03/04/06/09 的遮挡物）：场景生成器把原来的欧洲式半挂车外观换成日式厢式货车 `HK_Truck_Large`（10 吨级，11.8 m）和 `HK_Truck_Medium`（4 吨级，8.6 m），高度都是 3.62 m，放在原外观的位置上。原模型的碰撞体和 `TruckCollider` 不变。
+- **隐形辅助物体**（`Material_Invisible`、`ColliderOnlyMaterial`）改为真正不可见、不投影。
+- **护城河岸边**：地形在石垣墙线外 5 cm 就降到水底（`hk_terrain.WALL_GAP`），石垣前面不再露出草台和土壁；原道路网格中跨过岸线的人行道三角面在岸线处切掉（`road_raised(clip_moat=True)`）。
+- **行道树**：榉树按修剪后的大小（约 8.5 m 高、5.5 m 宽）。布局生成时，树干离路灯杆、标志杆和信号灯至少 1.5 m，灯笼不在树冠里，树冠不压到房屋和土塀；行道树沿树列挪到空位，散种的树有冲突则删除（`hk_layout.clear_town_trees`，校验中也会检查）。
 
-## 危险事件视线（各 Scenario 自身事故车路线，35 m 内可见率，原场景 → 新场景）
+## 危险事件视线
+
+当前的核查结果和方法见 [DESIGN.md](../../DESIGN.md) §4（`Tools/VRLearn/Hikone/3. Check Occlusion`）。以下是最初换成彦根场景时的记录（各 Scenario 自身事故车路线，35 m 内可见率，原场景 → 新场景）：
 
 S1 90→96%，S2 83→89%，S3 100→96%，S4 82→97%，S5 100→98%，S6/7 97→99%，S8 90→92%，S9 100→100%。
 S4 的事故车从桥上驶来。实际的京桥路口北侧就是开阔的护城河，所以这一项的可见率明显提高，这是按真实地形还原的结果。S2/S3/S5/S8 的卡车遮挡保持不变。

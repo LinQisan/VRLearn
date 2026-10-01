@@ -23,10 +23,14 @@ WATER_BED = -3.2
 WATER_Y = -1.35
 PLATEAU = (-40.0, 205.0, 30.0, 22.0, 50.0)     # cx, cz, half-x, half-z, height (honmaru)
 WALL_H = 6.0
-INSET = 1.4                        # moat floor starts this far inside the wall tops
+INSET = 1.4                        # moat floor starts this far inside the wall tops (layout clearance)
+# The terrain drops to the moat bed right behind the wall line: the battered stone face only
+# reaches 1.1 m out, so a wider flat band at bank height showed as a grass shelf with a soil
+# cliff in front of the walls (most visibly at the masugata banks).
+WALL_GAP = 0.05
 
-BREAK_X = [MOAT_X0, MOAT_X0 + INSET, PEN[0] - INSET, PEN[0], PEN[1], PEN[1] + INSET, MOAT_X1 - INSET, MOAT_X1]
-BREAK_Z = [TOWN_Z, TOWN_Z + INSET, PEN[2] - INSET, PEN[2], CASTLE_Z - INSET, CASTLE_Z]
+BREAK_X = [MOAT_X0, MOAT_X0 + WALL_GAP, PEN[0] - WALL_GAP, PEN[0], PEN[1], PEN[1] + WALL_GAP, MOAT_X1 - WALL_GAP, MOAT_X1]
+BREAK_Z = [TOWN_Z, TOWN_Z + WALL_GAP, PEN[2] - WALL_GAP, PEN[2], CASTLE_Z - WALL_GAP, CASTLE_Z]
 
 
 def in_moat(x, z, inset=0.0):
@@ -44,10 +48,10 @@ def on_peninsula(x, z):
 def terrain_height(x, z):
     if z <= TOWN_Z + 1e-6:
         return TOWN_GROUND
-    if in_moat(x, z, INSET - 1e-3):
+    if in_moat(x, z, WALL_GAP - 1e-3):
         return WATER_BED
     if in_moat(x, z):
-        return TOWN_GROUND          # vertices under the battered walls; hidden by the stone
+        return TOWN_GROUND          # vertices on the wall line; hidden under the coping
     if on_peninsula(x, z):
         return PEN_GROUND
     if z < CASTLE_Z and not (MOAT_X0 < x < MOAT_X1):

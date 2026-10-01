@@ -48,6 +48,7 @@
       "properties": {
         "name": { "type": "string" },
         "model": { "enum": ["Car_Left", "Car_Right", "Car_SideHit", "Car_EndlessGo"], "default": "Car_Left" },
+        "body": { "enum": ["", "kei-tall", "kei-hatch"], "default": "", "description": "Car body: '' = the prefab's sedan, or a kei car (tall wagon / hatchback). Optional; behaviour comes from model." },
         "route": { "type": "array", "minItems": 2, "items": { "$ref": "#/$defs/point" }, "description": "The car appears at route[0] and drives through the rest, then disappears." },
         "speedKmh": { "type": "number", "minimum": 5, "maximum": 80, "default": 36 },
         "start": { "enum": ["begin", "trigger"], "default": "begin" },
