@@ -4,8 +4,20 @@
     {
       "name": "scenario-editor",
       "runtimeExecutable": "node",
-      "runtimeArgs": ["ScenarioEditor/server.mjs"],
+      "runtimeArgs": [
+        "ScenarioEditor/server.mjs"
+      ],
       "port": 8765
+    },
+    {
+      "name": "hikone-traffic-sim",
+      "runtimeExecutable": "node",
+      "runtimeArgs": [
+        "/Users/xinyu/hikone-traffic-sim/serve.mjs",
+        "--port",
+        "8770"
+      ],
+      "port": 8770
     }
   ]
 }
