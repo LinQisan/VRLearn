@@ -74,7 +74,7 @@ Also: `Custom Scenarios/Play Scenario File…`, `Validate Scenario Files`; `Setu
 
 ## Tools
 
-`.mcp.json`: `blender` (`uvx blender-mcp`; Connect in Blender's BlenderMCP panel, port 9876) and `unityMCP` (`http://127.0.0.1:8080/mcp`; start it in `Window → MCP for Unity`; pass `compiler: "codedom"` to `execute_code`; a backgrounded Editor may not start test jobs until brought to the front). `.codex/config.toml` uses Unity's own `unity mcp`.
+Unity's official CLI (`unity`, in `~/.unity/bin`; `unity self-update`) drives the Editor through the `com.unity.pipeline` package in this project: `unity status`, `unity list`, `unity command …` (`unity command eval` takes C# statements: `return …;`), and its MCP server `unity mcp` (the `unity` entry in `.mcp.json`; Codex: `.codex/config.toml`). Its agent skill is installed with `unity skill install claude-code`. `blender` in `.mcp.json` is the community `uvx blender-mcp` (Connect in Blender's BlenderMCP panel, port 9876). It stays on purpose: the Blender Foundation's official MCP server (Blender Lab) needs Blender 5.1+, and Blender 5.x has no Intel Mac build — this Mac (Intel) runs Blender 4.5 LTS, the last one with Intel support. The asset pipeline does not need any MCP (`Blender -b --python`); either MCP runs generated code unguarded.
 
 ## Docs
 

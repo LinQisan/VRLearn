@@ -4,9 +4,9 @@
       "command": "/Users/xinyu/.local/bin/uvx",
       "args": ["blender-mcp"]
     },
-    "unityMCP": {
-      "type": "http",
-      "url": "http://127.0.0.1:8080/mcp"
+    "unity": {
+      "command": "/Users/xinyu/.unity/bin/unity",
+      "args": ["mcp", "--project-path", "/Users/xinyu/VRLearn"]
     }
   }
 }
