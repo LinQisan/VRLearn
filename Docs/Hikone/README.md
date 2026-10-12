@@ -21,7 +21,7 @@
 | [09](09_feedback.jpg) | 反馈页 |
 | [10](10_parked_trucks.jpg) | 情景 03 的停放卡车（日式厢式货车） |
 
-标题菜单的设计见 [RATIONALE.md](../../RATIONALE.md) §6，生成方法见 AGENTS.md「Change the title menu」。
+标题菜单的设计见 [RATIONALE.md](../../RATIONALE.md) §6，生成方法见 AGENTS.md 的 Commands 一节（改 `TitleMenuLayout.cs`，再运行 `Rebuild Title Menu (VR tiles)`）。
 
 ## 与真实地图的对应
 

@@ -8,7 +8,7 @@ using UnityEngine;
 /// comes from the car prefab; the body sets the look, the collision box, the mass and where the
 /// lights sit. Background traffic mixes the bodies in (<see cref="ApplyTrafficMix"/>); accident cars of
 /// the built-in scenarios keep the sedan; custom scenarios pick one per vehicle. Every car goes
-/// back to the sedan when it returns to the pool (hard rule 10).
+/// back to the sedan when it returns to the pool (AGENTS.md hard rule "Vehicle reuse").
 /// </summary>
 [DisallowMultipleComponent]
 public sealed class VehicleBody : MonoBehaviour
