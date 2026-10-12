@@ -8,7 +8,7 @@ using UnityEditor.SceneManagement;
 using UnityEngine;
 
 /// <summary>
-/// Occlusion check of DESIGN.md §4 (hard rule 4), run after any change to buildings, trees, walls
+/// Occlusion check of RATIONALE.md §4 (hard rule 4), run after any change to buildings, trees, walls
 /// or other visuals. For each built-in scenario (from Scenarios/templates, only that scenario's
 /// objects active): five eye points (1.6 m) from spawn to goal look at
 /// 1. where its vehicles appear (route starts) and every DestroyArea (1.2 m): exposed pairs, and

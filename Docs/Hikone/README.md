@@ -21,7 +21,7 @@
 | [09](09_feedback.jpg) | 反馈页 |
 | [10](10_parked_trucks.jpg) | 情景 03 的停放卡车（日式厢式货车） |
 
-标题菜单的设计见 [DESIGN.md](../../DESIGN.md) §6，生成方法见 AGENTS.md「Change the title menu」。
+标题菜单的设计见 [RATIONALE.md](../../RATIONALE.md) §6，生成方法见 AGENTS.md「Change the title menu」。
 
 ## 与真实地图的对应
 
@@ -57,7 +57,7 @@
 
 ## 危险事件视线
 
-当前的核查结果和方法见 [DESIGN.md](../../DESIGN.md) §4（`Tools/VRLearn/Hikone/3. Check Occlusion`）。以下是最初换成彦根场景时的记录（各 Scenario 自身事故车路线，35 m 内可见率，原场景 → 新场景）：
+当前的核查结果和方法见 [RATIONALE.md](../../RATIONALE.md) §4（`Tools/VRLearn/Hikone/3. Check Occlusion`）。以下是最初换成彦根场景时的记录（各 Scenario 自身事故车路线，35 m 内可见率，原场景 → 新场景）：
 
 S1 90→96%，S2 83→89%，S3 100→96%，S4 82→97%，S5 100→98%，S6/7 97→99%，S8 90→92%，S9 100→100%。
 S4 的事故车从桥上驶来。实际的京桥路口北侧就是开阔的护城河，所以这一项的可见率明显提高，这是按真实地形还原的结果。S2/S3/S5/S8 的卡车遮挡保持不变。
@@ -79,7 +79,7 @@ python3 Art/Hikone/hk_layout.py      # 布局 + 冲突校验
 2. `Tools/VRLearn/Hikone/2. Build Hikone Scene`（同时处理黑墙）
 3. `Tools/VRLearn/Rebuild Title Menu (VR tiles)`（标题菜单）
 
-设计意图与决策记录见根目录的 [DESIGN.md](../../DESIGN.md)。
+设计意图与决策记录见根目录的 [RATIONALE.md](../../RATIONALE.md)。
 
 ## 性能
 

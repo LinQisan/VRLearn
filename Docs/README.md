@@ -5,7 +5,7 @@
 | [`Hikone/`](Hikone/README.md) | 彦根・京橋シーンの説明と現在のスクリーンショット（`Tools/VRLearn/Docs/Capture Screenshots` で撮り直せます） |
 | `History/` | 過去の作業記録。当時の状態の証拠であり、現在の構成や手順ではありません |
 
-現在の設計・ルールはリポジトリ直下の [AGENTS.md](../AGENTS.md)（開発ルール）と [DESIGN.md](../DESIGN.md)（設計）を参照してください。
+現在の設計・ルールはリポジトリ直下の [AGENTS.md](../AGENTS.md)（開発ルール）と [RATIONALE.md](../RATIONALE.md)（設計）を参照してください。
 
 ## History
 

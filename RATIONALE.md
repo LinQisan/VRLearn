@@ -1,4 +1,4 @@
-# DESIGN.md — VRLearn 设计说明
+# RATIONALE.md — VRLearn 设计依据与决策记录
 
 本文回答两件事：这个体验为什么这样设计，以及修改时哪些东西不能丢。具体怎么做见 [AGENTS.md](AGENTS.md)，彦根场景的参数表见 [Docs/Hikone/README.md](Docs/Hikone/README.md)。
 
@@ -256,6 +256,7 @@ HikoneEnvironmentBuilder ──▶ 材质、Prefab ──▶ 场景中的 Enviro
 | D33 | 增加日本的轻自动车（高顶款、两厢款）作为车体：内置情景的普通车流随机混入约 40 %，事故车保持原轿车；自定义场景每辆车可选（`body`）；CarData 记录每辆车的车体 | 街景更接近日本（轻自动车约占乘用车的四成）；撞人的车是实验刺激，所以内置事故车不变；混入用独立的随机源，原车流的出现时机序列不变 | 所有车都换（改变实验刺激）；只在自定义场景里用 |
 | D34 | 浏览器版 Hikone Traffic Simulator 用 three.js 单独实现（独立仓库 `hikone-traffic-sim`，放在本项目旁边），数据从本项目导出（同一套布局、生成模型、道路碰撞网格、场景文件和共用的 `scenario.js`） | Unity Web 版渲染性能不够；three.js 无需构建、体积小、自带 WebXR，用 InstancedMesh 把整个街区压到约 160 次绘制；模拟在 Unity 坐标中进行，时机模型与网页编辑器相同 | Unity Web 版；Babylon.js（功能多但更重，物理和 VR 界面用不上） |
 | D35 | 网页场景编辑器移到浏览器版仓库（`hikone-traffic-sim/editor/`），外观改成模拟器的风格，功能不变；本项目只保留共用模型 `ScenarioModel/`（与 `CustomScenario.cs` 一致性的测试也留在这里）；随模拟器一起发布到 GitHub Pages | 编辑器和模拟器用同一份地图、模型和 `scenario.js`，能「▶ ブラウザで試す」直接体验；在 Pages 上没有服务器，作品存在浏览器里（可导出 JSON），而本机运行 `serve.mjs` 且旁边有本项目时，才提供保存到 `Scenarios/`、在 Unity 里运行和发送到 Quest（只接受本机请求、拒绝其他网站的写入） | 留在本项目（两份界面、两套地图数据）；把编辑器做成只能本地用的工具（不能公开试用） |
+| D36 | 本文件由 `DESIGN.md` 改名为 `RATIONALE.md` | 内容是设计依据和决策记录；而 `DESIGN.md` 在网页开发里通常指设计系统（颜色、字体、组件），人和 AI 工具都容易按那个意思去读。浏览器版的 `DESIGN.md` 现在就是它的设计系统 | 保留原名 |
 | D16 | 测试只跑彦根场景 | 标准场景已删除（D6）；运行时间从约 4 分钟缩短到约 2 分钟 | 两个场景都跑 |
 
 ## 9. 已知限制与后续

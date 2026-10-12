@@ -3,7 +3,7 @@
 Meta Quest 2 向けの、歩行者向け交通安全 VR 体験・実験用 Unity プロジェクトです（一部の場面は自転車で体験します）。体験の舞台は彦根・京橋口の交差点（夢京橋キャッスルロードと中堀通り）です。Unity Editor では、ヘッドセットなしでもキーボードとマウスで動かせます。
 
 - 開発ルールと作業手順 → [AGENTS.md](AGENTS.md)（AI エージェント・開発者向け）
-- 設計の考え方と決定事項 → [DESIGN.md](DESIGN.md)
+- 設計の考え方と決定事項 → [RATIONALE.md](RATIONALE.md)
 - 彦根シーンの詳細 → [Docs/Hikone/README.md](Docs/Hikone/README.md)
 
 ## 動かし方
