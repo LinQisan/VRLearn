@@ -9,18 +9,15 @@ Talk to the owner in Chinese. Code, comments, commits and this file in English; 
 ## Commands
 
 ```sh
-UNITY_EDITOR="/Applications/Unity/Hub/Editor/6000.3.19f1/Unity.app/Contents/MacOS/Unity"   # close the Editor first
-RESULT_DIR="$PWD/Logs/Tests/$(date +%Y%m%d-%H%M%S)"; mkdir -p "$RESULT_DIR"
-"$UNITY_EDITOR" -batchmode -nographics -projectPath "$PWD" -runTests -testPlatform EditMode \
-  -assemblyNames VRLearn.EditModeTests -testResults "$RESULT_DIR/editmode.xml" -logFile "$RESULT_DIR/editmode.log"
-"$UNITY_EDITOR" -batchmode -nographics -projectPath "$PWD" -runTests -testPlatform PlayMode \
-  -assemblyNames VRLearn.PlayModeTests -testResults "$RESULT_DIR/playmode.xml" -logFile "$RESULT_DIR/playmode.log"
-(cd ScenarioModel && npm test)       # shared scenario model, no packages
-"$UNITY_EDITOR" -batchmode -quit -projectPath "$PWD" -buildTarget Android \
+D="$PWD/Logs/Tests/$(date +%Y%m%d-%H%M%S)"                                     # close the Editor first
+unity test "$PWD" --mode EditMode --output "$D/editmode.xml" --timeout 1200    # ~1.5 min (mostly Editor start-up)
+unity test "$PWD" --mode PlayMode --output "$D/playmode.xml" --timeout 1800    # ~3.5 min
+(cd ScenarioModel && npm test)                                                 # shared scenario model, no packages
+"/Applications/Unity/Hub/Editor/6000.3.19f1/Unity.app/Contents/MacOS/Unity" -batchmode -quit -projectPath "$PWD" -buildTarget Android \
   -executeMethod AccidentExperienceValidation.BuildAndroid -logFile "$PWD/Logs/android-build.log"   # → Builds/VRLearn-<version>-<code>.apk
 ```
 
-Trust the XML, not the exit code. Bump `bundleVersion` and `bundleVersionCode` for every APK handed out.
+`unity test` (Unity's CLI, see Tools) runs only this project's test assembly for the mode and exits 0 (passed), 8 (tests failed) or 6 (the run itself failed: compile error, licence, crash, timeout). Read the counts from the XML. Bump `bundleVersion` and `bundleVersionCode` for every APK handed out.
 
 Editor menus (`Tools/VRLearn/…`) for generated content — change the source, then run the menu:
 
@@ -67,7 +64,7 @@ Also: `Custom Scenarios/Play Scenario File…`, `Validate Scenario Files`; `Setu
 ## Before handing off
 
 - Docs-only: check paths and content. Logic or assets: both test assemblies pass — baseline **EditMode 46/46, PlayMode 43/43, ScenarioModel 8/8**. `VehicleLifecycleTests.FirstUseAndReuseObserveIdenticalSpawnConfig` and `WalkingPhoneModePresentsPhoneInView` fail occasionally; rerun before calling it a regression.
-- Test runs leave changes to revert before committing: `EditorSettings.asset` `m_EnterPlayModeOptions`, `UnityConnectSettings.asset` `m_Enabled`, stray `Assets/InitTestScene*.unity`. Run `git diff --check`.
+- Test runs may leave changes to revert before committing: `EditorSettings.asset` `m_EnterPlayModeOptions`, `UnityConnectSettings.asset` `m_Enabled`, stray `Assets/InitTestScene*.unity`. Run `git diff --check`.
 - Headless tests do not prove UI, audio or headset behaviour: for experience changes walk title → accident → replay/results → retry → back, and run 6, 7, 9 three times in a row. Report "build succeeded" and "verified on device" separately.
 - Commit only source, assets with `.meta`, manifests, settings and docs — never `Library/`, `Logs/`, `Temp/`, `Builds/`, APKs, `*.csproj`, credentials. Commit or push only when asked; never force-push.
 - Say what changed, what was verified, and what was not.
