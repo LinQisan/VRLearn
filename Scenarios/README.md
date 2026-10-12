@@ -8,7 +8,7 @@
 - まとめて確認: `Tools/VRLearn/Custom Scenarios/Validate Scenario Files`
 - ひな形の更新: `Tools/VRLearn/Custom Scenarios/Export Built-in Scenarios As Templates`
 
-Quest へは、シナリオエディタ（`../ScenarioEditor`）の「⇪ Questに送る」でコピーします（`/sdcard/Android/data/<package>/files/Scenarios`）。Quest ではタイトル画面の「カスタム」タブに出ます。
+場面はシナリオエディタ（[Hikone Traffic Simulator](https://github.com/LinQisan/hikone-traffic-sim) の `editor/`。隣の `../hikone-traffic-sim` で `node serve.mjs` → http://localhost:8770/editor/ を開くと、このフォルダに保存できます）で作れます。Quest へは、エディタの「⇪ Questに送る」でコピーします（`/sdcard/Android/data/<package>/files/Scenarios`）。Quest ではタイトル画面の「カスタム」タブに出ます。
 
 地図は彦根・京橋のみ対応しています。CSV では `EventNumber` が 100、最後の列 `CustomScenario` にファイルの `id` が入ります。
 

@@ -4,7 +4,7 @@ import assert from 'node:assert/strict';
 import fs from 'node:fs';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
-import * as S from '../web/scenario.js';
+import * as S from '../scenario.js';
 
 const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..', '..', 'Scenarios');
 const map = JSON.parse(fs.readFileSync(path.join(root, 'maps', 'hikone-kyobashi', 'map.json'), 'utf8'));

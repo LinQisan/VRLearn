@@ -1,0 +1,10 @@
+{
+  "name": "vrlearn-scenario-model",
+  "private": true,
+  "type": "module",
+  "description": "Shared model of VRLearn custom scenarios (format, validation, timing); mirrors CustomScenario.cs. The editor lives in ../hikone-traffic-sim/editor. No dependencies.",
+  "scripts": {
+    "test": "node --test \"test/*.test.mjs\""
+  },
+  "engines": { "node": ">=20" }
+}

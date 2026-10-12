@@ -35,7 +35,7 @@ Meta Quest 2 向けの、歩行者向け交通安全 VR 体験・実験用 Unity
 | --- | --- |
 | `Assets/_Project/` | このプロジェクトのコードと素材（`Scripts/`、`Scenes/`、`ScenarioDefinitions/`、`Prefabs/`、`Editor/`、`Tests/` など） |
 | `Assets/_Project/Scripts/` | 機能別：`Core/`（全体の流れ・CSV）、`Scenario/`（場面）、`Traffic/`（車・信号）、`Player/`（体験者）、`XR/`（VR 入力）、`Accident/`（事故・リプレイ・振り返り）、`Title/`（タイトル）、`UI/`、`Recording/` |
-| `ScenarioEditor/` | カスタム場面を作るブラウザ用エディタ |
+| `ScenarioModel/` | カスタム場面のデータ形式とチェック（`scenario.js`、Unity の `CustomScenario.cs` と同じ内容）。エディタ本体は [Hikone Traffic Simulator](https://github.com/LinQisan/hikone-traffic-sim) の `editor/` |
 | `Scenarios/` | カスタム場面（JSON）、組み込み場面のひな形、エディタ用の地図 |
 | `Assets/_Project/Hikone/` | 彦根シーンの生成済みモデル・マテリアル・プレハブ・配置データ |
 | `Art/Hikone/` | 彦根アセットの生成元（Blender 用 Python スクリプト） |

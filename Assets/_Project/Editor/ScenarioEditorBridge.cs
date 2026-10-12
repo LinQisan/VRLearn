@@ -4,8 +4,9 @@ using UnityEditor;
 using UnityEngine;
 
 /// <summary>
-/// Lets the web scenario editor (ScenarioEditor/) start a scenario in this Editor: its
-/// "Unityで試す" button writes Scenarios/.play-request.json; this watcher picks it up, deletes it
+/// Lets the web scenario editor (../hikone-traffic-sim/editor, served locally by its serve.mjs)
+/// start a scenario in this Editor: its "Unityで試す" button writes Scenarios/.play-request.json;
+/// this watcher picks it up, deletes it
 /// and plays the file in the Hikone scene. Ignored while playing or compiling.
 /// </summary>
 [InitializeOnLoad]
