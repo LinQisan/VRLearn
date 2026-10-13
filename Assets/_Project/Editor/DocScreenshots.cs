@@ -1,4 +1,5 @@
 using System.IO;
+using System.Linq;
 using UnityEditor;
 using UnityEditor.SceneManagement;
 using UnityEngine;
@@ -90,6 +91,38 @@ public static class DocScreenshots
         }
         Debug.Log("[DocScreenshots] saved to " + OutputFolder);
         CapturePropModels();
+        CaptureTrafficSignals();
+    }
+
+    [MenuItem("Tools/VRLearn/Docs/Capture Traffic Signals")]
+    public static void CaptureTrafficSignals()
+    {
+        Directory.CreateDirectory(OutputFolder);
+        EditorSceneManager.OpenScene(GameplayScene, OpenSceneMode.Single);
+        var heads = Object.FindObjectsByType<TrafficSignalPreset>(FindObjectsSortMode.None);
+        var head = heads.First(s => s.IsVertical && !s.IsPedestrian);
+        var camera = NewCamera();
+        try
+        {
+            camera.fieldOfView = 42f;
+            camera.transform.position = head.transform.position - head.transform.forward * 10f
+                + head.transform.right * 1.2f + Vector3.up * 0.8f;
+            camera.transform.LookAt(head.transform.position + Vector3.up * 0.5f);
+            var times = new[] { 0f, 20.5f, 23.5f };
+            var names = new[] { "12_signal_green.jpg", "13_signal_yellow.jpg", "14_signal_red.jpg" };
+            for (var i = 0; i < times.Length; i++)
+            {
+                foreach (var signal in heads)
+                {
+                    var aspect = TrafficSignalCycle.Evaluate(times[i], true, signal.IsVertical,
+                        signal.IsPedestrian, out var visible);
+                    signal.Apply(aspect, visible);
+                }
+                Save(camera, names[i]);
+            }
+        }
+        finally { Object.DestroyImmediate(camera.gameObject); }
+        EditorSceneManager.OpenScene(GameplayScene, OpenSceneMode.Single);
     }
 
     /// <summary>The ported props at their authored scale, independent of scenario activation.</summary>
@@ -155,6 +188,7 @@ public static class DocScreenshots
         {
             camera.aspect = (float)width / Height;
             camera.targetTexture = target;
+            camera.Render(); // warm the newly loaded materials before the captured frame
             camera.Render();
             RenderTexture.active = target;
             image.ReadPixels(new Rect(0, 0, width, Height), 0, 0);

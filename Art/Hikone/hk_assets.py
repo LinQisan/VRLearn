@@ -7,6 +7,7 @@ import math, random
 import bpy
 from hk_lib import MB, clear_asset, export, mat
 import hk_web_props
+import hk_signals
 
 PAINT_Y = 0.012
 
@@ -1142,6 +1143,7 @@ def build_all():
     obs.append(tree_zelkova())
     obs.append(hedge())
     obs.append(hk_web_props.build("HK_Sedan"))
+    obs.extend(hk_signals.build(name) for name in hk_signals.MODEL_NAMES)
     # kei cars mixed into the background traffic (VehicleBody)
     obs.append(kei_tall())
     obs.append(kei_hatch())

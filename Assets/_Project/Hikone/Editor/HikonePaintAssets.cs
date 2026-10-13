@@ -48,6 +48,10 @@ public static class HikonePaintAssets
         ["ART_Chassis"] = C(0.17f, 0.18f, 0.22f), ["ART_VehiclePaint"] = C(0.90f, 0.91f, 0.87f),
         ["ART_Rubber"] = C(0.26f, 0.27f, 0.35f), ["ART_WhitePaint"] = C(0.98f, 0.93f, 0.77f),
         ["ART_PlateGreen"] = C(0.23f, 0.47f, 0.36f),
+        ["ART_SignalHousing"] = C(0.55f, 0.57f, 0.57f), ["ART_SignalHood"] = C(0.50f, 0.52f, 0.53f),
+        ["ART_SignalHousingDark"] = C(0.25f, 0.25f, 0.27f), ["ART_SignalHoodDark"] = C(0.22f, 0.23f, 0.26f),
+        ["ART_SignalGreen"] = C(0.17f, 0.76f, 0.46f), ["ART_SignalGlyph"] = C(1f, 0.96f, 0.80f),
+        ["ART_SignalPole"] = C(0.36f, 0.29f, 0.25f),
     };
 
     /// <summary>Every Hikone material (one per name used by the Art/Hikone models).</summary>

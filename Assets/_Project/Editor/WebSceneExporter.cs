@@ -76,7 +76,12 @@ public static class WebSceneExporter
         signals.parts = UnityEngine.Object.FindObjectsByType<Transform>(FindObjectsInactive.Exclude, FindObjectsSortMode.None)
                 .Where(t => t.name.StartsWith("TrafficLight_"))
                 .OrderBy(t => t.position.x).ThenBy(t => t.position.z)
-                .SelectMany(t => t.GetComponentsInChildren<MeshRenderer>(false).Where(r => r.enabled)
+                // Preserve the original head/pole anchors used by the browser's signal-layout.js.
+                // Unity's generated visual is separate from these source meshes; hidden originals
+                // still provide the reference matrices instead of exporting the replacement twice.
+                .SelectMany(t => t.GetComponentsInChildren<MeshRenderer>(false)
+                    .Where(r => t.Find(HikoneSignalVisuals.VisualName) == null
+                        || !r.transform.IsChildOf(t.Find(HikoneSignalVisuals.VisualName)))
                     .Select(r => Part(r, $"{t.parent?.name}/{t.name}@{t.position.x:0.0},{t.position.z:0.0}", signals, meshIndex)))
                 .Where(m => m != null).ToArray();
         File.WriteAllText(Path.Combine(OutputFolder, "signals.json"), JsonUtility.ToJson(signals, false));

@@ -43,6 +43,10 @@ MAT_COLORS = {
     "ART_Chassis": (0.17, 0.18, 0.22), "ART_VehiclePaint": (0.90, 0.91, 0.87),
     "ART_Rubber": (0.26, 0.27, 0.35), "ART_WhitePaint": (0.98, 0.93, 0.77),
     "ART_PlateGreen": (0.23, 0.47, 0.36),
+    "ART_SignalHousing": (0.55, 0.57, 0.57), "ART_SignalHood": (0.50, 0.52, 0.53),
+    "ART_SignalHousingDark": (0.25, 0.25, 0.27), "ART_SignalHoodDark": (0.22, 0.23, 0.26),
+    "ART_SignalGreen": (0.17, 0.76, 0.46), "ART_SignalGlyph": (1.0, 0.96, 0.80),
+    "ART_SignalPole": (0.36, 0.29, 0.25),
 }
 
 

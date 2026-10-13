@@ -10,9 +10,13 @@ Talk to the owner in Chinese. Code, comments, commits and this file in English; 
 
 ```sh
 D="$PWD/Logs/Tests/$(date +%Y%m%d-%H%M%S)"                                     # close the Editor first
+# Targeted examples: choose the affected fixture or test; do not run both automatically.
+unity test "$PWD" --mode EditMode --filter HikonePropTests --output "$D/props.xml" --timeout 1200
+unity test "$PWD" --mode PlayMode --filter PortedWheelsRollAfterBodySwapsAndReturnToRestOnReuse --output "$D/wheels.xml" --timeout 1800
+# Full regression: only when required by Verification below.
 unity test "$PWD" --mode EditMode --output "$D/editmode.xml" --timeout 1200    # ~1.5 min (mostly Editor start-up)
 unity test "$PWD" --mode PlayMode --output "$D/playmode.xml" --timeout 1800    # ~3.5 min
-(cd ScenarioModel && npm test)                                                 # shared scenario model, no packages
+(cd ScenarioModel && npm test)                                                 # when shared format/data/timing changes; no packages
 "/Applications/Unity/Hub/Editor/6000.3.19f1/Unity.app/Contents/MacOS/Unity" -batchmode -quit -projectPath "$PWD" -buildTarget Android \
   -executeMethod AccidentExperienceValidation.BuildAndroid -logFile "$PWD/Logs/android-build.log"   # → Builds/VRLearn-<version>-<code>.apk
 ```
@@ -34,7 +38,7 @@ Also: `Custom Scenarios/Play Scenario File…`, `Validate Scenario Files`; `Main
 
 ## Hard rules (breaking these breaks the experiment)
 
-1. **Experiment objects stay put:** player, waypoints, spawns, goals, accident areas, car factories, `DestroyArea`s, traffic signals, `InvisibleWallContainer`, `ScenarioHost` and the bindings of all 10 scenarios. The Hikone scene only replaces visuals.
+1. **Experiment objects stay put:** player, waypoints, spawns, goals, accident areas, car factories, `DestroyArea`s, traffic signals, `InvisibleWallContainer`, `ScenarioHost` and the bindings of all 10 scenarios. The Hikone scene replaces visuals; its synchronized signal cycle follows `GameplayFlowController` (D41), while vehicle scheduling stays unchanged.
 2. **Road colliders are ground truth.** `Environment/RoadContainerNeo` has only its renderers off; colliders, lamp-pole colliders and night lights stay. Carriageway y 0.01, sidewalk y 0.16 (15 cm kerbs, ramps at junction corners; was 40 cm until `HikoneKerbMigration`, RATIONALE D37 — its height-mapped copies of the road meshes are in `Assets/_Project/Hikone/Kerb15`, the third-party originals are untouched; the tool refuses to run twice). Any new road visual must match exactly. Vehicle height comes from a downward raycast onto these colliders; waypoint Y is ignored.
 3. **Black walls are occluders** (`OnOffContainer/BlackWallContainer`, no code references, no colliders): they hide where cars spawn and despawn. Never remove them.
 4. **Occlusion is an experimental variable.** After changing buildings, trees, walls, parked vehicles or terrain, run `Hikone/3. Check Occlusion` (`Logs/occlusion-report.txt`) before and after (e.g. with `git stash`) and report any difference.
@@ -61,11 +65,33 @@ Also: `Custom Scenarios/Play Scenario File…`, `Validate Scenario Files`; `Main
 - CSV files (`CarData_*`, `HumanData_*`, `HumanData_InExperiment_*`) go to `persistentDataPath`: macOS Editor `~/Library/Application Support/DefaultCompany/VRLearn`, Quest `/sdcard/Android/data/com.moxuanxuerain.vrlearn/files`.
 - `Assets/ThirdParty/` — do not modify unless unavoidable.
 
+## Verification
+
+Choose checks by the behavior affected, not the number of changed lines. Use the smallest existing fixture or test that covers the change; keep the full suites available. Do not add tests for prose, pure formatting or cosmetic constants, or tests that only repeat the implementation. Add a focused regression test when fixing a behavior that existing tests do not cover.
+
+When several rows apply, combine their focused checks; use full regression if the cross-cutting or APK row applies.
+
+| Change | Required checks |
+| --- | --- |
+| Docs, comments, pure formatting (no literal/serialized value changes) | Review content/paths and `git diff --check`; no Unity launch. |
+| Editor-only report/tool, with no runtime or generated asset changes | Compile/run the affected menu or method and inspect its output; no PlayMode suite. If it writes assets, also use the appropriate asset row below. |
+| Material/texture/colour only | Regenerate from source and inspect the affected view; no full automated suites. Shader changes also need a render check with the affected shader. |
+| Model/prefab visuals | Related EditMode checks (e.g. `HikonePropTests` for sedan prefabs) and a visual check. Run the wheel/body PlayMode case only if wheel hierarchy, damage or body switching is affected. Silhouette/placement changes still require the before/after occlusion check in rule 4. |
+| Text/fonts or title layout | Rebuild the affected content/fonts and inspect it. Font changes: `FontFallbackTests`; title layout/control changes: `MetaTitleUsesOneStandardMouseInputPathInEditor`. No unrelated gameplay tests. |
+| Isolated runtime fix | Affected EditMode test or PlayMode test/fixture, plus a focused reproduction. E.g. wheel reset: `PortedWheelsRollAfterBodySwapsAndReturnToRestOnReuse`; vehicle reuse: `VehicleLifecycleTests`. |
+| Scenario text/content or custom format/loader | Select `ScenarioAndFeedbackTests`, `CustomScenarioFormatTests`, `ScenarioMapTests` and/or the affected `CustomScenarioTests` case as applicable. Run `ScenarioModel` tests when shared format, templates, map or timing inputs change. Count/shape, scheduling or binding changes use full regression below. |
+| Cross-cutting runtime changes, flow/replay ownership, CSV contract/save paths, pooling lifecycle, XR/input, experiment bindings/routes/spawns/colliders, package/assembly changes, or uncertain impact | Full EditMode + PlayMode; shared JS tests if affected. |
+| APK delivery | Full EditMode + PlayMode + ScenarioModel; build validation and the experience checks below. |
+
+Filtered Unity runs still pay the Editor start-up cost. Prefer one appropriate fixture over multiple launches for its individual cases. Read the XML counts and names: a zero-test run is not a pass. Retry failures with `--rerun-failed` using the same mode and existing output report, or use an explicit `--filter`. Expand coverage after failures or newly discovered dependencies; once relevant checks pass, do not repeat or broaden them merely for hand-off, commit or push. Reuse results while the tested code, assets and dependencies remain unchanged.
+
+Full-suite inventory: **EditMode 55 cases, PlayMode 46 cases, ScenarioModel 8 cases**. Report the actual selected run's results, not these inventory counts. `VehicleLifecycleTests.FirstUseAndReuseObserveIdenticalSpawnConfig` and `WalkingPhoneModePresentsPhoneInView` fail occasionally; rerun the failing case before calling it a regression.
+
 ## Before handing off
 
-- Docs-only: check paths and content. Logic or assets: both test assemblies pass — baseline **EditMode 46/46, PlayMode 43/43, ScenarioModel 8/8**. `VehicleLifecycleTests.FirstUseAndReuseObserveIdenticalSpawnConfig` and `WalkingPhoneModePresentsPhoneInView` fail occasionally; rerun before calling it a regression.
-- Test runs may leave changes to revert before committing: `EditorSettings.asset` `m_EnterPlayModeOptions`, `UnityConnectSettings.asset` `m_Enabled`, stray `Assets/InitTestScene*.unity`. Run `git diff --check`.
-- Headless tests do not prove UI, audio or headset behaviour: for experience changes walk title → accident → replay/results → retry → back, and run 6, 7, 9 three times in a row. Report "build succeeded" and "verified on device" separately.
+- Complete the applicable checks above and run `git diff --check`.
+- Test runs may leave changes to revert before committing: `EditorSettings.asset` `m_EnterPlayModeOptions`, `UnityConnectSettings.asset` `m_Enabled`, stray `Assets/InitTestScene*.unity`.
+- Headless tests do not prove UI, audio or headset behaviour. For local visual/audio changes inspect the affected view or interaction. For flow, replay, movement, pooling or XR changes and APK delivery, walk title → accident → replay/results → retry → back, and run 6, 7, 9 three times in a row. Report "build succeeded" and "verified on device" separately.
 - Commit only source, assets with `.meta`, manifests, settings and docs — never `Library/`, `Logs/`, `Temp/`, `Builds/`, APKs, `*.csproj`, credentials. Commit or push only when asked; never force-push.
 - Say what changed, what was verified, and what was not.
 

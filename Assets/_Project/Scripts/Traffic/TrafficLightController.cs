@@ -1,176 +1,75 @@
-using System.Collections;
-using System.Collections.Generic;
+using System;
 using UnityEngine;
-using DG.Tweening;
 
+/// <summary>One lens channel. Shared materials stay intact when the signal changes.</summary>
 public class TrafficLightController : MonoBehaviour
 {
-    //赤信号に変える
-    public void ChangeRed()
+    [SerializeField] Renderer[] visualRenderers = Array.Empty<Renderer>();
+    static readonly int BaseColor = Shader.PropertyToID("_BaseColor");
+    static readonly int LegacyColor = Shader.PropertyToID("_Color");
+    static readonly int Emission = Shader.PropertyToID("_EmissionColor");
+    struct Slot
     {
-        //赤ランプ
-        if (this.gameObject.tag == "RedLight")
-        {
-            DOVirtual.Color(
-                from: new Color32(80, 0, 0, 1), //Tween開始時の値
-                to: new Color32(255, 0, 0, 1), //終了時の値
-                duration: 0.5f,//Tween時間
-                //値が変わった時の処理
-                onVirtualUpdate: (tweenValue) => {
-                    GetComponent<Renderer>().material.color = tweenValue;
-                }
-            ).SetLink(gameObject);   // stops with the light when the scene unloads
-            // Emissionを有効化
-            GetComponent<Renderer>().material.EnableKeyword("_EMISSION");
-            GetComponent<Renderer>().material.SetColor("_EmissionColor",new Color(255, 0, 0, 1) * 1f);
-        }
-        //黄ランプ
-        if (this.gameObject.tag == "YellowLight")
-        {
-            DOVirtual.Color(
-                from: GetComponent<Renderer>().material.color, //Tween開始時の値
-                to: new Color32(80, 80, 0, 1), //終了時の値
-                duration: 0.5f,//Tween時間
-                               //値が変わった時の処理
-                onVirtualUpdate: (tweenValue) => {
-                    GetComponent<Renderer>().material.color = tweenValue;
-                }
-            ).SetLink(gameObject);   // stops with the light when the scene unloads
-            //オフ
-            GetComponent<Renderer>().material.DisableKeyword("_EMISSION");
-            GetComponent<Renderer>().material.SetColor("_EmissionColor", Color.black);
-        }
-        //緑ランプ
-        if (this.gameObject.tag == "GreenLight")
-        {
-            DOVirtual.Color(
-                from: new Color32(0, 80, 0, 1), //Tween開始時の値
-                to: new Color32(0, 80, 0, 1), //終了時の値
-                duration: 0.5f,//Tween時間
-                               //値が変わった時の処理
-                onVirtualUpdate: (tweenValue) => {
-                    GetComponent<Renderer>().material.color = tweenValue;
-                }
-            ).SetLink(gameObject);   // stops with the light when the scene unloads
-            //オフ
-            GetComponent<Renderer>().material.DisableKeyword("_EMISSION");
-            GetComponent<Renderer>().material.SetColor("_EmissionColor", Color.black);
-        }
+        public Renderer renderer;
+        public int index;
+        public Color colour, emission;
+        public MaterialPropertyBlock block;
     }
-    //黄色信号に変える
-    public void ChangeYellow()
+    Slot[] slots;
+    bool initialized;
+    public bool IsLit { get; private set; }
+
+    public void BindVisuals(Renderer[] renderers)
     {
-        //赤ランプ
-        if (this.gameObject.tag == "RedLight")
-        {
-            DOVirtual.Color(
-                from: new Color32(80, 0, 0, 1), //Tween開始時の値
-                to: new Color32(80, 0, 0, 1), //終了時の値
-                duration: 0.5f,//Tween時間
-                               //値が変わった時の処理
-                onVirtualUpdate: (tweenValue) => {
-                    GetComponent<Renderer>().material.color = tweenValue;
-                }
-            ).SetLink(gameObject);   // stops with the light when the scene unloads
-            //オフ
-            GetComponent<Renderer>().material.DisableKeyword("_EMISSION");
-            GetComponent<Renderer>().material.SetColor("_EmissionColor", Color.black);
-        }
-        //黄ランプ
-        if (this.gameObject.tag == "YellowLight")
-        {
-            DOVirtual.Color(
-                from: new Color32(80, 80, 0, 1), //Tween開始時の値
-                to: new Color32(255, 255, 0, 1), //終了時の値
-                duration: 0.5f,//Tween時間
-                               //値が変わった時の処理
-                onVirtualUpdate: (tweenValue) => {
-                    GetComponent<Renderer>().material.color = tweenValue;
-                }
-            ).SetLink(gameObject);   // stops with the light when the scene unloads
-            // Emissionを有効化
-            GetComponent<Renderer>().material.EnableKeyword("_EMISSION");
-            GetComponent<Renderer>().material.SetColor("_EmissionColor", new Color(255, 255, 0, 1) * 1f);
-        }
-        //緑ランプ
-        if (this.gameObject.tag == "GreenLight")
-        {
-            DOVirtual.Color(
-                from: new Color32(0, 255, 0, 1), //Tween開始時の値
-                to: new Color32(0, 80, 0, 1), //終了時の値
-                duration: 0.5f,//Tween時間
-                               //値が変わった時の処理
-                onVirtualUpdate: (tweenValue) => {
-                    GetComponent<Renderer>().material.color = tweenValue;
-                }
-            ).SetLink(gameObject);   // stops with the light when the scene unloads
-            //オフ
-            GetComponent<Renderer>().material.DisableKeyword("_EMISSION");
-            GetComponent<Renderer>().material.SetColor("_EmissionColor", Color.black);
-        }
+        visualRenderers = renderers;
+        slots = null;
+        initialized = false;
     }
-    //青信号に変える
-    public void ChangeGreen()
+
+    public void ChangeRed() => SetLit(CompareTag("RedLight"));
+    public void ChangeYellow() => SetLit(CompareTag("YellowLight"));
+    public void ChangeGreen() => SetLit(CompareTag("GreenLight"));
+
+    public void SetLit(bool lit)
     {
-        //赤ランプ
-        if (this.gameObject.tag == "RedLight")
+        if (initialized && IsLit == lit) return;
+        if (slots == null) CacheSlots();
+        IsLit = lit;
+        initialized = true;
+        foreach (var slot in slots)
         {
-            DOVirtual.Color(
-                from: new Color32(255, 0, 0, 1), //Tween開始時の値
-                to: new Color32(80, 0, 0, 1), //終了時の値
-                duration: 0.5f,//Tween時間
-                               //値が変わった時の処理
-                onVirtualUpdate: (tweenValue) => {
-                    GetComponent<Renderer>().material.color = tweenValue;
-                }
-            ).SetLink(gameObject);   // stops with the light when the scene unloads
-            //オフ
-            GetComponent<Renderer>().material.DisableKeyword("_EMISSION");
-            GetComponent<Renderer>().material.SetColor("_EmissionColor", Color.black);
-        }
-        //黄ランプ
-        if (this.gameObject.tag == "YellowLight")
-        {
-            DOVirtual.Color(
-                from: new Color32(80, 80, 0, 1), //Tween開始時の値
-                to: new Color32(80, 80, 0, 1), //終了時の値
-                duration: 0.5f,//Tween時間
-                               //値が変わった時の処理
-                onVirtualUpdate: (tweenValue) => {
-                    GetComponent<Renderer>().material.color = tweenValue;
-                }
-            ).SetLink(gameObject);   // stops with the light when the scene unloads
-            //オフ
-            GetComponent<Renderer>().material.DisableKeyword("_EMISSION");
-            GetComponent<Renderer>().material.SetColor("_EmissionColor", Color.black);
-        }
-        //緑ランプ
-        if (this.gameObject.tag == "GreenLight")
-        {
-            DOVirtual.Color(
-                from: new Color32(0, 80, 0, 1), //Tween開始時の値
-                to: new Color32(0, 255, 0, 1), //終了時の値
-                duration: 0.5f,//Tween時間
-                               //値が変わった時の処理
-                onVirtualUpdate: (tweenValue) => {
-                    GetComponent<Renderer>().material.color = tweenValue;
-                }
-            ).SetLink(gameObject);   // stops with the light when the scene unloads
-            // Emissionを有効化
-            GetComponent<Renderer>().material.EnableKeyword("_EMISSION");
-            GetComponent<Renderer>().material.SetColor("_EmissionColor", new Color(0, 255, 0, 1) * 1f);
+            if (slot.renderer == null) continue;
+            slot.renderer.GetPropertyBlock(slot.block, slot.index);
+            var colour = slot.colour * (lit ? 1f : 0.10f);
+            colour.a = 1f;
+            slot.block.SetColor(BaseColor, colour);
+            slot.block.SetColor(LegacyColor, colour);
+            slot.block.SetColor(Emission, lit ? slot.emission : Color.black);
+            slot.block.SetFloat("_Paint", 0f); // safety colours remain distinct on the signal lenses
+            slot.renderer.SetPropertyBlock(slot.block, slot.index);
         }
     }
 
-    // Start is called before the first frame update
-    void Start()
+    void CacheSlots()
     {
-
-    }
-
-    // Update is called once per frame
-    void Update()
-    {
-        
+        var renderers = visualRenderers.Length > 0 ? visualRenderers : GetComponents<Renderer>();
+        var list = new System.Collections.Generic.List<Slot>();
+        foreach (var renderer in renderers)
+        {
+            if (renderer == null) continue;
+            var materials = renderer.sharedMaterials;
+            for (var i = 0; i < materials.Length; i++)
+            {
+                var material = materials[i];
+                if (material == null) continue;
+                list.Add(new Slot
+                {
+                    renderer = renderer, index = i, block = new MaterialPropertyBlock(),
+                    colour = material.HasProperty(BaseColor) ? material.GetColor(BaseColor) : material.color,
+                    emission = material.HasProperty(Emission) ? material.GetColor(Emission) : Color.black
+                });
+            }
+        }
+        slots = list.ToArray();
     }
 }

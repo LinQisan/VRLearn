@@ -21,6 +21,7 @@
 | [09](09_feedback.jpg) | 反馈页 |
 | [10](10_parked_trucks.jpg) | 情景 03 的停放卡车（日式厢式货车） |
 | [11](11_vehicle_models.jpg) | 从浏览器版移植的路灯与五种车辆模型 |
+| [12](12_signal_green.jpg)、[13](13_signal_yellow.jpg)、[14](14_signal_red.jpg) | 同一信号灯的绿、黄、红三个状态 |
 
 标题菜单的设计见 [RATIONALE.md](../../RATIONALE.md) §6，生成方法见 AGENTS.md 的 Commands 一节（改 `TitleMenuLayout.cs`，再运行 `Rebuild Title Menu (VR tiles)`）。
 
@@ -43,7 +44,7 @@
 
 ## 实验逻辑保持不变
 
-- 玩家、相机、WayPoint、10 个 Scenario、危险事件、信号灯、InvisibleWall、数据记录与 UI 的对象和坐标均未修改。
+- 玩家、相机、WayPoint、10 个 Scenario、危险事件、信号灯锚点、InvisibleWall、数据记录与 UI 的对象和坐标均未修改。信号灯的显示和周期见下文。
 - 原道路瓦片只关闭了 Renderer；碰撞体继续用于车辆地面检测和玩家落地判定。路灯位置与原灯杆一致，桥上的路灯落在桥面人行道上。
 - **路面高度与碰撞体一致**：碰撞体的车道在 y 0.01，人行道在 y 0.16（路缘高 15 cm，路口转角为坡道；原为 40 cm，2026-10 由 `HikoneKerbMigration` 整体降低，见 RATIONALE D37）。道路网格的高度映射副本放在 `Assets/_Project/Hikone/Kerb15`，第三方原网格不动。新的沥青和标线放在 y 0.01。人行道、路缘和转角坡道直接取自道路网格（`Art/Hikone/road_tiles_geometry.json` → `HK_RoadRaised`），只替换为彦根的石材，因此车轮和脚下都与碰撞面完全重合。车辆模型本身无需修改：轮胎底部就是碰撞体底部。
 - **黑墙（BlackWallContainer）**：没有任何代码引用，也没有碰撞体。它们是遮挡车辆生成点和消失点的黑色面片。直接删除会让车辆凭空出现或消失，影响实验，因此改为嵌入建筑：
@@ -52,6 +53,10 @@
   - `BlackWall (2)` 已停用，由本町通北侧的土塀和路口西南角的土蔵代替。
 - 核查结果：在所有场景中，车辆生成点和消失点的遮挡程度均不低于原场景（`HikoneSceneTests` 和下方的视线核查）。
 - **路灯和车辆外观**（D39）：`Art/Hikone/hk_web_props.py` 保存浏览器版 `tools/abstract_props.py` 的灯笼路灯、轿车、两种轻自动车和两种卡车生成源。面片颜料保存在顶点颜色中；车轮是独立网格，会随行驶转动。四种行驶车辆 Prefab 和停放轿车由 `HikoneVehicleVisuals` 换装，新的轿车外观对齐原模型的包围盒，原碰撞体、质量和灯光不变。内置事故车仍为轿车，普通车流中轻自动车的比例不变。
+- **动态信号灯**（D41）：`hk_signals.py` 移植浏览器的灰色车行灯头（正面从左到右为绿、黄、红）和带站立／行走图案的行人灯。`HikoneSignalVisuals` 按原灯头和 `Pole2` 锚点生成棕色杆臂与铭牌；原网格只关闭渲染，位置、碰撞体、标签和灯色控制组件保留。新的外观放在各灯头的 `HK_SignalVisual` 子对象中。
+- **信号周期**：`TrafficSignalCycle` 统一推进六个灯头，两个方向交替，每方向车行绿灯 20 秒、黄灯 3 秒、全红过渡 1 秒。行人绿灯在相应车行方向为红时开放，末 4 秒以 0.5 秒间隔闪烁，车行黄灯及全红过渡期间行人灯均为红。只在 `GameplayPhase.Playing` 计时；到达终点、事故、回放和结果阶段保持当前灯色，重试／重载从初始相位开始。情景 id 1、2、4、8 从 Vertical 车行绿灯开始，其余内置情景及自定义情景从 Beside 开始；这延续已有预设，并修复 id 7、9 和自定义情景原先三灯全亮的漏配。车辆仍按实验既定路线、出现时机和速度运行，周期不参与车辆调度。自定义 JSON 暂不提供信号相位参数。
+- **信号资源重建**：Blender 中运行 `hk_signals.build_all()` 只导出两个灯头；用带 Pillow 的 Python 运行 `python3 Art/Hikone/hk_signal_plates.py` 烘焙三种铭牌（直接使用项目的 Noto Sans JP 字体）。再运行 `HikoneEnvironmentBuilder.SetupSignals` 和 `Hikone/4. Rebuild Traffic Signals`，随后遮挡核查、地图／Web 导出与截图。完整 `hk_assets.build_all()` 和场景生成也包含信号灯。铭牌文字已烘焙到 PNG，不在头显上动态生成字体；杆臂网格和铭牌材质由编辑器生成到 `Hikone/Signals/`。
+- **信号验证**：定向 EditMode 5/5、PlayMode 2/2、浏览器模型／碰撞测试 22/22 通过，包含两边灯头的毫米级几何一致性、对向灯互斥、行人闪烁、事故暂停和重载复位。场景原有变换与物理记录、除灯片渲染绑定外的 144 个 MonoBehaviour 序列化记录保持相同；遮挡前后结果见 RATIONALE 第 4 节。三色截图与同步后的网页地图已检查，网页控制台无错误。尚未打包 APK 或验证 Quest 真机。
 - **停放的卡车**（情景 03/04/06/09 的遮挡物）：场景生成器把原来的欧洲式半挂车外观换成日式厢式货车 `HK_Truck_Large`（10 吨级，11.8 m）和 `HK_Truck_Medium`（4 吨级，8.6 m），高度都是 3.62 m，放在原外观的位置上。原模型的碰撞体和 `TruckCollider` 不变。
 - **隐形辅助物体**（`Material_Invisible`、`ColliderOnlyMaterial`）改为真正不可见、不投影。
 - **护城河岸边**：地形在石垣墙线外 5 cm 就降到水底（`hk_terrain.WALL_GAP`），石垣前面不再露出草台和土壁；原道路网格中跨过岸线的人行道三角面在岸线处切掉（`road_raised(clip_moat=True)`）。

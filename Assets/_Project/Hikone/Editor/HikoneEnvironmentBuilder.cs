@@ -165,6 +165,16 @@ public static class HikoneEnvironmentBuilder
         AssetDatabase.CreateFolder(parent, Path.GetFileName(path));
     }
 
+    /// <summary>Import only signal models when other generated geometry has not changed.</summary>
+    public static void SetupSignals()
+    {
+        var mats = BuildMaterials();
+        ConfigureModels(mats, true);
+        BuildPrefabs(true);
+        AssetDatabase.SaveAssets();
+        NormalizePortedPropAssets();
+    }
+
     static Color C(float r, float g, float b) => new Color(r, g, b, 1f);
 
     /// <summary>
@@ -191,6 +201,10 @@ public static class HikoneEnvironmentBuilder
                 : name == "ART_LampGlow" ? new Color(1f, 0.70f, 0.32f).linear * 0.20f
                 : name == "ART_SignalRed" ? new Color(1f, 0.12f, 0.06f).linear * 0.38f
                 : name == "ART_SignalYellow" ? new Color(1f, 0.65f, 0.04f).linear * 0.38f : Color.black);
+            if (name == "ART_SignalGreen") m.SetColor("_EmissionColor", new Color(0.04f, 0.85f, 0.24f).linear * 0.38f);
+            if (name == "ART_SignalGlyph") m.SetColor("_EmissionColor", new Color(1f, 0.91f, 0.68f).linear * 0.18f);
+            if (name.StartsWith("ART_Signal") && name != "ART_SignalRed" && name != "ART_SignalYellow")
+                m.SetFloat("_Paint", 0f);
             m.globalIlluminationFlags = MaterialGlobalIlluminationFlags.None;
             m.enableInstancing = true;
             EditorUtility.SetDirty(m);
@@ -199,11 +213,12 @@ public static class HikoneEnvironmentBuilder
         return result;
     }
 
-    static void ConfigureModels(Dictionary<string, Material> mats)
+    static void ConfigureModels(Dictionary<string, Material> mats, bool signalsOnly = false)
     {
         foreach (var guid in AssetDatabase.FindAssets("t:Model", new[] { ModelDir }))
         {
             var path = AssetDatabase.GUIDToAssetPath(guid);
+            if (signalsOnly && !Path.GetFileNameWithoutExtension(path).StartsWith("HK_Signal_")) continue;
             var mi = (ModelImporter)AssetImporter.GetAtPath(path);
             mi.importCameras = false;
             mi.importLights = false;
@@ -218,7 +233,7 @@ public static class HikoneEnvironmentBuilder
             mi.addCollider = false;
             mi.materialImportMode = ModelImporterMaterialImportMode.ImportStandard;
             mi.materialLocation = ModelImporterMaterialLocation.InPrefab;
-            // Ported pigment materials belong only to the six new models. Avoid adding
+            // Ported pigment materials belong only to the ported prop models. Avoid adding
             // unused material references to every building, road and tree importer.
             if (!IsPortedProp(name))
                 foreach (var key in mi.GetExternalObjectMap().Keys.Where(k => k.name.StartsWith("ART_")).ToArray())
@@ -264,12 +279,13 @@ public static class HikoneEnvironmentBuilder
         EditorUtility.SetDirty(catalog);
     }
 
-    static void BuildPrefabs()
+    static void BuildPrefabs(bool signalsOnly = false)
     {
         foreach (var guid in AssetDatabase.FindAssets("t:Model", new[] { ModelDir }))
         {
             var path = AssetDatabase.GUIDToAssetPath(guid);
             var name = Path.GetFileNameWithoutExtension(path);
+            if (signalsOnly && !name.StartsWith("HK_Signal_")) continue;
             var model = AssetDatabase.LoadAssetAtPath<GameObject>(path);
             var go = (GameObject)PrefabUtility.InstantiatePrefab(model);
             go.name = name;
@@ -295,7 +311,7 @@ public static class HikoneEnvironmentBuilder
                     }
                 }
                 GameObjectUtility.SetStaticEditorFlags(t.gameObject,
-                    name == "HK_Sedan" || name.StartsWith("HK_Kei_") ? 0 : flags);
+                    name == "HK_Sedan" || name.StartsWith("HK_Kei_") || name.StartsWith("HK_Signal_") ? 0 : flags);
             }
             foreach (var r in go.GetComponentsInChildren<MeshRenderer>(true))
             {
@@ -319,7 +335,7 @@ public static class HikoneEnvironmentBuilder
     }
 
     static bool IsPortedProp(string name) => name == "HK_StreetLamp" || name == "HK_Sedan"
-        || name.StartsWith("HK_Kei_") || name.StartsWith("HK_Truck_");
+        || name.StartsWith("HK_Kei_") || name.StartsWith("HK_Truck_") || name.StartsWith("HK_Signal_");
 
     // Unity writes a space after empty YAML values. Normalize generated text so a
     // scene rebuild also passes the repository's required git diff --check.
@@ -409,6 +425,7 @@ public static class HikoneEnvironmentBuilder
         if (missing.Count > 0) Debug.LogWarning("[Hikone] missing prefabs: " + string.Join(", ", missing));
 
         ApplyAtmosphere();
+        HikoneSignalVisuals.Replace(scene);
         EditorSceneManager.MarkSceneDirty(scene);
         EditorSceneManager.SaveScene(scene);
         NormalizeSerializedText(TargetScene);
