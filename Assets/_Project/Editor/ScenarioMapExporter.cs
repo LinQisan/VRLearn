@@ -294,6 +294,9 @@ public static class ScenarioMapExporter
             var data = camera.GetUniversalAdditionalCameraData();
             data.renderPostProcessing = false;
             data.renderShadows = true;
+            // the first render after opening the scene comes out with wrong material colours
+            // (two-tone beige / mauve); the second is right
+            camera.Render();
             camera.Render();
 
             RenderTexture.active = texture;
