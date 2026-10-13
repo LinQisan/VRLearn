@@ -131,6 +131,7 @@ public sealed class VehicleBody : MonoBehaviour
         if (lights != null)
             lights.localScale = Vector3.Scale(sedanLightScale, ratio);
         Id = entry.id;
+        GetComponent<VehicleWheelVisuals>()?.RefreshWheels();
     }
 
     public void RestoreSedan()
@@ -148,6 +149,7 @@ public sealed class VehicleBody : MonoBehaviour
         if (rigid != null) rigid.mass = sedanMass;
         if (lights != null) lights.localScale = sedanLightScale;
         Id = Sedan;
+        GetComponent<VehicleWheelVisuals>()?.RefreshWheels();
     }
 
     /// <summary>The sedan as authored in the prefab (read once, before any body is applied).</summary>

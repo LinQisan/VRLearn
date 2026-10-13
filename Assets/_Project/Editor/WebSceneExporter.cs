@@ -120,6 +120,10 @@ public static class WebSceneExporter
         foreach (var guid in AssetDatabase.FindAssets("t:Material", new[] { MaterialDir }))
         {
             var m = AssetDatabase.LoadAssetAtPath<Material>(AssetDatabase.GUIDToAssetPath(guid));
+            // The abstract props already carry pigments and emission in their GLB materials.
+            // Unity uses white as a vertex-colour multiplier; exporting it as the pigment
+            // would override the browser's authored lamp glass and vehicle materials.
+            if (m.HasProperty("_VertexPigment") && m.GetFloat("_VertexPigment") > 0f) continue;
             var tex = m.HasProperty("_BaseMap") ? m.GetTexture("_BaseMap") : null;
             var bump = m.HasProperty("_BumpMap") && m.IsKeywordEnabled("_NORMALMAP") ? m.GetTexture("_BumpMap") : null;
             var scale = tex != null ? m.GetTextureScale("_BaseMap").x : 1f;

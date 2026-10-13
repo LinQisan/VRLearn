@@ -6,11 +6,11 @@ using UnityEditor;
 using UnityEngine;
 
 /// <summary>
-/// Which files under Assets/ThirdParty and Assets/_Project/Hikone/Textures nothing uses: everything
+/// Serialized dependency reachability under Assets/ThirdParty and Assets/_Project/Hikone/Textures: everything
 /// reachable from the build scenes, every Resources folder and the assets the project settings
 /// point at counts as used. Writes Logs/unused-assets.txt (per package: used / unused files and
-/// sizes). Scripts are reported but never counted as removable on their own: code can depend on
-/// code without a serialized reference.
+/// sizes). This is not a deletion list: scripts, native plugins, shader includes, Android manifests,
+/// licenses and editor source assets can be required without a serialized reference.
 /// </summary>
 public static class UnusedAssetReport
 {
@@ -34,6 +34,7 @@ public static class UnusedAssetReport
         var used = new HashSet<string>(AssetDatabase.GetDependencies(roots.Distinct().ToArray(), true));
 
         var sb = new StringBuilder($"Unused assets ({used.Count} files reachable from {roots.Count} roots)\n");
+        sb.Append("Not a deletion list: check code, shader includes, Android manifests, licenses and editor generators before removing an unreachable asset.\n");
         foreach (var top in Candidates)
         {
             var packages = AssetDatabase.IsValidFolder(top) && top.EndsWith("ThirdParty")

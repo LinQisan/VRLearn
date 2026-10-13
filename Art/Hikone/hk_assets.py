@@ -6,6 +6,7 @@ lot extends to -Z. Roads: origin at tile centre, top of carriageway ~= y 0.
 import math, random
 import bpy
 from hk_lib import MB, clear_asset, export, mat
+import hk_web_props
 
 PAINT_Y = 0.012
 
@@ -434,25 +435,7 @@ def road_raised(name, tiles, geometry_path, drop_z_above=None, drop_tiles=(), co
 
 # =============================================================== props
 def street_lamp(name="HK_StreetLamp"):
-    clear_asset(name)
-    b = MB(name)
-    b.box((0, 0.15, 0), (0.36, 0.3, 0.36), "HK_StoneDark")
-    b.box((0, 2.5, 0), (0.15, 4.8, 0.15), "HK_Metal")
-    b.box((0, 4.85, 0.6), (0.08, 0.08, 1.3), "HK_Metal")
-    b.box((0, 4.62, 0.25), (0.05, 0.4, 0.05), "HK_Metal")
-    # lantern (andon-like box with a hipped cap)
-    lz = 1.2
-    b.box((0, 4.55, lz), (0.44, 0.55, 0.44), "HK_Lamp")
-    for dx in (-0.22, 0.22):
-        for dz in (-0.22, 0.22):
-            b.box((dx, 4.55, lz + dz), (0.05, 0.6, 0.05), "HK_Metal")
-    b.face([(-0.34, 4.85, lz - 0.34), (0.34, 4.85, lz - 0.34), (0.0, 5.05, lz)], "HK_Metal")
-    b.face([(0.34, 4.85, lz - 0.34), (0.34, 4.85, lz + 0.34), (0.0, 5.05, lz)], "HK_Metal")
-    b.face([(0.34, 4.85, lz + 0.34), (-0.34, 4.85, lz + 0.34), (0.0, 5.05, lz)], "HK_Metal")
-    b.face([(-0.34, 4.85, lz + 0.34), (-0.34, 4.85, lz - 0.34), (0.0, 5.05, lz)], "HK_Metal")
-    b.face([(-0.34, 4.85, lz + 0.34), (0.34, 4.85, lz + 0.34), (0.34, 4.85, lz - 0.34), (-0.34, 4.85, lz - 0.34)], "HK_Metal")
-    return b.finish()
-
+    return hk_web_props.build(name)
 
 def bollard(name="HK_Bollard"):
     clear_asset(name)
@@ -780,62 +763,7 @@ def _wheel(b, cx, cy, cz, r, w, m="HK_Rubber", seg=12):
 
 
 def box_truck(name, L, W, H, cab_len, cab_h, wheel_r, axles, rear_dual=True):
-    """Japanese cab-over box truck (aluminium van body), as parked on town streets.
-    Cab at -x, origin at the centre of the footprint on the ground. Sized to the scene's truck
-    colliders so the occlusion of the parked-truck scenarios stays the same."""
-    clear_asset(name)
-    b = MB(name)
-    xf, xr = -L / 2, L / 2
-    # chassis, wheels, side guards, fuel tank
-    b.box((0.25, wheel_r + 0.12, 0), (L - 0.9, 0.26, W * 0.55), "HK_Metal", bottom=True)
-    for k, ax in enumerate(axles):
-        dual = rear_dual and k > 0
-        for sgn in (-1, 1):
-            if dual:
-                for off in (0.0, 0.34):
-                    _wheel(b, ax, wheel_r, sgn * (W / 2 - 0.2 - off), wheel_r, 0.3)
-            else:
-                _wheel(b, ax, wheel_r, sgn * (W / 2 - 0.2), wheel_r, 0.3)
-    span0, span1 = axles[0] + wheel_r + 0.35, axles[1] - wheel_r - 0.3
-    for sgn in (-1, 1):
-        for y in (0.45, 0.72):
-            b.box(((span0 + span1) / 2, y, sgn * (W / 2 - 0.06)), (span1 - span0, 0.09, 0.04), "HK_MetalLight")
-    b.box((xf + cab_len + 0.9, 0.78, -(W / 2 - 0.4)), (1.1, 0.48, 0.5), "HK_MetalLight")
-    # cab (flat cab-over front, white), windscreen, grille, bumper, lights, mirrors, green plate
-    cx = xf + cab_len / 2
-    b.box((cx, (0.6 + cab_h) / 2, 0), (cab_len, cab_h - 0.6, W), "HK_TruckCab", bottom=True)
-    b.box((xf + 0.55, cab_h + 0.12, 0), (1.0, 0.24, W - 0.25), "HK_TruckCab")          # sun visor / roof lip
-    b.box((xf - 0.015, cab_h - 0.72, 0), (0.04, 1.0, W - 0.32), "HK_Glass")
-    for sgn in (-1, 1):
-        b.box((xf + cab_len * 0.42, cab_h - 0.75, sgn * (W / 2 + 0.012)), (cab_len * 0.5, 0.82, 0.03), "HK_Glass")
-        b.box((xf + cab_len * 0.8, (0.9 + cab_h - 1.25) / 2 + 0.2, sgn * (W / 2 + 0.012)), (0.04, cab_h - 1.4, 0.03), "HK_Metal")  # door line
-        b.box((xf + 0.12, cab_h - 0.55, sgn * (W / 2 + 0.22)), (0.07, 0.48, 0.14), "HK_Metal")   # mirror
-        b.box((xf + 0.12, cab_h - 0.3, sgn * (W / 2 + 0.1)), (0.04, 0.04, 0.26), "HK_Metal")    # mirror arm
-        b.box((xf - 0.03, 0.9, sgn * (W / 2 - 0.36)), (0.05, 0.2, 0.38), "HK_Lamp")           # headlight
-        b.box((xf - 0.03, 0.9, sgn * (W / 2 - 0.1)), (0.05, 0.16, 0.12), "HK_SignYellow")     # indicator
-    b.box((xf - 0.02, 1.2, 0), (0.04, 0.38, W * 0.62), "HK_Metal")                      # grille
-    b.box((xf - 0.06, 0.62, 0), (0.16, 0.3, W + 0.02), "HK_Metal", bottom=True)         # bumper
-    b.box((xf - 0.15, 0.62, 0), (0.02, 0.2, 0.33), "HK_PlateGreen")
-    # aluminium van body with ribs, rails, rear doors, tail lights
-    bx0 = xf + cab_len + 0.12
-    y0 = wheel_r * 2 + 0.05
-    bl = xr - bx0
-    b.box(((bx0 + xr) / 2, (y0 + H) / 2, 0), (bl, H - y0, W), "HK_VanBody", bottom=True)
-    n = max(4, int(bl / 0.62))
-    for i in range(1, n):
-        x = bx0 + i * bl / n
-        for sgn in (-1, 1):
-            b.box((x, (y0 + H) / 2, sgn * (W / 2 + 0.012)), (0.05, H - y0 - 0.1, 0.02), "HK_VanRib")
-    for y in (y0 + 0.05, H - 0.06):
-        for sgn in (-1, 1):
-            b.box(((bx0 + xr) / 2, y, sgn * (W / 2 + 0.02)), (bl, 0.1, 0.03), "HK_VanRib")
-    b.box((xr + 0.012, (y0 + H) / 2, 0), (0.02, H - y0 - 0.1, 0.05), "HK_VanRib")           # door split
-    for sgn in (-1, 1):
-        b.box((xr + 0.012, (y0 + H) / 2, sgn * (W / 2 - 0.05)), (0.02, H - y0 - 0.1, 0.06), "HK_VanRib")
-        b.box((xr + 0.03, 0.75, sgn * (W / 2 - 0.3)), (0.04, 0.16, 0.36), "HK_SignRed")      # tail light
-    b.box((xr - 0.05, 0.5, 0), (0.12, 0.14, W - 0.1), "HK_Metal")                       # rear underrun bar
-    return b.finish()
-
+    return hk_web_props.build(name)
 
 def _oface(b, pts, m, inside):
     """Face whose normal points away from the point `inside` (winding picked automatically)."""
@@ -920,22 +848,10 @@ def kei_car(name, profile, H, windshield, side_window, rear_window, pillars, doo
 
 
 def kei_tall():
-    """Tall-wagon kei (N-BOX / Tanto type): box body 1.79 m high, short nose, sliding rear door."""
-    profile = [(-1.69, 0.3), (1.66, 0.3), (1.697, 0.55), (1.68, 0.86), (1.14, 1.02), (0.62, 1.74),
-               (0.48, 1.79), (-1.58, 1.79), (-1.697, 1.68)]
-    return kei_car("HK_Kei_Tall", profile, 1.79, windshield=((1.1, 1.08), (0.66, 1.7)),
-                   side_window=[(-1.5, 1.14), (0.99, 1.14), (0.64, 1.68), (-1.5, 1.68)],
-                   rear_window=(-1.697, 1.16, 1.62), pillars=[(0.02, 0.1), (-0.95, -0.85)], door_lines=[0.06, -0.9])
-
+    return hk_web_props.build("HK_Kei_Tall")
 
 def kei_hatch():
-    """Two-box kei hatchback (Alto / Mira type), 1.525 m high."""
-    profile = [(-1.69, 0.3), (1.66, 0.3), (1.697, 0.55), (1.66, 0.78), (0.95, 0.92), (0.28, 1.49),
-               (0.05, 1.525), (-1.22, 1.525), (-1.62, 1.34), (-1.697, 0.96)]
-    return kei_car("HK_Kei_Hatch", profile, 1.525, windshield=((0.92, 0.97), (0.33, 1.46)),
-                   side_window=[(-1.3, 1.0), (0.84, 1.0), (0.3, 1.44), (-1.18, 1.44)],
-                   rear_window=(-1.64, 1.02, 1.3), pillars=[(-0.2, -0.12)], door_lines=[-0.16])
-
+    return hk_web_props.build("HK_Kei_Hatch")
 
 def hedge(name="HK_Hedge", L=3.0):
     clear_asset(name)
@@ -1225,6 +1141,7 @@ def build_all():
     obs.append(chain_fence())
     obs.append(tree_zelkova())
     obs.append(hedge())
+    obs.append(hk_web_props.build("HK_Sedan"))
     # kei cars mixed into the background traffic (VehicleBody)
     obs.append(kei_tall())
     obs.append(kei_hatch())
@@ -1244,5 +1161,12 @@ def build_all():
     obs.append(terrain())
     for i, ob in enumerate(obs):
         export(ob, i)
-    tris = {ob.name: sum(len(p.vertices) - 2 for p in ob.data.polygons) for ob in obs}
+    tris = {ob.name: sum(len(p.vertices) - 2 for part in [ob, *ob.children_recursive]
+                         if part.type == "MESH" for p in part.data.polygons) for ob in obs}
     return tris
+
+
+def build_web_props():
+    """Export only the six ported models; leave unrelated FBX timestamps intact."""
+    for name in hk_web_props.MODEL_NAMES:
+        export(hk_web_props.build(name), -1)

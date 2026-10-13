@@ -11,18 +11,26 @@ public sealed class VehicleWheelVisuals : MonoBehaviour
     float roll;
     float radius = 0.32f;
 
-    void Awake()
+    void Awake() => RefreshWheels();
+
+    /// <summary>Body swaps may create new wheels after Awake; hidden legacy wheels never roll.</summary>
+    public void RefreshWheels()
     {
+        ResetVisuals();
+        wheels.Clear();
+        restRotations.Clear();
         foreach (var child in GetComponentsInChildren<Transform>(true))
         {
-            if (!child.name.StartsWith("Wheel_")) continue;
+            if (!child.name.StartsWith("Wheel_") || !child.gameObject.activeInHierarchy) continue;
+            var renderers = child.GetComponentsInChildren<Renderer>();
+            if (!System.Array.Exists(renderers, r => r.enabled && r.gameObject.activeInHierarchy)) continue;
             wheels.Add(child);
             restRotations.Add(child.localRotation);
-            var renderers = child.GetComponentsInChildren<Renderer>();
             foreach (var renderer in renderers)
                 if (renderer.name == "Tire")
                     radius = Mathf.Clamp(renderer.bounds.extents.y, 0.2f, 0.6f);
         }
+        ResetVisuals();
     }
 
     public void ResetVisuals()
@@ -32,7 +40,7 @@ public sealed class VehicleWheelVisuals : MonoBehaviour
         for (int i = 0; i < wheels.Count; i++)
             if (wheels[i] != null) wheels[i].localRotation = restRotations[i];
     }
-    void OnEnable() => ResetVisuals();
+    void OnEnable() => RefreshWheels();
 
     void LateUpdate()
     {

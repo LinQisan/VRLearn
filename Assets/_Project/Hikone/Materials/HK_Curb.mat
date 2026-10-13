@@ -45,6 +45,7 @@ Material:
     m_Floats:
     - _DabStrength: 0.65
     - _Paint: 1
+    - _VertexPigment: 0
     m_Colors:
     - _BaseColor: {r: 0.77, g: 0.75, b: 0.68, a: 1}
     - _Cool: {r: 0.59, g: 0.68, b: 0.83, a: 1}

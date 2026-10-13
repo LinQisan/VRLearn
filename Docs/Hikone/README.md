@@ -20,6 +20,7 @@
 | [08](08_accident_replay.jpg) | 事故回放（三视角） |
 | [09](09_feedback.jpg) | 反馈页 |
 | [10](10_parked_trucks.jpg) | 情景 03 的停放卡车（日式厢式货车） |
+| [11](11_vehicle_models.jpg) | 从浏览器版移植的路灯与五种车辆模型 |
 
 标题菜单的设计见 [RATIONALE.md](../../RATIONALE.md) §6，生成方法见 AGENTS.md 的 Commands 一节（改 `TitleMenuLayout.cs`，再运行 `Rebuild Title Menu (VR tiles)`）。
 
@@ -50,6 +51,7 @@
   - `BlackWall (1)` 缩小并移到南侧小街的長屋門通道内（位置 (10, 2.4, 6.63)，缩放 9.4×5）。
   - `BlackWall (2)` 已停用，由本町通北侧的土塀和路口西南角的土蔵代替。
 - 核查结果：在所有场景中，车辆生成点和消失点的遮挡程度均不低于原场景（`HikoneSceneTests` 和下方的视线核查）。
+- **路灯和车辆外观**（D39）：`Art/Hikone/hk_web_props.py` 保存浏览器版 `tools/abstract_props.py` 的灯笼路灯、轿车、两种轻自动车和两种卡车生成源。面片颜料保存在顶点颜色中；车轮是独立网格，会随行驶转动。四种行驶车辆 Prefab 和停放轿车由 `HikoneVehicleVisuals` 换装，新的轿车外观对齐原模型的包围盒，原碰撞体、质量和灯光不变。内置事故车仍为轿车，普通车流中轻自动车的比例不变。
 - **停放的卡车**（情景 03/04/06/09 的遮挡物）：场景生成器把原来的欧洲式半挂车外观换成日式厢式货车 `HK_Truck_Large`（10 吨级，11.8 m）和 `HK_Truck_Medium`（4 吨级，8.6 m），高度都是 3.62 m，放在原外观的位置上。原模型的碰撞体和 `TruckCollider` 不变。
 - **隐形辅助物体**（`Material_Invisible`、`ColliderOnlyMaterial`）改为真正不可见、不投影。
 - **护城河岸边**：地形在石垣墙线外 5 cm 就降到水底（`hk_terrain.WALL_GAP`），石垣前面不再露出草台和土壁；原道路网格中跨过岸线的人行道三角面在岸线处切掉（`road_raised(clip_moat=True)`）。
@@ -72,15 +74,15 @@ S4 的事故车从桥上驶来。实际的京桥路口北侧就是开阔的护�
 python3 Art/Hikone/hk_layout.py      # 布局 + 冲突校验
 ```
 
-在 Blender 中执行：`hk_assets.build_all()`（BlenderMCP 或 headless 均可；不再生成贴图，外观由画风着色器完成）。只改了一个模型时，可以只导出那一个（`hk_lib.export(hk_assets.<函数>(...), -1)`），避免所有 FBX 因时间戳而产生差异。然后在 Unity 菜单中依次执行：
+在 Blender 中执行：`hk_assets.build_all()`（BlenderMCP 或 headless 均可；不再生成贴图，外观由画风着色器完成）。只改了一个模型时，可以只导出那一个（`hk_lib.export(hk_assets.<函数>(...), -1)`；本次移植的六个模型可一起用 `hk_assets.build_web_props()` 导出），避免所有 FBX 因时间戳而产生差异。然后在 Unity 菜单中依次执行：
 
 0. `Tools/VRLearn/Hikone/0. Export Constraints From Scene`：仅在场景的道路、路点或触发区有变化时执行。它从彦根场景重新导出 `Art/Hikone/scene_constraints.json` 和 `road_tiles_geometry.json`，结果与现有文件一致即说明这些实验对象没有变化。
 1. `Tools/VRLearn/Hikone/1. Import Models, Materials & Prefabs`
-2. `Tools/VRLearn/Hikone/2. Build Hikone Scene`（同时处理黑墙，并设置画出来的天空和晴天的光照）
+2. `Tools/VRLearn/Hikone/2. Build Hikone Scene`（同时处理黑墙、停放轿车与卡车，并设置画出来的天空和晴天的光照；步骤 1 同时更新四种行驶车辆 Prefab）
 3. `Tools/VRLearn/Rebuild Title Menu (VR tiles)`（标题菜单）
 
 设计意图与决策记录见根目录的 [RATIONALE.md](../../RATIONALE.md)。
 
 ## 性能
 
-新环境约 19 万三角面，约 1270 个 Renderer（全部 Static），共享 39 个画风材质（同一个着色器 `VRLearn/HikonePaint`，兼容 SRP Batcher 和 GPU Instancing），只用一张 512px 的笔刷贴图；天空是烘焙好的全景图。原场景环境约 5.3 万面、71 个材质。
+统计与 Quest 2 的性能预算见 [RATIONALE.md §5.3](../../RATIONALE.md#53-性能预算quest-2)。场景生成的环境保持静态；行驶车辆、换装车体和车轮保持动态。

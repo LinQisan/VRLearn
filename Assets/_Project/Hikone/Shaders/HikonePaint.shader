@@ -16,6 +16,7 @@ Shader "VRLearn/HikonePaint"
         [NoScaleOffset] _BrushTex("Brush (dab mask, dab pigment, grain)", 2D) = "gray" {}
         [HDR] _EmissionColor("Emission", Color) = (0, 0, 0, 1)
         _Paint("Paint finish", Range(0, 1)) = 1
+        [Toggle] _VertexPigment("Use mesh pigments", Float) = 0
     }
 
     SubShader
@@ -31,6 +32,7 @@ Shader "VRLearn/HikonePaint"
             half _DabStrength;
             half4 _EmissionColor;
             half _Paint;
+            half _VertexPigment;
         CBUFFER_END
         ENDHLSL
 
@@ -60,6 +62,7 @@ Shader "VRLearn/HikonePaint"
             {
                 float4 positionOS : POSITION;
                 float3 normalOS : NORMAL;
+                half4 pigment : COLOR;
                 UNITY_VERTEX_INPUT_INSTANCE_ID
             };
 
@@ -70,6 +73,7 @@ Shader "VRLearn/HikonePaint"
                 half3 normalWS : TEXCOORD1;
                 half3 ambient : TEXCOORD2;
                 half fog : TEXCOORD3;
+                half3 pigment : TEXCOORD4;
                 UNITY_VERTEX_INPUT_INSTANCE_ID
                 UNITY_VERTEX_OUTPUT_STEREO
             };
@@ -86,6 +90,7 @@ Shader "VRLearn/HikonePaint"
                 o.normalWS = TransformObjectToWorldNormal(v.normalOS);
                 o.ambient = SampleSH(o.normalWS);
                 o.fog = ComputeFogFactor(p.positionCS.z);
+                o.pigment = lerp(half3(1, 1, 1), v.pigment.rgb, _VertexPigment);
                 return o;
             }
 
@@ -110,7 +115,7 @@ Shader "VRLearn/HikonePaint"
                 half2 dab = SAMPLE_TEXTURE2D(_BrushTex, sampler_BrushTex, q * float2(scale, scale * 1.35) / 32.0).rg;
                 half3 pigment = lerp(_Cool.rgb, _Warm.rgb, dab.y);
                 pigment = lerp(pigment, half3(0.71, 0.43, 0.39), smoothstep(0.84, 1.0, dab.y) * 0.20);
-                half3 albedo = lerp(_BaseColor.rgb, pigment, dab.x * _DabStrength * paint);
+                half3 albedo = lerp(_BaseColor.rgb * i.pigment, pigment, dab.x * _DabStrength * paint);
 
                 // Lambert light
                 float4 shadowCoord = TransformWorldToShadowCoord(i.positionWS);

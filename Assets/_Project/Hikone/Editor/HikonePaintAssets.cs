@@ -41,6 +41,13 @@ public static class HikonePaintAssets
         ["HK_SignRed"] = C(0.83f, 0.23f, 0.24f), ["HK_SignBlue"] = C(0.22f, 0.42f, 0.74f),
         ["HK_SignYellow"] = C(0.98f, 0.81f, 0.29f), ["HK_PlateGreen"] = C(0.23f, 0.47f, 0.36f),
         ["HK_Guard"] = C(0.45f, 0.36f, 0.33f),
+        ["ART_Frame"] = C(0.27f, 0.34f, 0.45f), ["ART_FrameLight"] = C(0.52f, 0.59f, 0.65f),
+        ["ART_LampGlow"] = C(1f, 0.87f, 0.59f), ["ART_LampBase"] = C(0.48f, 0.48f, 0.57f),
+        ["ART_SignalRed"] = C(0.94f, 0.19f, 0.16f), ["ART_SignalYellow"] = C(1f, 0.77f, 0.13f),
+        ["ART_Glass"] = C(0.35f, 0.52f, 0.66f), ["ART_Cargo"] = C(0.80f, 0.82f, 0.82f),
+        ["ART_Chassis"] = C(0.17f, 0.18f, 0.22f), ["ART_VehiclePaint"] = C(0.90f, 0.91f, 0.87f),
+        ["ART_Rubber"] = C(0.26f, 0.27f, 0.35f), ["ART_WhitePaint"] = C(0.98f, 0.93f, 0.77f),
+        ["ART_PlateGreen"] = C(0.23f, 0.47f, 0.36f),
     };
 
     /// <summary>Every Hikone material (one per name used by the Art/Hikone models).</summary>
@@ -92,12 +99,14 @@ public static class HikonePaintAssets
         }
         so.ApplyModifiedPropertiesWithoutUndo();
         m.shaderKeywords = new string[0];
-        m.SetColor("_BaseColor", Base.TryGetValue(name, out var c) ? c : C(0.73f, 0.70f, 0.67f));
+        var meshPigment = name.StartsWith("ART_");
+        m.SetColor("_BaseColor", meshPigment ? Color.white : Base.TryGetValue(name, out var c) ? c : C(0.73f, 0.70f, 0.67f));
+        m.SetFloat("_VertexPigment", meshPigment ? 1f : 0f);
         var known = Dabs.TryGetValue(name, out var d);
         m.SetColor("_Warm", known ? d.warm : C(0.76f, 0.64f, 0.49f));
         m.SetColor("_Cool", known ? d.cool : C(0.45f, 0.55f, 0.72f));
         // vehicle paint stays one colour so the per-car tint reads; unknown materials barely dab
-        m.SetFloat("_DabStrength", name == "HK_KeiPaint" ? 0f : known ? 0.65f : 0.12f);
+        m.SetFloat("_DabStrength", meshPigment || name == "HK_KeiPaint" ? 0f : known ? 0.65f : 0.12f);
         m.SetTexture("_BrushTex", brush);
         m.SetFloat("_Paint", 1f);
     }

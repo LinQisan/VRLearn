@@ -19,7 +19,7 @@ MonoBehaviour:
     size: {x: 1.475, y: 1.79, z: 3.395}
     massKg: 900
     trafficShare: 0.25
-    paintMaterial: HK_KeiPaint
+    paintMaterial: ART_VehiclePaint
     colors:
     - {r: 0.93, g: 0.93, b: 0.91, a: 1}
     - {r: 0.72, g: 0.73, b: 0.75, a: 1}
@@ -35,7 +35,7 @@ MonoBehaviour:
     size: {x: 1.475, y: 1.525, z: 3.395}
     massKg: 680
     trafficShare: 0.15
-    paintMaterial: HK_KeiPaint
+    paintMaterial: ART_VehiclePaint
     colors:
     - {r: 0.93, g: 0.93, b: 0.91, a: 1}
     - {r: 0.72, g: 0.73, b: 0.75, a: 1}

@@ -36,6 +36,13 @@ MAT_COLORS = {
     "HK_Namako": (0.35, 0.36, 0.38), "HK_SignRed": (0.78, 0.10, 0.10),
     "HK_SignBlue": (0.08, 0.30, 0.66), "HK_SignYellow": (0.95, 0.78, 0.10),
     "HK_Guard": (0.30, 0.22, 0.16),
+    "ART_Frame": (0.27, 0.34, 0.45), "ART_FrameLight": (0.52, 0.59, 0.65),
+    "ART_LampGlow": (1.0, 0.87, 0.59), "ART_LampBase": (0.48, 0.48, 0.57),
+    "ART_SignalRed": (0.94, 0.19, 0.16), "ART_SignalYellow": (1.0, 0.77, 0.13),
+    "ART_Glass": (0.35, 0.52, 0.66), "ART_Cargo": (0.80, 0.82, 0.82),
+    "ART_Chassis": (0.17, 0.18, 0.22), "ART_VehiclePaint": (0.90, 0.91, 0.87),
+    "ART_Rubber": (0.26, 0.27, 0.35), "ART_WhitePaint": (0.98, 0.93, 0.77),
+    "ART_PlateGreen": (0.23, 0.47, 0.36),
 }
 
 
@@ -152,9 +159,9 @@ class MB:
             self.face(pts, m)
         tmp.free()
 
-    def finish(self, origin_note=""):
+    def finish(self, origin_note="", weld_distance=0.0005):
         me = bpy.data.meshes.new(self.name)
-        bmesh.ops.remove_doubles(self.bm, verts=self.bm.verts, dist=0.0005)
+        bmesh.ops.remove_doubles(self.bm, verts=self.bm.verts, dist=weld_distance)
         self.bm.normal_update()
         self.bm.to_mesh(me)
         self.bm.free()
@@ -171,15 +178,18 @@ class MB:
 def clear_asset(name):
     ob = bpy.data.objects.get(name)
     if ob:
-        me = ob.data
-        bpy.data.objects.remove(ob)
-        if me and me.users == 0:
-            bpy.data.meshes.remove(me)
+        for part in list(ob.children_recursive) + [ob]:
+            me = part.data if part.type == 'MESH' else None
+            bpy.data.objects.remove(part, do_unlink=True)
+            if me and me.users == 0:
+                bpy.data.meshes.remove(me)
 
 
 def export(ob, spacing_index=0):
     bpy.ops.object.select_all(action="DESELECT")
     ob.select_set(True)
+    for child in ob.children_recursive:
+        child.select_set(True)
     bpy.context.view_layer.objects.active = ob
     loc = ob.location.copy()
     ob.location = (0, 0, 0)
@@ -187,6 +197,6 @@ def export(ob, spacing_index=0):
         filepath=f"{MODEL_DIR}/{ob.name}.fbx", use_selection=True,
         axis_forward='-Z', axis_up='Y', bake_space_transform=True,
         apply_scale_options='FBX_SCALE_ALL', mesh_smooth_type='FACE',
-        add_leaf_bones=False, use_mesh_modifiers=True, path_mode='STRIP')
+        add_leaf_bones=False, use_mesh_modifiers=True, path_mode='STRIP', colors_type='LINEAR')
     # lay assets out in a grid in the .blend so they can be inspected
     ob.location = loc if spacing_index < 0 else Vector(((spacing_index % 8) * 30.0, (spacing_index // 8) * 30.0, 0))

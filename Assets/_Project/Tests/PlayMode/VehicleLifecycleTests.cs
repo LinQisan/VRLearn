@@ -134,6 +134,40 @@ namespace VRLearn.Tests.PlayMode
             return null;
         }
 
+        [UnityTest]
+        public IEnumerator PortedWheelsRollAfterBodySwapsAndReturnToRestOnReuse()
+        {
+            yield return LoadGameplay();
+            var pool = PoolInstance();
+            var car = PoolGet(pool, FindCarPrefab());
+            var wheelType = GameType("VehicleWheelVisuals");
+            var wheels = car.GetComponent(wheelType) ?? car.AddComponent(wheelType);
+            var bodyType = GameType("VehicleBody");
+            var body = bodyType.GetMethod("For").Invoke(null, new object[] { car });
+            var lateUpdate = wheelType.GetMethod("LateUpdate", BindingFlags.NonPublic | BindingFlags.Instance);
+            foreach (var id in new[] { "", "kei-tall", "kei-hatch", "" })
+            {
+                bodyType.GetMethod("Apply").Invoke(body, new object[] { id, 3 });
+                var visual = id == "" ? car.transform.Find("HK_SedanVisual")
+                    : Array.Find(car.GetComponentsInChildren<Transform>(), t => t.parent == car.transform && t.name == "BodyMain");
+                var wheel = visual.GetComponentsInChildren<Transform>();
+                var front = Array.Find(wheel, t => t.name == "Wheel_FL");
+                Assert.That(front, Is.Not.Null);
+                var rest = front.localRotation;
+                car.transform.position += car.transform.forward * 0.5f;
+                lateUpdate.Invoke(wheels, null);
+                Assert.That(Quaternion.Angle(rest, front.localRotation), Is.GreaterThan(10f), id + " rolls");
+                wheelType.GetMethod("ResetVisuals").Invoke(wheels, null);
+                Assert.That(Quaternion.Angle(rest, front.localRotation), Is.LessThan(0.01f));
+            }
+            PoolRelease(pool, car);
+            var reused = PoolGet(pool, FindCarPrefab());
+            Assert.That(ReferenceEquals(car, reused), Is.True);
+            var sedanWheel = Array.Find(reused.transform.Find("HK_SedanVisual").GetComponentsInChildren<Transform>(), t => t.name == "Wheel_FL");
+            Assert.That(Quaternion.Angle(Quaternion.identity, sedanWheel.localRotation), Is.LessThan(0.01f));
+            PoolRelease(pool, reused);
+        }
+
         static List<Component> FindRoutes(int minimumPoints)
         {
             var result = new List<Component>();

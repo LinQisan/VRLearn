@@ -150,8 +150,10 @@ public static class HikoneEnvironmentBuilder
         var mats = BuildMaterials();
         ConfigureModels(mats);
         BuildPrefabs();
+        HikoneVehicleVisuals.RebuildCarPrefabs();
         WriteVehicleBodyCatalog();
         AssetDatabase.SaveAssets();
+        NormalizePortedPropAssets();
         Debug.Log($"[Hikone] assets ready: {mats.Count} materials");
     }
 
@@ -185,7 +187,10 @@ public static class HikoneEnvironmentBuilder
             }
             HikonePaintAssets.Paint(m, name, brush);
             // the browser port lights emissive pigments at 0.4 of their colour: warm glass, not white
-            m.SetColor("_EmissionColor", name == "HK_Lamp" ? m.GetColor("_BaseColor") * 0.4f : Color.black);
+            m.SetColor("_EmissionColor", name == "HK_Lamp" ? m.GetColor("_BaseColor") * 0.4f
+                : name == "ART_LampGlow" ? new Color(1f, 0.70f, 0.32f).linear * 0.20f
+                : name == "ART_SignalRed" ? new Color(1f, 0.12f, 0.06f).linear * 0.38f
+                : name == "ART_SignalYellow" ? new Color(1f, 0.65f, 0.04f).linear * 0.38f : Color.black);
             m.globalIlluminationFlags = MaterialGlobalIlluminationFlags.None;
             m.enableInstancing = true;
             EditorUtility.SetDirty(m);
@@ -205,14 +210,22 @@ public static class HikoneEnvironmentBuilder
             mi.importAnimation = false;
             mi.animationType = ModelImporterAnimationType.None;
             // car bodies are dented on impact (AccidentVehicleDamage needs readable meshes)
-            mi.isReadable = Path.GetFileNameWithoutExtension(path).StartsWith("HK_Kei_");
+            var name = Path.GetFileNameWithoutExtension(path);
+            mi.isReadable = name.StartsWith("HK_Kei_") || name == "HK_Sedan";
+            if (IsPortedProp(name)) mi.preserveHierarchy = true;
             mi.meshCompression = ModelImporterMeshCompression.Off;
             mi.importBlendShapes = false;
             mi.addCollider = false;
             mi.materialImportMode = ModelImporterMaterialImportMode.ImportStandard;
             mi.materialLocation = ModelImporterMaterialLocation.InPrefab;
+            // Ported pigment materials belong only to the six new models. Avoid adding
+            // unused material references to every building, road and tree importer.
+            if (!IsPortedProp(name))
+                foreach (var key in mi.GetExternalObjectMap().Keys.Where(k => k.name.StartsWith("ART_")).ToArray())
+                    mi.RemoveRemap(key);
             foreach (var kv in mats)
-                mi.AddRemap(new AssetImporter.SourceAssetIdentifier(typeof(Material), kv.Key), kv.Value);
+                if (!kv.Key.StartsWith("ART_") || IsPortedProp(name))
+                    mi.AddRemap(new AssetImporter.SourceAssetIdentifier(typeof(Material), kv.Key), kv.Value);
             mi.SaveAndReimport();
         }
     }
@@ -241,7 +254,7 @@ public static class HikoneEnvironmentBuilder
         VehicleBodyCatalog.Entry Body(string id, string label, string prefab, float h, float mass, float share) => new VehicleBodyCatalog.Entry
         {
             id = id, label = label, prefab = AssetDatabase.LoadAssetAtPath<GameObject>($"{PrefabDir}/{prefab}.prefab"),
-            size = new Vector3(1.475f, h, 3.395f), massKg = mass, trafficShare = share, paintMaterial = "HK_KeiPaint", colors = colors
+            size = new Vector3(1.475f, h, 3.395f), massKg = mass, trafficShare = share, paintMaterial = "ART_VehiclePaint", colors = colors
         };
         catalog.bodies = new[]
         {
@@ -260,11 +273,30 @@ public static class HikoneEnvironmentBuilder
             var model = AssetDatabase.LoadAssetAtPath<GameObject>(path);
             var go = (GameObject)PrefabUtility.InstantiatePrefab(model);
             go.name = name;
+            // Wheel pivots change the hierarchy, which is not allowed inside a model
+            // prefab instance. Keep imported mesh references in a generated plain prefab.
+            if (IsPortedProp(name))
+                PrefabUtility.UnpackPrefabInstance(go, PrefabUnpackMode.Completely, InteractionMode.AutomatedAction);
             var flags = StaticEditorFlags.BatchingStatic | StaticEditorFlags.OccludeeStatic;
             if (BuildingAssets.Contains(name) || name.StartsWith("HK_Terrain") || name.StartsWith("HK_Hikone") || name.StartsWith("HK_Ishigaki"))
                 flags |= StaticEditorFlags.OccluderStatic;
-            foreach (var t in go.GetComponentsInChildren<Transform>(true))
-                GameObjectUtility.SetStaticEditorFlags(t.gameObject, flags);
+            foreach (var t in go.GetComponentsInChildren<Transform>(true).ToArray())
+            {
+                if (IsPortedProp(name) && t != go.transform && t.name.StartsWith(name + "_"))
+                {
+                    t.name = t.name.Substring(name.Length + 1);
+                    if (t.name.StartsWith("Tire_"))
+                    {
+                        var pivot = new GameObject("Wheel_" + t.name.Substring("Tire_".Length)).transform;
+                        pivot.SetParent(go.transform, false);
+                        pivot.position = t.GetComponent<Renderer>().bounds.center;
+                        t.SetParent(pivot, true);
+                        t.name = "Tire";
+                    }
+                }
+                GameObjectUtility.SetStaticEditorFlags(t.gameObject,
+                    name == "HK_Sedan" || name.StartsWith("HK_Kei_") ? 0 : flags);
+            }
             foreach (var r in go.GetComponentsInChildren<MeshRenderer>(true))
             {
                 // small props and distant forest do not need to cast shadows on Quest
@@ -281,8 +313,32 @@ public static class HikoneEnvironmentBuilder
                 box.size = new Vector3(b.size.x - 0.2f, Mathf.Min(b.size.y, 5f), name == "HK_Dobei_5m" ? 0.5f : b.size.z - 2.2f);
             }
             PrefabUtility.SaveAsPrefabAsset(go, $"{PrefabDir}/{name}.prefab");
+            NormalizeSerializedText($"{PrefabDir}/{name}.prefab");
             UnityEngine.Object.DestroyImmediate(go);
         }
+    }
+
+    static bool IsPortedProp(string name) => name == "HK_StreetLamp" || name == "HK_Sedan"
+        || name.StartsWith("HK_Kei_") || name.StartsWith("HK_Truck_");
+
+    // Unity writes a space after empty YAML values. Normalize generated text so a
+    // scene rebuild also passes the repository's required git diff --check.
+    public static void NormalizeSerializedText(string path) =>
+        File.WriteAllLines(path, File.ReadAllLines(path).Select(line => line.TrimEnd()));
+
+    /// <summary>Keep newly generated pigment assets and model metadata free of trailing spaces.</summary>
+    public static void NormalizePortedPropAssets()
+    {
+        foreach (var name in HikonePaintAssets.MaterialNames.Where(n => n.StartsWith("ART_")))
+            foreach (var suffix in new[] { ".mat", ".mat.meta" })
+                NormalizeSerializedText($"{MaterialDir}/{name}{suffix}");
+        foreach (var guid in AssetDatabase.FindAssets("t:Model", new[] { ModelDir }))
+        {
+            var path = AssetDatabase.GUIDToAssetPath(guid);
+            if (IsPortedProp(Path.GetFileNameWithoutExtension(path)))
+                NormalizeSerializedText(path + ".meta");
+        }
+        Debug.Log("[Hikone] ported prop asset text normalized");
     }
 
     static Bounds LocalBounds(GameObject go)
@@ -321,6 +377,7 @@ public static class HikoneEnvironmentBuilder
         HideLegacyVisuals(env.transform);
         ConfigureSpawnOccluders(scene);
         ReplaceTruckVisuals(scene);
+        HikoneVehicleVisuals.ReplaceParkedCars(scene);
 
         var existing = env.transform.Find(EnvironmentRootName);
         if (existing != null) UnityEngine.Object.DestroyImmediate(existing.gameObject);
@@ -354,6 +411,7 @@ public static class HikoneEnvironmentBuilder
         ApplyAtmosphere();
         EditorSceneManager.MarkSceneDirty(scene);
         EditorSceneManager.SaveScene(scene);
+        NormalizeSerializedText(TargetScene);
         AddToBuildSettings();
         Debug.Log($"[Hikone] built {layout.items.Length} placements into {TargetScene}");
     }

@@ -7,6 +7,71 @@ ModelImporter:
   - first:
       type: UnityEngine:Material
       assembly: UnityEngine.CoreModule
+      name: ART_Cargo
+    second: {fileID: 2100000, guid: c9208745a001e4c65a9d73ae29d2a5af, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: ART_Chassis
+    second: {fileID: 2100000, guid: 464bbf7669c9d47148a7f3d66bc1e3c1, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: ART_Frame
+    second: {fileID: 2100000, guid: f8ab59d1e66b44f0dbc9cbdda2271822, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: ART_FrameLight
+    second: {fileID: 2100000, guid: 70673e49083be4a89ac9a6d84cda07de, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: ART_Glass
+    second: {fileID: 2100000, guid: 660a1c81035154bacb599b00f0aa59eb, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: ART_LampBase
+    second: {fileID: 2100000, guid: 0508ee5b06d7b4798aa93f121fb288bd, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: ART_LampGlow
+    second: {fileID: 2100000, guid: 54bfbea7c33a94b31bd4b05096ac5054, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: ART_PlateGreen
+    second: {fileID: 2100000, guid: 391f1b2ee77454bca883641b0ab077fa, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: ART_Rubber
+    second: {fileID: 2100000, guid: b9c96f4b42a16474a9dd4669064369ab, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: ART_SignalRed
+    second: {fileID: 2100000, guid: 55f10b736748141df96dc00ed5e035a0, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: ART_SignalYellow
+    second: {fileID: 2100000, guid: 4ff2bb21d3df34859bf9ba9ce6dc48b1, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: ART_VehiclePaint
+    second: {fileID: 2100000, guid: 18b0db395035343679ceaeb7d42d5154, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: ART_WhitePaint
+    second: {fileID: 2100000, guid: 026f61c9dd322451fa72d47351d0d5a6, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
       name: HK_Asphalt
     second: {fileID: 2100000, guid: 458c4366a2a87491dbb8ccb7b2f0855e, type: 2}
   - first:
@@ -211,10 +276,10 @@ ModelImporter:
     resampleCurves: 1
     optimizeGameObjects: 0
     removeConstantScaleCurves: 0
-    motionNodeName: 
-    animationImportErrors: 
-    animationImportWarnings: 
-    animationRetargetingWarnings: 
+    motionNodeName:
+    animationImportErrors:
+    animationImportWarnings:
+    animationRetargetingWarnings:
     animationDoRetargetingWarnings: 0
     importAnimatedCustomProperties: 0
     importConstraints: 0
@@ -247,7 +312,7 @@ ModelImporter:
     keepQuads: 0
     weldVertices: 1
     bakeAxisConversion: 0
-    preserveHierarchy: 0
+    preserveHierarchy: 1
     skinWeightsMode: 0
     maxBonesPerVertex: 4
     minBoneWeight: 0.001
@@ -288,7 +353,7 @@ ModelImporter:
     legStretch: 0.05
     feetSpacing: 0
     globalScale: 1
-    rootMotionBoneName: 
+    rootMotionBoneName:
     hasTranslationDoF: 0
     hasExtraRoot: 0
     skeletonHasParents: 1
@@ -301,6 +366,6 @@ ModelImporter:
   importBlendShapeDeformPercent: 1
   remapMaterialsIfMaterialImportModeIsNone: 0
   additionalBone: 0
-  userData: 
-  assetBundleName: 
-  assetBundleVariant: 
+  userData:
+  assetBundleName:
+  assetBundleVariant:

@@ -89,6 +89,50 @@ public static class DocScreenshots
             Object.DestroyImmediate(camera.gameObject);
         }
         Debug.Log("[DocScreenshots] saved to " + OutputFolder);
+        CapturePropModels();
+    }
+
+    /// <summary>The ported props at their authored scale, independent of scenario activation.</summary>
+    public static void CapturePropModels()
+    {
+        EditorSceneManager.NewScene(NewSceneSetup.EmptyScene, NewSceneMode.Single);
+        RenderSettings.skybox = AssetDatabase.LoadAssetAtPath<Material>(HikonePaintAssets.SkyMaterialPath);
+        RenderSettings.ambientMode = UnityEngine.Rendering.AmbientMode.Trilight;
+        RenderSettings.ambientSkyColor = HikonePaintAssets.AmbientSky;
+        RenderSettings.ambientEquatorColor = new Color(0.82f, 0.82f, 0.82f);
+        RenderSettings.ambientGroundColor = HikonePaintAssets.AmbientGround;
+        RenderSettings.fog = false;
+        var sun = new GameObject("PreviewSun").AddComponent<Light>();
+        sun.type = LightType.Directional;
+        sun.color = HikonePaintAssets.SunColor;
+        sun.intensity = 1.1f;
+        sun.shadows = LightShadows.Soft;
+        sun.transform.rotation = Quaternion.Euler(50f, -35f, 0f);
+        RenderSettings.sun = sun;
+        var ground = GameObject.CreatePrimitive(PrimitiveType.Plane);
+        ground.transform.localScale = new Vector3(4f, 1f, 4f);
+        ground.transform.position = new Vector3(0f, -0.015f, -4f);
+        ground.GetComponent<Renderer>().sharedMaterial = AssetDatabase.LoadAssetAtPath<Material>("Assets/_Project/Hikone/Materials/HK_Sidewalk.mat");
+        void Place(string name, float x, float z, float yaw = 0f)
+        {
+            var prefab = AssetDatabase.LoadAssetAtPath<GameObject>($"Assets/_Project/Hikone/Prefabs/{name}.prefab");
+            var go = (GameObject)PrefabUtility.InstantiatePrefab(prefab);
+            go.transform.SetPositionAndRotation(new Vector3(x, 0f, z), Quaternion.Euler(0f, yaw, 0f));
+        }
+        Place("HK_StreetLamp", -7f, 0f);
+        Place("HK_Sedan", -3.5f, 0f);
+        Place("HK_Kei_Tall", 0f, 0f);
+        Place("HK_Kei_Hatch", 3.5f, 0f);
+        Place("HK_Truck_Large", -3.5f, -10f, 90f);
+        Place("HK_Truck_Medium", 3.5f, -9f, 90f);
+        var camera = NewCamera();
+        camera.fieldOfView = 43f;
+        camera.transform.position = new Vector3(16f, 10f, 22f);
+        camera.transform.LookAt(new Vector3(-0.5f, 1.7f, -3f));
+        Save(camera, "11_vehicle_models.jpg");
+        Object.DestroyImmediate(camera.gameObject);
+        // Discard the preview rather than making it another project scene.
+        EditorSceneManager.OpenScene(GameplayScene, OpenSceneMode.Single);
     }
 
     static Camera NewCamera()
