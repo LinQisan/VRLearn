@@ -31,62 +31,64 @@ public static class HikoneOcclusionCheck
     public static void Run()
     {
         EditorSceneManager.OpenScene(Scene, OpenSceneMode.Single);
+        string text;
+        try { text = Measure(); }
+        finally { EditorSceneManager.OpenScene(Scene, OpenSceneMode.Single); }   // discard the probes and activations
+        Directory.CreateDirectory(Path.GetDirectoryName(Report));
+        File.WriteAllText(Report, text);
+        Debug.Log("[Occlusion]\n" + text);
+    }
+
+    /// <summary>The report for the scene as it is open now (it leaves scenario activations changed).</summary>
+    public static string Measure()
+    {
         var entries = ScenarioRoots();
         var destroyAreas = UnityEngine.Object.FindObjectsByType<DestroyArea>(FindObjectsInactive.Include, FindObjectsSortMode.None)
             .Select(d => d.transform.position).ToArray();
         var text = new StringBuilder();
         text.AppendLine($"Occlusion check {DateTime.Now:yyyy-MM-dd HH:mm} (eye {Eye} m, target {Target} m, route step {Step} m, range {Range} m)");
         text.AppendLine("scenario | appear/despawn pairs visible | accident route visible within range | occluding meshes");
-        try
+        for (var n = 1; n <= 10; n++)
         {
-            for (var n = 1; n <= 10; n++)
+            var tpl = JsonUtility.FromJson<Tpl>(File.ReadAllText($"Scenarios/templates/builtin-{n:00}.json"));
+            for (var i = 0; i < entries.Count; i++)
+                if (entries[i] != null) entries[i].SetActive(i == n - 1);
+            var probes = BuildProbes();
+            try
             {
-                var tpl = JsonUtility.FromJson<Tpl>(File.ReadAllText($"Scenarios/templates/builtin-{n:00}.json"));
-                for (var i = 0; i < entries.Count; i++)
-                    if (entries[i] != null) entries[i].SetActive(i == n - 1);
-                var probes = BuildProbes();
-                try
+                var eyes = Enumerable.Range(0, 5).Select(k =>
                 {
-                    var eyes = Enumerable.Range(0, 5).Select(k =>
-                    {
-                        var p = Vector3.Lerp(new Vector3(tpl.spawn.x, 0f, tpl.spawn.z), new Vector3(tpl.goal.x, 0f, tpl.goal.z), k / 4f);
-                        return Ground(p) + Vector3.up * Eye;
-                    }).ToArray();
-                    var appear = tpl.vehicles.Where(v => v.route != null && v.route.Length > 0)
-                        .Select(v => new Vector3(v.route[0].x, 0f, v.route[0].z)).Distinct().Concat(destroyAreas)
-                        .Select(p => Ground(p) + Vector3.up * Target).ToArray();
-                    int pairs = 0, seen = 0;
-                    foreach (var e in eyes)
-                    foreach (var t in appear)
-                    {
-                        pairs++;
-                        if (!Physics.Linecast(e, t, 1 << ProbeLayer, QueryTriggerInteraction.Ignore)) seen++;
-                    }
-                    int samples = 0, visible = 0;
-                    foreach (var v in tpl.vehicles.Where(v => v.accident && v.route != null))
-                    foreach (var s in Sample(v.route))
-                    {
-                        var t = Ground(s) + Vector3.up * Target;
-                        var near = eyes.Where(e => Vector3.Distance(e, t) <= Range).ToArray();
-                        if (near.Length == 0) continue;
-                        samples++;
-                        if (near.Any(e => !Physics.Linecast(e, t, 1 << ProbeLayer, QueryTriggerInteraction.Ignore))) visible++;
-                    }
-                    text.AppendLine($"S{n:00} | {seen}/{pairs} | " + (samples > 0 ? $"{100f * visible / samples:0}% ({visible}/{samples})" : "-") + $" | {probes.Count}");
-                }
-                finally
+                    var p = Vector3.Lerp(new Vector3(tpl.spawn.x, 0f, tpl.spawn.z), new Vector3(tpl.goal.x, 0f, tpl.goal.z), k / 4f);
+                    return Ground(p) + Vector3.up * Eye;
+                }).ToArray();
+                var appear = tpl.vehicles.Where(v => v.route != null && v.route.Length > 0)
+                    .Select(v => new Vector3(v.route[0].x, 0f, v.route[0].z)).Distinct().Concat(destroyAreas)
+                    .Select(p => Ground(p) + Vector3.up * Target).ToArray();
+                int pairs = 0, seen = 0;
+                foreach (var e in eyes)
+                foreach (var t in appear)
                 {
-                    foreach (var p in probes) UnityEngine.Object.DestroyImmediate(p);
+                    pairs++;
+                    if (!Physics.Linecast(e, t, 1 << ProbeLayer, QueryTriggerInteraction.Ignore)) seen++;
                 }
+                int samples = 0, visible = 0;
+                foreach (var v in tpl.vehicles.Where(v => v.accident && v.route != null))
+                foreach (var s in Sample(v.route))
+                {
+                    var t = Ground(s) + Vector3.up * Target;
+                    var near = eyes.Where(e => Vector3.Distance(e, t) <= Range).ToArray();
+                    if (near.Length == 0) continue;
+                    samples++;
+                    if (near.Any(e => !Physics.Linecast(e, t, 1 << ProbeLayer, QueryTriggerInteraction.Ignore))) visible++;
+                }
+                text.AppendLine($"S{n:00} | {seen}/{pairs} | " + (samples > 0 ? $"{100f * visible / samples:0}% ({visible}/{samples})" : "-") + $" | {probes.Count}");
+            }
+            finally
+            {
+                foreach (var p in probes) UnityEngine.Object.DestroyImmediate(p);
             }
         }
-        finally
-        {
-            EditorSceneManager.OpenScene(Scene, OpenSceneMode.Single);   // discard the probes and activations
-        }
-        Directory.CreateDirectory(Path.GetDirectoryName(Report));
-        File.WriteAllText(Report, text.ToString());
-        Debug.Log("[Occlusion]\n" + text);
+        return text.ToString();
     }
 
     static List<GameObject> ScenarioRoots()

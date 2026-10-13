@@ -44,7 +44,7 @@
 
 - 玩家、相机、WayPoint、10 个 Scenario、危险事件、信号灯、InvisibleWall、数据记录与 UI 的对象和坐标均未修改。
 - 原道路瓦片只关闭了 Renderer；碰撞体继续用于车辆地面检测和玩家落地判定。路灯位置与原灯杆一致，桥上的路灯落在桥面人行道上。
-- **路面高度与碰撞体一致**：原碰撞体的车道在 y 0.01，人行道在 y 0.41（路缘高 40 cm，路口转角为坡道）。新的沥青和标线放在 y 0.01。人行道、路缘和转角坡道直接取自原道路网格（`Art/Hikone/road_tiles_geometry.json` → `HK_RoadRaised`），只替换为彦根的石材，因此车轮和脚下都与碰撞面完全重合。车辆模型本身无需修改：轮胎底部就是碰撞体底部。
+- **路面高度与碰撞体一致**：碰撞体的车道在 y 0.01，人行道在 y 0.16（路缘高 15 cm，路口转角为坡道；原为 40 cm，2026-10 由 `HikoneKerbMigration` 整体降低，见 RATIONALE D37）。道路网格的高度映射副本放在 `Assets/_Project/Hikone/Kerb15`，第三方原网格不动。新的沥青和标线放在 y 0.01。人行道、路缘和转角坡道直接取自道路网格（`Art/Hikone/road_tiles_geometry.json` → `HK_RoadRaised`），只替换为彦根的石材，因此车轮和脚下都与碰撞面完全重合。车辆模型本身无需修改：轮胎底部就是碰撞体底部。
 - **黑墙（BlackWallContainer）**：没有任何代码引用，也没有碰撞体。它们是遮挡车辆生成点和消失点的黑色面片。直接删除会让车辆凭空出现或消失，影响实验，因此改为嵌入建筑：
   - `BlackWall`（x −103）原样保留，现在位于县道 25 号西端的櫓门之内，看起来是城门通道的暗处，车辆从门洞驶出。
   - `BlackWall (1)` 缩小并移到南侧小街的長屋門通道内（位置 (10, 2.4, 6.63)，缩放 9.4×5）。
@@ -72,15 +72,15 @@ S4 的事故车从桥上驶来。实际的京桥路口北侧就是开阔的护�
 python3 Art/Hikone/hk_layout.py      # 布局 + 冲突校验
 ```
 
-在 Blender 中执行：`hk_textures.run(); hk_assets.build_all()`（BlenderMCP 或 headless 均可）。只改了一个模型时，可以只导出那一个（`hk_lib.export(hk_assets.<函数>(...), -1)`），避免所有 FBX 因时间戳而产生差异。然后在 Unity 菜单中依次执行：
+在 Blender 中执行：`hk_assets.build_all()`（BlenderMCP 或 headless 均可；不再生成贴图，外观由画风着色器完成）。只改了一个模型时，可以只导出那一个（`hk_lib.export(hk_assets.<函数>(...), -1)`），避免所有 FBX 因时间戳而产生差异。然后在 Unity 菜单中依次执行：
 
 0. `Tools/VRLearn/Hikone/0. Export Constraints From Scene`：仅在场景的道路、路点或触发区有变化时执行。它从彦根场景重新导出 `Art/Hikone/scene_constraints.json` 和 `road_tiles_geometry.json`，结果与现有文件一致即说明这些实验对象没有变化。
 1. `Tools/VRLearn/Hikone/1. Import Models, Materials & Prefabs`
-2. `Tools/VRLearn/Hikone/2. Build Hikone Scene`（同时处理黑墙）
+2. `Tools/VRLearn/Hikone/2. Build Hikone Scene`（同时处理黑墙，并设置画出来的天空和晴天的光照）
 3. `Tools/VRLearn/Rebuild Title Menu (VR tiles)`（标题菜单）
 
 设计意图与决策记录见根目录的 [RATIONALE.md](../../RATIONALE.md)。
 
 ## 性能
 
-新环境约 19.2 万三角面，1272 个 Renderer（全部 Static），共享 34 个 URP/Lit 材质（已开启 GPU Instancing），贴图 512px。原场景环境约 5.3 万面、71 个材质。
+新环境约 19 万三角面，约 1270 个 Renderer（全部 Static），共享 39 个画风材质（同一个着色器 `VRLearn/HikonePaint`，兼容 SRP Batcher 和 GPU Instancing），只用一张 512px 的笔刷贴图；天空是烘焙好的全景图。原场景环境约 5.3 万面、71 个材质。

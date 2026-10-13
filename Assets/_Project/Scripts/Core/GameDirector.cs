@@ -548,22 +548,21 @@ public class GameDirector : MonoBehaviour
             //喧騒音を切る
             GetComponent<AudioSource>().clip = null;
         }
+        else if (isRaining)
+        {
+            RenderSettings.skybox = DayRain;
+            RenderSettings.ambientSkyColor = new Color32(150, 164, 180, 255);
+            RenderSettings.ambientEquatorColor = new Color32(112, 124, 138, 255);
+            RenderSettings.ambientGroundColor = new Color32(72, 78, 88, 255);
+            sun.color = new Color32(196, 207, 219, 255);
+            sun.intensity = 0.7f;
+            directionallight.transform.rotation = Quaternion.Euler(50f, 60f, 0f);
+        }
         else
         {
-            RenderSettings.skybox = isRaining ? DayRain : DaySky;
-            RenderSettings.ambientSkyColor = isRaining
-                ? new Color32(150, 164, 180, 255)
-                : new Color32(184, 205, 228, 255);
-            RenderSettings.ambientEquatorColor = isRaining
-                ? new Color32(112, 124, 138, 255)
-                : new Color32(137, 154, 174, 255);
-            RenderSettings.ambientGroundColor = isRaining
-                ? new Color32(72, 78, 88, 255)
-                : new Color32(88, 94, 105, 255);
-            sun.color = isRaining
-                ? new Color32(196, 207, 219, 255)
-                : new Color32(255, 244, 214, 255);
-            sun.intensity = isRaining ? 0.7f : 1.2f;
+            // clear day: the scene's own ambient and sun as Tools/VRLearn/Hikone/2. Build Hikone Scene
+            // authored them (the browser port's painted light, RATIONALE.md D38); DaySky is its painted sky
+            RenderSettings.skybox = DaySky;
             directionallight.transform.rotation = Quaternion.Euler(50f, 60f, 0f);
         }
 

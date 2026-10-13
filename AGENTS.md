@@ -23,19 +23,19 @@ Editor menus (`Tools/VRLearn/…`) for generated content — change the source, 
 
 | Change | Edit | Then run |
 | --- | --- | --- |
-| Hikone environment | `Art/Hikone/hk_*.py` (`python3 Art/Hikone/hk_layout.py` must report `validation problems: 0`) | Blender `hk_textures.run(); hk_assets.build_all()` (export only the changed models: FBX carry timestamps) → `Hikone/1. Import…` → `Hikone/2. Build Hikone Scene` → `Hikone/3. Check Occlusion` → map export → `Docs/Capture Screenshots`. If scene roads, waypoints or triggers changed, first `Hikone/0. Export Constraints From Scene`. New materials need entries in `hk_lib.MAT_COLORS` and the builder's `MatSpec` |
+| Hikone environment | `Art/Hikone/hk_*.py` (`python3 Art/Hikone/hk_layout.py` must report `validation problems: 0`) | Blender `hk_assets.build_all()` (export only the changed models: FBX carry timestamps) → `Hikone/1. Import…` → `Hikone/2. Build Hikone Scene` → `Hikone/3. Check Occlusion` → map export → `Docs/Capture Screenshots`. If scene roads, waypoints or triggers changed, first `Hikone/0. Export Constraints From Scene`. New materials need entries in `hk_lib.MAT_COLORS` and the pigment tables of `HikonePaintAssets` |
 | Title menu | `Assets/_Project/Editor/TitleMenuLayout.cs` | `Rebuild Title Menu (VR tiles)` (idempotent) |
 | Built-in scenario content | the table in `Assets/_Project/Editor/ScenarioCatalog.cs`, not the assets | `Scenarios/Write Scenario Catalog To Assets`, then `Custom Scenarios/Export Built-in Scenarios As Templates` |
 | Scenario or UI text | the source above | `Prepare Accident Experience Font` + rebuild the title menu; review the font asset diff |
 | Roads, walls, routes, environment look | — | `Custom Scenarios/Export Map For Scenario Editor` (`Scenarios/maps/`) |
 | Anything the browser port shows | — | `Web/Export Scene For Web`, then in `../hikone-traffic-sim` its `tools/export_models.py` and `node tools/sync.mjs` |
 
-Also: `Custom Scenarios/Play Scenario File…`, `Validate Scenario Files`; `Setup Dynamic Font Fallback` (re-run before committing so the dynamic fallback atlas is empty).
+Also: `Custom Scenarios/Play Scenario File…`, `Validate Scenario Files`; `Maintenance/Report Unused Assets` (`Logs/unused-assets.txt`: what nothing in the build reaches); `Setup Dynamic Font Fallback` (re-run before committing so the dynamic fallback atlas is empty).
 
 ## Hard rules (breaking these breaks the experiment)
 
 1. **Experiment objects stay put:** player, waypoints, spawns, goals, accident areas, car factories, `DestroyArea`s, traffic signals, `InvisibleWallContainer`, `ScenarioHost` and the bindings of all 10 scenarios. The Hikone scene only replaces visuals.
-2. **Road colliders are ground truth.** `Environment/RoadContainerNeo` has only its renderers off; colliders, lamp-pole colliders and night lights stay. Carriageway y 0.01, sidewalk y 0.41 (40 cm curbs, ramps at junction corners); any new road visual must match exactly. Vehicle height comes from a downward raycast onto these colliders; waypoint Y is ignored.
+2. **Road colliders are ground truth.** `Environment/RoadContainerNeo` has only its renderers off; colliders, lamp-pole colliders and night lights stay. Carriageway y 0.01, sidewalk y 0.16 (15 cm kerbs, ramps at junction corners; was 40 cm until `HikoneKerbMigration`, RATIONALE D37 — its height-mapped copies of the road meshes are in `Assets/_Project/Hikone/Kerb15`, the third-party originals are untouched; the tool refuses to run twice). Any new road visual must match exactly. Vehicle height comes from a downward raycast onto these colliders; waypoint Y is ignored.
 3. **Black walls are occluders** (`OnOffContainer/BlackWallContainer`, no code references, no colliders): they hide where cars spawn and despawn. Never remove them.
 4. **Occlusion is an experimental variable.** After changing buildings, trees, walls, parked vehicles or terrain, run `Hikone/3. Check Occlusion` (`Logs/occlusion-report.txt`) before and after (e.g. with `git stash`) and report any difference.
 5. **Never hand-edit generated output:** `Hikone/Models/*.fbx`, `Layout/hikone_layout.json`, everything under `HikoneEnvironment` in the scene, the title menu, the scenario assets, `Scenarios/templates/`, `Scenarios/maps/`. Blender → FBX mirrors X; `hk_lib.U()` compensates — never write vertices around it.
@@ -55,7 +55,7 @@ Also: `Custom Scenarios/Play Scenario File…`, `Validate Scenario Files`; `Setu
 ## Where things are
 
 - `Assets/_Project/Scripts/` (one assembly): `Core/` (`GameDirector`, `GameplayFlowController`, `SceneRoute`, `ScenarioRetry`, `CSVPrinter`), `Scenario/` (`ScenarioRuntime`, `ScenarioDefinitionAsset`, `CustomScenario*`, `AccidentCarFactory`, goal), `Traffic/` (`CarFactory` → `VehiclePool` → `CarController` on `WaypointPath`; `VehicleBody` + `Resources/VehicleBodies.asset`), `Player/`, `XR/` (`OpenXRScene`, `OpenXRInput`, `MetaEditorSimulationController`), `Accident/` (`MetaVehicleImpactSensor`, `HybridAccidentPresentation`, `AccidentReplayRecorder` / `Presenter` / `Analysis`, `ReplayMannequin`, `AccidentResultPresenter`), `Title/` (`GameDirector_Title` holds every selection), `UI/` (`UiKit`, `VrPanel`).
-- `Assets/_Project/Editor/` menus and generators; `Assets/_Project/Hikone/` generated environment; `Art/Hikone/` its Python sources and scene constraints.
+- `Assets/_Project/Editor/` menus and generators; `Assets/_Project/Hikone/` generated environment, painted by the `VRLearn/HikonePaint` shader with the browser port's pigments, brush and sky (`HikonePaintAssets`; RATIONALE D38 — clear day only, rain and night keep their own sky and light in `GameDirector`); `Art/Hikone/` its Python sources and scene constraints.
 - `Scenarios/` custom JSON, schema, `templates/`, `maps/` (generated); `ScenarioModel/` shared JS model. The web editor and browser port are `../hikone-traffic-sim` (separate repository).
 - Custom scenarios: `persistentDataPath/Scenarios` on the headset (plus `Scenarios/` in the Editor); `CustomScenarioRunner.Setup` builds them at runtime, then the shared pipeline runs. The web editor's "▶ Unityで試す" writes `Scenarios/.play-request.json`, which `ScenarioEditorBridge` picks up.
 - CSV files (`CarData_*`, `HumanData_*`, `HumanData_InExperiment_*`) go to `persistentDataPath`: macOS Editor `~/Library/Application Support/DefaultCompany/VRLearn`, Quest `/sdcard/Android/data/com.moxuanxuerain.vrlearn/files`.
@@ -72,6 +72,8 @@ Also: `Custom Scenarios/Play Scenario File…`, `Validate Scenario Files`; `Setu
 ## Tools
 
 Unity's official CLI (`unity`, in `~/.unity/bin`; `unity self-update`) drives the Editor through the `com.unity.pipeline` package in this project: `unity status`, `unity list`, `unity command …` (`unity command eval` takes C# statements: `return …;`), and its MCP server `unity mcp` (the `unity` entry in `.mcp.json`; Codex: `.codex/config.toml`). Its agent skill is installed with `unity skill install claude-code`. `blender` in `.mcp.json` is the community `uvx blender-mcp` (Connect in Blender's BlenderMCP panel, port 9876). It stays on purpose: the Blender Foundation's official MCP server (Blender Lab) needs Blender 5.1+, and Blender 5.x has no Intel Mac build — this Mac (Intel) runs Blender 4.5 LTS, the last one with Intel support. The asset pipeline does not need any MCP (`Blender -b --python`); either MCP runs generated code unguarded.
+
+Long Editor jobs (steps 1–2, occlusion, map export) from the command line: `unity run "$PWD" -- -executeMethod <Class.Method> -logFile <file>` with the Editor closed — never add `-batchmode`/`-quit` (it fails with exit 6). An open Editor in the background throttles: `unity command eval` hits its 5 s main-thread limit and queued work may never start. Anything that renders for a file (`DocScreenshots`, the scenario map) turns off asynchronous shader compilation first; otherwise a shader still compiling draws a placeholder (a magenta or two-tone image).
 
 ## Docs
 

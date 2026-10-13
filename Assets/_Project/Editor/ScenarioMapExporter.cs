@@ -115,7 +115,7 @@ public static class ScenarioMapExporter
         return map;
     }
 
-    /// <summary>Upward faces of the road colliders: carriageway (y≈0.01), sidewalk (y≈0.41), ramps, ground.</summary>
+    /// <summary>Upward faces of the road colliders: carriageway (y≈0.01), sidewalk (y≈0.16, 15 cm kerbs), ramps, ground.</summary>
     static Surface[] CollectSurfaces()
     {
         var buckets = new Dictionary<string, (float height, List<float> tris)>();
@@ -145,9 +145,9 @@ public static class ScenarioMapExporter
                 string kind;
                 if (isGround) kind = "ground";
                 else if (Mathf.Abs(normal.y) < 0.995f) kind = "ramp";
-                else if (y < 0.2f) kind = "carriageway";
+                else if (y < (HikoneKerbMigration.Carriageway + HikoneKerbMigration.Pavement) / 2f) kind = "carriageway";
                 else kind = "sidewalk";
-                Add(kind, kind == "carriageway" ? 0.01f : kind == "sidewalk" ? 0.41f : y, a, b, c);
+                Add(kind, kind == "carriageway" ? HikoneKerbMigration.Carriageway : kind == "sidewalk" ? HikoneKerbMigration.Pavement : y, a, b, c);
             }
         }
         var order = new[] { "ground", "carriageway", "ramp", "sidewalk" };
@@ -196,7 +196,8 @@ public static class ScenarioMapExporter
         }
     }
 
-    const float MinWallTop = 0.6f;
+    // the sidewalk plus one step (CharacterController stepOffset ≥ 0.2 m)
+    const float MinWallTop = HikoneKerbMigration.Pavement + 0.2f;
 
     /// <summary>Highest world point of a box collider (from its corners; bounds are not reliable outside play mode).</summary>
     static float Top(BoxCollider b)
@@ -213,9 +214,9 @@ public static class ScenarioMapExporter
         var container = GameObject.Find("Environment/InvisibleWallContainer");
         if (container == null)
             return new Wall[0];
-        // A collider that stays below the sidewalk plus one step (0.41 + CharacterController stepOffset
-        // ≥ 0.2 m) is walked onto, not a wall: InvisibleBlock at the far kerb of the mid-block
-        // crossings is a box tilted 75°, i.e. a 15° ramp from the road up to y 0.385.
+        // A collider that stays below the sidewalk plus one step is walked onto, not a wall:
+        // InvisibleBlock at the far kerb of the mid-block crossings is a box tilted 75°, i.e. a 15°
+        // ramp from the road up to y 0.15, just under the pavement.
         return container.GetComponentsInChildren<BoxCollider>()
             .Where(b => b.enabled && !b.isTrigger && Top(b) >= MinWallTop)
             .Select(b =>
@@ -269,6 +270,11 @@ public static class ScenarioMapExporter
         // scene fog is tuned for eye level; from 250 m it washes the whole map out
         var fog = RenderSettings.fog;
         RenderSettings.fog = false;
+        // flat pigments, no brush dabs: a plan to edit on (and a PNG a seventh of the size)
+        Shader.SetGlobalFloat("_HikonePaintOff", 1f);
+        // compile shaders before drawing: an asynchronously compiling shader renders a placeholder
+        var asyncCompile = ShaderUtil.allowAsyncCompilation;
+        ShaderUtil.allowAsyncCompilation = false;
         var go = new GameObject("__MapCamera") { hideFlags = HideFlags.HideAndDontSave };
         var texture = new RenderTexture(map.imageWidth, map.imageHeight, 24, RenderTextureFormat.ARGB32) { antiAliasing = 4 };
         try
@@ -301,6 +307,8 @@ public static class ScenarioMapExporter
         finally
         {
             RenderSettings.fog = fog;
+            Shader.SetGlobalFloat("_HikonePaintOff", 0f);
+            ShaderUtil.allowAsyncCompilation = asyncCompile;
             RenderTexture.active = null;
             UnityEngine.Object.DestroyImmediate(go);
             texture.Release();

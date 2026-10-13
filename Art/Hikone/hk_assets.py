@@ -253,9 +253,9 @@ def _rect(b, x0, x1, z0, z1, y, m):
     b.quad_up([(x0, z0), (x0, z1), (x1, z1), (x1, z0)], y, m)
 
 
-# The original road colliders put the carriageway at y 0.01 and sidewalks at y 0.41, so the
+# The road colliders put the carriageway at y 0.01 and sidewalks at y 0.16 (15 cm kerbs), so the
 # modules are placed at y 0.01 and sidewalks rise WALK_H above the carriageway.
-WALK_H = 0.40
+WALK_H = 0.15
 
 
 def _sidewalk_poly(b, pts, curb_edge=None):
@@ -966,7 +966,12 @@ def sign_guide(name="HK_Sign_Guide"):
     return b.finish()
 
 
-def sign_speed(name="HK_Sign_Speed30"):
+# seven-segment strokes of the speed digits: a top, b/c right (upper/lower), d bottom,
+# e/f left (lower/upper), g middle
+SEVEN = {"0": "abcdef", "3": "abcdg", "4": "bcfg"}
+
+
+def sign_speed(name="HK_Sign_Speed30", digits="30"):
     clear_asset(name)
     b = MB(name)
     _sign_pole(b)
@@ -978,16 +983,15 @@ def sign_speed(name="HK_Sign_Speed30"):
         b.face([(ring[k][0], ring[k][1], z), (ring[j][0], ring[j][1], z), (inner[j][0], inner[j][1], z), (inner[k][0], inner[k][1], z)], "HK_SignRed")
     b.face([(p[0], p[1], z) for p in inner], "HK_WhitePaint")
     zz = z + 0.01
-    # "30" in blue seven-segment strokes
+    # the limit in blue seven-segment strokes
     def seg(x0, y0, x1, y1):
         b.box(((x0 + x1) / 2, (y0 + y1) / 2, zz), (abs(x1 - x0) + 0.03, abs(y1 - y0) + 0.03, 0.005), "HK_SignBlue")
-    for ox in (-0.08, 0.08):
-        if ox < 0:
-            seg(ox - 0.05, y + 0.12, ox + 0.05, y + 0.12); seg(ox - 0.05, y, ox + 0.05, y); seg(ox - 0.05, y - 0.12, ox + 0.05, y - 0.12)
-            seg(ox + 0.05, y - 0.12, ox + 0.05, y + 0.12)
-        else:
-            seg(ox - 0.05, y + 0.12, ox + 0.05, y + 0.12); seg(ox - 0.05, y - 0.12, ox + 0.05, y - 0.12)
-            seg(ox - 0.05, y - 0.12, ox - 0.05, y + 0.12); seg(ox + 0.05, y - 0.12, ox + 0.05, y + 0.12)
+    for ox, digit in zip((-0.08, 0.08), digits):
+        l, r, t, m, bt = ox - 0.05, ox + 0.05, y + 0.12, y, y - 0.12
+        strokes = {"a": (l, t, r, t), "b": (r, m, r, t), "c": (r, bt, r, m), "d": (l, bt, r, bt),
+                   "e": (l, bt, l, m), "f": (l, m, l, t), "g": (l, m, r, m)}
+        for s in SEVEN[digit]:
+            seg(*strokes[s])
     return b.finish()
 
 
@@ -1231,6 +1235,7 @@ def build_all():
                          axles=(-8.6 / 2 + 1.15, 8.6 / 2 - 2.3)))
     obs.append(sign_guide())
     obs.append(sign_speed())
+    obs.append(sign_speed("HK_Sign_Speed40", "40"))           # Route 25 along the moat
     obs.append(water())
     obs.append(bridge())
     obs.append(castle_keep())

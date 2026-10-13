@@ -16,12 +16,15 @@ TOWN_Z = 39.6                      # town-side moat bank (top edge of the stone 
 MOAT_X0, MOAT_X1 = -150.0, 200.0
 PEN = (21.0, 63.0, 51.5, 76.0)     # masugata peninsula: x0, x1, south bank z, north wall z
 CASTLE_Z = 76.0                    # castle-side bank (outside the peninsula)
-CASTLE_GROUND = 4.4                # raised castle grounds behind the stone walls
+# Kerbs are 15 cm (pavement y 0.16): the town and everything above it stand 0.25 m lower than in
+# the original 40 cm-kerb scene; the moat (below the carriageway) is unchanged.
+KERB_DROP = 0.25
+CASTLE_GROUND = 4.4 - KERB_DROP    # raised castle grounds behind the stone walls
 PEN_GROUND = -0.05         # below the carriageway (0.01) so the masugata road shows
-TOWN_GROUND = 0.40
+TOWN_GROUND = 0.15
 WATER_BED = -3.2
 WATER_Y = -1.35
-PLATEAU = (-40.0, 205.0, 30.0, 22.0, 50.0)     # cx, cz, half-x, half-z, height (honmaru)
+PLATEAU = (-40.0, 205.0, 30.0, 22.0, 50.0 - KERB_DROP)     # cx, cz, half-x, half-z, height (honmaru)
 WALL_H = 6.0
 INSET = 1.4                        # moat floor starts this far inside the wall tops (layout clearance)
 # The terrain drops to the moat bed right behind the wall line: the battered stone face only
@@ -55,7 +58,7 @@ def terrain_height(x, z):
     if on_peninsula(x, z):
         return PEN_GROUND
     if z < CASTLE_Z and not (MOAT_X0 < x < MOAT_X1):
-        return 0.45                 # beyond the moat ends
+        return 0.45 - KERB_DROP     # beyond the moat ends
     cx, cz, hx, hz, top = PLATEAU
     base = CASTLE_GROUND
     dx = max(0.0, abs(x - cx) - hx)

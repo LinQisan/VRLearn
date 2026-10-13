@@ -31,13 +31,13 @@ public static class DocScreenshots
     // Castle Road runs south, Route 25 runs west past the Honmachi T (x 0..20)
     static readonly View[] Views =
     {
-        new View("01_kyobashi_intersection.jpg", new Vector3(24.5f, 2.0f, 12.5f), new Vector3(34f, 3f, 60f)),
-        new View("02_castle_road.jpg", new Vector3(32f, 2.0f, 15f), new Vector3(32f, 1.5f, -60f)),
+        new View("01_kyobashi_intersection.jpg", new Vector3(24.5f, 1.75f, 12.5f), new Vector3(34f, 3f, 60f)),
+        new View("02_castle_road.jpg", new Vector3(32f, 1.75f, 15f), new Vector3(32f, 1.5f, -60f)),
         new View("03_aerial.jpg", new Vector3(75f, 55f, -45f), new Vector3(30f, 0f, 60f)),
-        new View("04_bridge.jpg", new Vector3(32f, 2.0f, 37f), new Vector3(32f, 3.5f, 90f)),
-        new View("05_route25_west_gate.jpg", new Vector3(20f, 2.0f, 21f), new Vector3(-60f, 3f, 26f)),
+        new View("04_bridge.jpg", new Vector3(32f, 1.75f, 37f), new Vector3(32f, 3.5f, 90f)),
+        new View("05_route25_west_gate.jpg", new Vector3(20f, 1.75f, 21f), new Vector3(-60f, 3f, 26f)),
         new View("06_junctions_from_above.jpg", new Vector3(21f, 38f, 3f), new Vector3(21f, 0f, 26f), 55f),
-        new View("10_parked_trucks.jpg", new Vector3(44f, 1.8f, 21.5f), new Vector3(56f, 1.6f, 24f), 60f, 2),
+        new View("10_parked_trucks.jpg", new Vector3(44f, 1.55f, 21.5f), new Vector3(56f, 1.6f, 24f), 60f, 2),
     };
 
     [MenuItem("Tools/VRLearn/Docs/Capture Screenshots")]
@@ -102,6 +102,9 @@ public static class DocScreenshots
     static void Save(Camera camera, string file, int width = Width)
     {
         var target = new RenderTexture(width, Height, 24) { antiAliasing = 4 };
+        // compile shaders before drawing: an asynchronously compiling shader renders a placeholder
+        var asyncCompile = ShaderUtil.allowAsyncCompilation;
+        ShaderUtil.allowAsyncCompilation = false;
         var image = new Texture2D(width, Height, TextureFormat.RGB24, false);
         var active = RenderTexture.active;
         try
@@ -117,6 +120,7 @@ public static class DocScreenshots
         finally
         {
             camera.targetTexture = null;
+            ShaderUtil.allowAsyncCompilation = asyncCompile;
             RenderTexture.active = active;
             Object.DestroyImmediate(image);
             target.Release();

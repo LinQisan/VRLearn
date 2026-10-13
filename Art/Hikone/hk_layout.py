@@ -5,7 +5,7 @@ Inputs : Art/Hikone/scene_constraints.json (exported from Gameplay_Hikone: road 
          waypoints, spawns, goals, triggers, invisible walls, lamp poles)
 Output : Assets/_Project/Hikone/Layout/hikone_layout.json + a validation report on stdout.
 
-World frame = Unity (x east, y up, z north). Town ground (road surface) is y = 0.40.
+World frame = Unity (x east, y up, z north). Town ground is y = 0.15 (15 cm kerbs: pavement 0.16).
 """
 import json, math, os, random, sys
 
@@ -16,7 +16,7 @@ from hk_terrain import (PLATEAU, terrain_height, TOWN_Z, PEN, CASTLE_Z, MOAT_X0,
 ROOT = os.path.abspath(os.path.join(os.path.dirname(__file__), "..", ".."))
 C = json.load(open(os.path.join(ROOT, "Art/Hikone/scene_constraints.json")))
 OUT = os.path.join(ROOT, "Assets/_Project/Hikone/Layout/hikone_layout.json")
-Y0 = 0.40
+Y0 = 0.15
 rnd = random.Random(20260928)
 
 # ------------------------------------------------------------------ asset metrics
@@ -77,8 +77,8 @@ def blocked(fp, point_buf=2.0, tile_margin=0.05):
 
 # ------------------------------------------------------------------ roads (merged runs)
 BRIDGE = (22.0, TOWN_Z, 42.0, 52.0)          # north leg over the moat -> Kyobashi
-ROAD_Y = 0.01        # carriageway height of the original road colliders (sidewalks: 0.41)
-WALK_Y = 0.41
+ROAD_Y = 0.01        # carriageway height of the road colliders (sidewalks: 0.16)
+WALK_Y = 0.16
 CASTLE_ROAD_END = -150.0                      # visual continuation of Castle Road to the south
 
 
@@ -266,9 +266,15 @@ TOWN_TREE_GROUPS = ("StreetTrees", "Trees")
 BUILT = ("HK_Machiya", "HK_Kura", "HK_Dobei", "HK_Gate", "HK_CastleWall")
 
 
+# Where three crosswalk signs of the Kyobashi crossing stood (removed: the street photographs show
+# none). The trees still keep clear of these spots, so removing the signs moves nothing else (tree
+# positions are part of the occlusion).
+REMOVED_PROP_SPOTS = [(44.8, 31.3), (21.0, 20.9), (26.7, 13.4)]
+
+
 def _obstacles():
     """(x, z, kind) of poles and lanterns the crowns must keep clear of."""
-    out = []
+    out = [(x, z, "pole") for (x, z) in REMOVED_PROP_SPOTS]
     for e in ITEMS:
         x, _, z = e["p"]
         if e["a"] == "HK_StreetLamp":
@@ -402,6 +408,8 @@ def main():
     wall_run("HK_CastleWall", 62.6, 52.2, 62.6, 71.8, 90, WALK_Y, group="Castle")
     add("HK_Yagura", 68.0, CASTLE_GROUND, 82.0, 180, group="Castle")
     wall_run("HK_CastleWall", 74.0, CASTLE_Z + 1.2, 104.0, CASTLE_Z + 1.2, 0, CASTLE_GROUND, group="Castle")
+    # the "彦根城 →" guide post at the bridge corner is not in the photographs, but it stays: it hides
+    # one of scenario 05's vehicle appear/despawn points (occlusion check, hard rule 4)
     add("HK_GuidePost", 38.2, Y0, 37.6, 270, group="Props")   # 彦根城 ->
 
     # ------------------------------------------------------------ Route 25 (south side only)
@@ -453,15 +461,15 @@ def main():
     dobei_run(21.4, 4.3, 21.4, 10.6)
 
     # ------------------------------------------------------------ signs on Route 25
-    add("HK_Sign_Crosswalk", 44.8, Y0, 31.3, 90, group="Signs")
-    add("HK_Sign_Crosswalk", 21.0, Y0, 20.9, 270, group="Signs")
+    # "横断歩道" signs at the Kyobashi crossing: the photographs show none (signal-controlled,
+    # 歩車分離式), but the one at the bridge corner stays: it hides one of scenario 05's vehicle
+    # appear/despawn points (occlusion check, hard rule 4)
     add("HK_Sign_Crosswalk", 37.3, Y0, 37.4, 0, group="Signs")
-    add("HK_Sign_Crosswalk", 26.7, Y0, 13.4, 180, group="Signs")
     add("HK_Sign_Stop", 4.6, Y0, 14.8, 180, group="Signs")
     add("HK_Sign_School", 52.0, Y0, 31.2, 90, group="Signs")
     add("HK_Sign_School", -30.0, Y0, 20.8, 270, group="Signs")
-    add("HK_Sign_Speed30", 88.0, Y0, 31.2, 90, group="Signs")
-    add("HK_Sign_Speed30", -20.0, Y0, 20.8, 270, group="Signs")
+    add("HK_Sign_Speed40", 88.0, Y0, 31.2, 90, group="Signs")     # Route 25 is a 40 km/h road
+    add("HK_Sign_Speed40", -20.0, Y0, 20.8, 270, group="Signs")
     for (x, z0, z1) in ((27.55, 4.5, 14.0),):
         z = z0
         while z + 2 <= z1:

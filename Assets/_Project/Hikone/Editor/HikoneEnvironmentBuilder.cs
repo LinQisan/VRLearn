@@ -29,67 +29,6 @@ public static class HikoneEnvironmentBuilder
         "HK_Machiya_A", "HK_Machiya_A_Narrow", "HK_Machiya_B", "HK_Machiya_C", "HK_Kura", "HK_Dobei_5m"
     };
 
-    // ------------------------------------------------------------------ materials
-    struct MatSpec
-    {
-        public string Tex; public float TileMeters; public Color Color; public float Smooth; public float Metal;
-        public bool Emissive; public string Normal; public float NormalTile;
-        public MatSpec(string tex, float tile, Color c, float smooth = 0.12f, float metal = 0f)
-        { Tex = tex; TileMeters = tile; Color = c; Smooth = smooth; Metal = metal; Emissive = false; Normal = null; NormalTile = 1f; }
-    }
-
-    static Color C(float r, float g, float b) => new Color(r, g, b, 1f);
-
-    static Dictionary<string, MatSpec> MaterialSpecs()
-    {
-        var white = Color.white;
-        var d = new Dictionary<string, MatSpec>
-        {
-            ["HK_Plaster"] = new MatSpec("HK_T_Plaster", 2f, white, 0.08f),
-            ["HK_PlasterWarm"] = new MatSpec("HK_T_Plaster", 2f, C(0.95f, 0.91f, 0.82f), 0.08f),
-            ["HK_WoodDark"] = new MatSpec("HK_T_Wood", 2f, C(0.42f, 0.36f, 0.33f), 0.18f),
-            ["HK_WoodMid"] = new MatSpec("HK_T_Wood", 2f, C(0.82f, 0.74f, 0.66f), 0.2f),
-            ["HK_WoodLight"] = new MatSpec("HK_T_Wood", 2f, C(1.3f, 1.2f, 1.05f), 0.2f),
-            ["HK_RoofTile"] = new MatSpec("HK_T_RoofTile", 2f, C(0.9f, 0.92f, 0.96f), 0.35f),
-            ["HK_RoofRidge"] = new MatSpec(null, 1f, C(0.18f, 0.19f, 0.21f), 0.35f),
-            ["HK_Stone"] = new MatSpec("HK_T_StoneWall", 3.2f, white, 0.1f),
-            ["HK_StoneDark"] = new MatSpec("HK_T_StoneWall", 2f, C(0.7f, 0.69f, 0.67f), 0.1f),
-            ["HK_Asphalt"] = new MatSpec("HK_T_Asphalt", 4f, white, 0.18f),
-            ["HK_Sidewalk"] = new MatSpec("HK_T_Pavers", 2.4f, white, 0.1f),
-            ["HK_Curb"] = new MatSpec("HK_T_StoneWall", 1.5f, C(1.08f, 1.06f, 1.02f), 0.1f),
-            ["HK_WhitePaint"] = new MatSpec(null, 1f, C(0.92f, 0.92f, 0.9f), 0.2f),
-            ["HK_Grass"] = new MatSpec("HK_T_Grass", 6f, white, 0.05f),
-            ["HK_Soil"] = new MatSpec(null, 1f, C(0.3f, 0.26f, 0.2f), 0.05f),
-            ["HK_Leaf"] = new MatSpec(null, 1f, C(0.27f, 0.42f, 0.19f), 0.1f),
-            ["HK_LeafDark"] = new MatSpec(null, 1f, C(0.14f, 0.27f, 0.15f), 0.1f),
-            ["HK_Sakura"] = new MatSpec(null, 1f, C(0.95f, 0.76f, 0.82f), 0.1f),
-            ["HK_Bark"] = new MatSpec("HK_T_Wood", 1f, C(0.62f, 0.55f, 0.5f), 0.05f),
-            ["HK_Metal"] = new MatSpec(null, 1f, C(0.19f, 0.19f, 0.2f), 0.45f, 0.6f),
-            ["HK_MetalLight"] = new MatSpec(null, 1f, C(0.62f, 0.63f, 0.64f), 0.5f, 0.7f),
-            ["HK_Glass"] = new MatSpec(null, 1f, C(0.1f, 0.12f, 0.13f), 0.88f),
-            ["HK_Shoji"] = new MatSpec(null, 1f, C(0.95f, 0.92f, 0.82f), 0.05f),
-            ["HK_Noren"] = new MatSpec(null, 1f, C(0.14f, 0.19f, 0.34f), 0.05f),
-            ["HK_NorenRed"] = new MatSpec(null, 1f, C(0.58f, 0.14f, 0.12f), 0.05f),
-            ["HK_Gold"] = new MatSpec(null, 1f, C(0.8f, 0.63f, 0.27f), 0.6f, 0.85f),
-            ["HK_Namako"] = new MatSpec("HK_T_Namako", 1.2f, white, 0.15f),
-            ["HK_SignRed"] = new MatSpec(null, 1f, C(0.78f, 0.1f, 0.1f), 0.3f),
-            ["HK_SignBlue"] = new MatSpec(null, 1f, C(0.08f, 0.3f, 0.66f), 0.3f),
-            ["HK_SignYellow"] = new MatSpec(null, 1f, C(0.95f, 0.78f, 0.1f), 0.3f),
-            ["HK_Guard"] = new MatSpec(null, 1f, C(0.3f, 0.22f, 0.16f), 0.3f),
-            ["HK_TruckCab"] = new MatSpec(null, 1f, C(0.9f, 0.9f, 0.88f), 0.45f),
-            ["HK_Rubber"] = new MatSpec(null, 1f, C(0.05f, 0.05f, 0.05f), 0.15f),
-            ["HK_PlateGreen"] = new MatSpec(null, 1f, C(0.1f, 0.34f, 0.19f), 0.3f),
-            ["HK_VanBody"] = new MatSpec(null, 1f, C(0.8f, 0.81f, 0.82f), 0.35f),
-            ["HK_VanRib"] = new MatSpec(null, 1f, C(0.6f, 0.61f, 0.62f), 0.3f),
-            // kei car paint: white, tinted per car (VehicleBody) through a property block
-            ["HK_KeiPaint"] = new MatSpec(null, 1f, C(1f, 1f, 1f), 0.6f),
-        };
-        var lamp = new MatSpec(null, 1f, C(1f, 0.86f, 0.62f), 0.2f) { Emissive = true };
-        d["HK_Lamp"] = lamp;
-        var water = new MatSpec(null, 1f, C(0.13f, 0.24f, 0.24f), 0.93f) { Normal = "HK_T_WaterNormal", NormalTile = 12f };
-        d["HK_Water"] = water;
-        return d;
-    }
 
     // ------------------------------------------------------------------ constraints
     const string ArtDir = "Art/Hikone";
@@ -208,7 +147,6 @@ public static class HikoneEnvironmentBuilder
     {
         EnsureFolder(MaterialDir);
         EnsureFolder(PrefabDir);
-        ConfigureTextures();
         var mats = BuildMaterials();
         ConfigureModels(mats);
         BuildPrefabs();
@@ -225,70 +163,33 @@ public static class HikoneEnvironmentBuilder
         AssetDatabase.CreateFolder(parent, Path.GetFileName(path));
     }
 
-    static void ConfigureTextures()
-    {
-        foreach (var guid in AssetDatabase.FindAssets("t:Texture2D", new[] { TextureDir }))
-        {
-            var path = AssetDatabase.GUIDToAssetPath(guid);
-            var ti = (TextureImporter)AssetImporter.GetAtPath(path);
-            var normal = path.Contains("Normal");
-            var changed = ti.wrapMode != TextureWrapMode.Repeat || ti.maxTextureSize != 512 ||
-                          (normal && ti.textureType != TextureImporterType.NormalMap) || ti.anisoLevel != 4;
-            if (!changed) continue;
-            ti.wrapMode = TextureWrapMode.Repeat;
-            ti.maxTextureSize = 512;
-            ti.anisoLevel = 4;
-            ti.mipmapEnabled = true;
-            if (normal) ti.textureType = TextureImporterType.NormalMap;
-            ti.SaveAndReimport();
-        }
-    }
+    static Color C(float r, float g, float b) => new Color(r, g, b, 1f);
 
+    /// <summary>
+    /// One painted material per Hikone material name (HikonePaintAssets: the browser port's pigments
+    /// and brush, VRLearn/HikonePaint shader); the lamp glass glows.
+    /// </summary>
     static Dictionary<string, Material> BuildMaterials()
     {
-        var lit = Shader.Find("Universal Render Pipeline/Lit");
+        var brush = HikonePaintAssets.WriteBrushTexture();
+        var shader = Shader.Find(HikonePaintAssets.ShaderName);
         var result = new Dictionary<string, Material>();
-        foreach (var kv in MaterialSpecs())
+        foreach (var name in HikonePaintAssets.MaterialNames)
         {
-            var path = $"{MaterialDir}/{kv.Key}.mat";
+            var path = $"{MaterialDir}/{name}.mat";
             var m = AssetDatabase.LoadAssetAtPath<Material>(path);
             if (m == null)
             {
-                m = new Material(lit);
+                m = new Material(shader);
                 AssetDatabase.CreateAsset(m, path);
             }
-            m.shader = lit;
-            var s = kv.Value;
-            m.SetColor("_BaseColor", s.Color);
-            m.SetFloat("_Smoothness", s.Smooth);
-            m.SetFloat("_Metallic", s.Metal);
-            if (s.Tex != null)
-            {
-                var tex = AssetDatabase.LoadAssetAtPath<Texture2D>($"{TextureDir}/{s.Tex}.png");
-                m.SetTexture("_BaseMap", tex);
-                var tile = 1f / s.TileMeters;
-                m.SetTextureScale("_BaseMap", new Vector2(tile, tile));
-            }
-            else
-            {
-                m.SetTexture("_BaseMap", null);
-            }
-            if (s.Normal != null)
-            {
-                m.SetTexture("_BumpMap", AssetDatabase.LoadAssetAtPath<Texture2D>($"{TextureDir}/{s.Normal}.png"));
-                m.SetTextureScale("_BumpMap", new Vector2(1f / s.NormalTile, 1f / s.NormalTile));
-                m.SetFloat("_BumpScale", 0.6f);
-                m.EnableKeyword("_NORMALMAP");
-            }
-            if (s.Emissive)
-            {
-                m.SetColor("_EmissionColor", s.Color * 1.4f);
-                m.EnableKeyword("_EMISSION");
-                m.globalIlluminationFlags = MaterialGlobalIlluminationFlags.None;
-            }
+            HikonePaintAssets.Paint(m, name, brush);
+            // the browser port lights emissive pigments at 0.4 of their colour: warm glass, not white
+            m.SetColor("_EmissionColor", name == "HK_Lamp" ? m.GetColor("_BaseColor") * 0.4f : Color.black);
+            m.globalIlluminationFlags = MaterialGlobalIlluminationFlags.None;
             m.enableInstancing = true;
             EditorUtility.SetDirty(m);
-            result[kv.Key] = m;
+            result[name] = m;
         }
         return result;
     }
@@ -556,13 +457,44 @@ public static class HikoneEnvironmentBuilder
             honmachi.gameObject.SetActive(false);
     }
 
+    /// <summary>
+    /// The browser port's light (HikonePaintAssets): its painted sky, linear fog, a sky-to-ground
+    /// ambient and a warm sun. three.js divides Lambert light by π and the port shows it at exposure
+    /// 1.08, so its sun (2.5) and hemisphere (2.1) become 0.86 and 0.72 here (Lambert without π).
+    /// </summary>
     static void ApplyAtmosphere()
     {
+        const float exposure = 1.08f, sun = 2.5f * exposure / Mathf.PI, hemisphere = 2.1f * exposure / Mathf.PI;
         RenderSettings.fog = true;
         RenderSettings.fogMode = FogMode.Linear;
-        RenderSettings.fogColor = new Color(0.74f, 0.8f, 0.86f);
-        RenderSettings.fogStartDistance = 110f;
-        RenderSettings.fogEndDistance = 620f;
+        RenderSettings.fogColor = HikonePaintAssets.FogColor;
+        RenderSettings.fogStartDistance = HikonePaintAssets.FogStart;
+        RenderSettings.fogEndDistance = HikonePaintAssets.FogEnd;
+        Color Scaled(Color c) => new Color(Mathf.LinearToGammaSpace(Mathf.GammaToLinearSpace(c.r) * hemisphere),
+            Mathf.LinearToGammaSpace(Mathf.GammaToLinearSpace(c.g) * hemisphere), Mathf.LinearToGammaSpace(Mathf.GammaToLinearSpace(c.b) * hemisphere));
+        RenderSettings.ambientMode = UnityEngine.Rendering.AmbientMode.Trilight;
+        RenderSettings.ambientSkyColor = Scaled(HikonePaintAssets.AmbientSky);
+        RenderSettings.ambientEquatorColor = Scaled(Color.Lerp(HikonePaintAssets.AmbientSky, HikonePaintAssets.AmbientGround, 0.5f));
+        RenderSettings.ambientGroundColor = Scaled(HikonePaintAssets.AmbientGround);
+        var sky = HikonePaintAssets.WriteSky();
+        RenderSettings.skybox = sky;
+        // GameDirector keeps this light for the clear-day condition and shows DaySky
+        var director = UnityEngine.Object.FindFirstObjectByType<GameDirector>(FindObjectsInactive.Include);
+        if (director != null)
+        {
+            var so = new SerializedObject(director);
+            so.FindProperty("DaySky").objectReferenceValue = sky;
+            so.ApplyModifiedPropertiesWithoutUndo();
+        }
+        var light = RenderSettings.sun != null ? RenderSettings.sun
+            : UnityEngine.Object.FindObjectsByType<Light>(FindObjectsSortMode.None).FirstOrDefault(l => l.type == LightType.Directional);
+        if (light != null)
+        {
+            light.color = HikonePaintAssets.SunColor;
+            light.intensity = sun;
+            EditorUtility.SetDirty(light);
+        }
+        else Debug.LogWarning("[Hikone] no directional light: sun left unchanged");
     }
 
     static void AddToBuildSettings()

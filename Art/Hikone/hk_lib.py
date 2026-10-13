@@ -10,7 +10,6 @@ from mathutils import Vector, Matrix
 
 ROOT = "/Users/xinyu/VRLearn"
 MODEL_DIR = ROOT + "/Assets/_Project/Hikone/Models"
-TEX_DIR = ROOT + "/Assets/_Project/Hikone/Textures"
 
 
 def U(x, y, z):
@@ -191,19 +190,3 @@ def export(ob, spacing_index=0):
         add_leaf_bones=False, use_mesh_modifiers=True, path_mode='STRIP')
     # lay assets out in a grid in the .blend so they can be inspected
     ob.location = loc if spacing_index < 0 else Vector(((spacing_index % 8) * 30.0, (spacing_index // 8) * 30.0, 0))
-
-
-# ---------------------------------------------------------------- textures
-def save_tex(name, arr):
-    """arr: numpy float array HxWx3 in 0..1 -> PNG in TEX_DIR."""
-    import numpy as np
-    h, w, _ = arr.shape
-    img = bpy.data.images.get(name) or bpy.data.images.new(name, w, h, alpha=False)
-    if img.size[0] != w:
-        img.scale(w, h)
-    rgba = np.ones((h, w, 4), dtype=np.float32)
-    rgba[:, :, :3] = np.clip(arr, 0, 1)
-    img.pixels.foreach_set(rgba.ravel())
-    img.filepath_raw = f"{TEX_DIR}/{name}.png"
-    img.file_format = 'PNG'
-    img.save()
